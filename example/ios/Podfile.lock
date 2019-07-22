@@ -1,0 +1,33 @@
+PODS:
+  - Flutter (1.0.0)
+  - tealium (0.0.1):
+    - Flutter
+    - TealiumIOS (<= 5.5.2)
+    - TealiumIOSLifecycle (<= 5.5.2)
+  - TealiumIOS (5.5.2)
+  - TealiumIOSLifecycle (5.5.2)
+
+DEPENDENCIES:
+  - Flutter (from `.symlinks/flutter/ios`)
+  - tealium (from `.symlinks/plugins/tealium/ios`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - TealiumIOS
+    - TealiumIOSLifecycle
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: ".symlinks/flutter/ios"
+  tealium:
+    :path: ".symlinks/plugins/tealium/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  tealium: 1cb09f1e9ea840d83a40304e17c7b53421317cfb
+  TealiumIOS: 556dc670b3c61b56a38157fab1c4dae6001df329
+  TealiumIOSLifecycle: d4ffa989719d6eeaca02db5addf160815161dcba
+
+PODFILE CHECKSUM: aff02bfeed411c636180d6812254b2daeea14d09
+
+COCOAPODS: 1.7.2
