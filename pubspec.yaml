@@ -1,6 +1,6 @@
 name: tealium
 description: A Flutter plugin for using Tealium's Android and iOS libraries.
-version: 1.0.0
+version: 1.0.1
 author: Tealium Mobile Team <integrations.device@tealium.com>
 homepage: https://tealium.com/
 documentation:

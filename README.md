@@ -3,7 +3,7 @@
 ## Documentation
 For full documentation, please see the Tealium Learning Community:
 
-[Tealium Flutter Documentation on TLC](LINK HERE!!!!!)
+[Tealium for Flutter](https://docs.tealium.com/platforms/flutter/)
 
 ## License
 
