@@ -6,6 +6,7 @@ import com.tealium.library.BuildConfig;
 import com.tealium.library.ConsentManager;
 import com.tealium.library.Tealium;
 import com.tealium.lifecycle.LifeCycle;
+import com.tealium.internal.tagbridge.RemoteCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -29,13 +33,15 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 public class TealiumPlugin implements MethodCallHandler {
     private String mTealiumInstanceName;
     private static PluginRegistry.Registrar mRegistrar;
+    private static MethodChannel mChannel;
+    private static Map<String, RemoteCommand> mRemoteCommandsMap = new HashMap<>();
 
     /**
      * Plugin registration.
      */
     public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "tealium");
-        channel.setMethodCallHandler(new TealiumPlugin());
+        mChannel = new MethodChannel(registrar.messenger(), "tealium");
+        mChannel.setMethodCallHandler(new TealiumPlugin());
         mRegistrar = registrar;
     }
 
@@ -147,6 +153,18 @@ public class TealiumPlugin implements MethodCallHandler {
             case "isConsentLoggingEnabledForInstance":
                 isConsentLoggingEnabledForInstance((String) call.argument("instance"), result);
                 break;
+            case "addRemoteCommandForInstance":
+                addRemoteCommandForInstance((String) call.argument("instance"), call);
+                break; 
+            case "addRemoteCommand":
+                addRemoteCommand(call);
+                break;
+            case "removeRemoteCommandForInstance":
+                removeRemoteCommandForInstance((String) call.argument("instance"), call);
+                break; 
+            case "removeRemoteCommand":
+                removeRemoteCommand(call);
+                break;                        
             default:
                 result.notImplemented();
                 break;
@@ -575,7 +593,81 @@ public class TealiumPlugin implements MethodCallHandler {
         }
     }
 
+    private void addRemoteCommandForInstance(String instance, MethodCall call) {
+        Map<String, Object> arguments = (Map<String, Object>) call.arguments;
+        final String commandID = (String) arguments.get("commandID");
+        final String description = (String) arguments.get("description");
+        final Tealium tealium = Tealium.getInstance(instance);
+        if (tealium == null) {
+            Log.e(BuildConfig.TAG, "addRemoteCommandForInstance attempted, but Tealium not enabled for instance name: " + instance);
+            return;
+        }
+        final RemoteCommand remoteCommand = new RemoteCommand(commandID, description) {
+            @Override
+            protected void onInvoke(Response response) throws Exception {
+                Map<String, Object> args = toMap(response.getRequestPayload());
+                mChannel.invokeMethod("callListener", args);
+                Log.i(BuildConfig.TAG, "addRemoteCommandForInstance attempted response: " + response);
+            }
+        };
+        tealium.addRemoteCommand(remoteCommand);
+        mRemoteCommandsMap.put(commandID, remoteCommand);
+    }    
+
+    private void addRemoteCommand(MethodCall call) {
+        addRemoteCommandForInstance(mTealiumInstanceName, call);
+    }
+
+    private void removeRemoteCommandForInstance(String instance, MethodCall call) {
+        Map<String, Object> arguments = (Map<String, Object>) call.arguments;
+        final String commandID = (String) arguments.get("commandID");
+        final Tealium tealium = Tealium.getInstance(instance);
+        if (tealium == null) {
+            Log.e(BuildConfig.TAG, "removeRemoteCommandForInstance attempted, but Tealium not enabled for instance name: " + instance);
+            return;
+        }
+        if (mRemoteCommandsMap.get(commandID) != null) {
+            tealium.removeRemoteCommand(mRemoteCommandsMap.get(commandID));
+            Log.i(BuildConfig.TAG, "Remote command with id `" + commandID + "` has been removed from `" + instance + "`");
+        } else {
+            Log.d(BuildConfig.TAG, "Remote command with id `" + commandID + "` does not exist");
+        }
+    } 
+
+    private void removeRemoteCommand(MethodCall call) {
+        removeRemoteCommandForInstance(mTealiumInstanceName, call);
+    }
+
     //========================== Helper Functions =============================
+
+    public static Map<String, Object> toMap(JSONObject jsonobj)  throws JSONException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        Iterator<String> keys = jsonobj.keys();
+        while(keys.hasNext()) {
+            String key = keys.next();
+            Object value = jsonobj.get(key);
+            if (value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            } else if (value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            map.put(key, value);
+        }   return map;
+    }
+
+    public static List<Object> toList(JSONArray array) throws JSONException {
+        List<Object> list = new ArrayList<Object>();
+        for(int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if (value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+            else if (value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            list.add(value);
+        }   return list;
+     }
 
     private String mapConsentStatus(int userConsentStatus) {
         switch (userConsentStatus) {

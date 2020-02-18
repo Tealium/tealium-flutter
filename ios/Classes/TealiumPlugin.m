@@ -1,10 +1,11 @@
 #import "TealiumPlugin.h"
 
 NSString *tealiumInternalInstanceName;
+FlutterMethodChannel *channel;
 
 @implementation TealiumPlugin
 + (void)registerWithRegistrar:(NSObject <FlutterPluginRegistrar> *)registrar {
-    FlutterMethodChannel *channel = [FlutterMethodChannel
+    channel = [FlutterMethodChannel
             methodChannelWithName:@"tealium"
                   binaryMessenger:[registrar messenger]];
     TealiumPlugin *instance = [[TealiumPlugin alloc] init];
@@ -119,6 +120,18 @@ NSString *tealiumInternalInstanceName;
     } else if ([@"isConsentLoggingEnabledForInstance" isEqualToString:call.method]) {
         [self isConsentLoggingEnabledForInstance:call.arguments[@"instance"] result:result];
 
+    } else if ([@"addRemoteCommandForInstance" isEqualToString:call.method]) {
+        [self addRemoteCommandForInstance:call.arguments[@"instance"] call:call];
+
+    } else if ([@"addRemoteCommand" isEqualToString:call.method]) {
+        [self addRemoteCommand:call];
+
+    } else if ([@"removeRemoteCommandForInstance" isEqualToString:call.method]) {
+        [self removeRemoteCommandForInstance:call.arguments[@"instance"] call:call];
+
+    } else if ([@"removeRemoteCommand" isEqualToString:call.method]) {
+        [self removeRemoteCommand:call];
+        
     } else {
         result(FlutterMethodNotImplemented);
     }
@@ -356,6 +369,31 @@ NSString *tealiumInternalInstanceName;
 - (void)isConsentLoggingEnabledForInstance:(NSString *)instance result:(FlutterResult)result {
     Tealium *tealium = [Tealium instanceForKey:instance];
     [[tealium consentManager] isConsentLoggingEnabled];
+}
+
+- (void)addRemoteCommandForInstance:(NSString *)instance call:(FlutterMethodCall *)call {
+    Tealium *tealium = [Tealium instanceForKey:instance];
+    NSString *commandID = call.arguments[@"commandID"];
+    NSString *description = call.arguments[@"description"];
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    [tealium addRemoteCommandID:commandID description:description targetQueue:queue responseBlock:^(TEALRemoteCommandResponse *_Nullable response) {
+        [channel invokeMethod:@"callListener" arguments: [response requestPayload]];
+        NSLog(@"%@ response: ", response);
+    }];
+}
+
+- (void)addRemoteCommand:(FlutterMethodCall *)call {
+    [self addRemoteCommandForInstance:tealiumInternalInstanceName call:call];
+}
+
+- (void)removeRemoteCommandForInstance:(NSString *)instance call:(FlutterMethodCall *)call {
+    Tealium *tealium = [Tealium instanceForKey:instance];
+    NSString *commandID = call.arguments[@"commandID"];
+    [tealium removeRemoteCommandID: commandID];
+}
+
+- (void)removeRemoteCommand:(FlutterMethodCall *)call {
+    [self removeRemoteCommandForInstance:tealiumInternalInstanceName call:call];
 }
 
 @end

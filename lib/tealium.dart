@@ -1,10 +1,35 @@
 import 'dart:async';
-
+import 'package:eventify/eventify.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
 
 class Tealium {
   static const MethodChannel _channel =
       const MethodChannel('tealium');
+  static String remoteCommandEvent = "remoteCommandEvent";
+  static EventEmitter emitter = new EventEmitter();
+  static Map<String, Function> _callbacksById = new Map();
+
+  static remoteCommandListener(String eventName) {
+    _channel.setMethodCallHandler(_methodCallHandler);
+    emitter.on(eventName, null, (ev, context) {
+      var encodedData = json.encode(ev.eventData);
+      var eventData = json.decode(encodedData);
+      var commandID = eventData['command_id'];
+      if (commandID != null) {
+        Function callback = _callbacksById[commandID];
+        if (callback != null) {
+          callback(eventData);
+        }
+      }
+    });
+  }
+
+  static Future<void> _methodCallHandler(MethodCall call) async {
+    if (call.method.toString() == 'callListener') {
+        emitter.emit(remoteCommandEvent, null, call.arguments);
+    }
+  }
 
   /// Initialize Tealium instance with minimum necessities
   ///
@@ -22,6 +47,7 @@ class Tealium {
       'androidDatasouce' : androidDatasource,
       'instance' :instance,
       'isLifecycleEnabled' : isLifecycleEnabled });
+      remoteCommandListener(remoteCommandEvent);
   }
 
   /// Initialize Tealium instance and enable Consent Manager
@@ -40,6 +66,7 @@ class Tealium {
       'androidDatasource' : androidDatasource,
       'instance' : instance,
       'isLifecycleEnabled' : isLifecycleEnabled});
+      remoteCommandListener(remoteCommandEvent);
   }
 
   /// Initialize a custom Tealium instance
@@ -64,6 +91,7 @@ class Tealium {
       'overridePublishSettingsUrl' : overridePublishSettingsUrl,
       'overrideTagManagementUrl' : overrideTagManagementUrl,
       'enableConsentManager' : enableConsentManager});
+      remoteCommandListener(remoteCommandEvent);
   }
 
   /// Track event - requires a string event name and optional data map
@@ -234,5 +262,28 @@ class Tealium {
     return isConsentLoggingEnabled;
   }
 
+  ///Add a remote command
+  static addRemoteCommand(String commandID, String description, Function callback) async {
+    _channel.invokeMethod('addRemoteCommand', {'commandID' : commandID, 'description': description});
+    _callbacksById[commandID] = callback;
+  }
+
+  ///Add a remote command for specific tealium instance - requires string tealium instance name
+  static addRemoteCommandForInstance(String instance, String commandID, String description, Function callback) async {
+    _channel.invokeMethod('addRemoteCommandForInstance', {'instance': instance, 'commandID' : commandID, 'description': description});
+    _callbacksById[commandID] = callback;
+  }
+
+  ///Remove a remote command
+  static removeRemoteCommand(String commandID) {
+    _channel.invokeMethod('removeRemoteCommand', {'commandID': commandID});
+    _callbacksById.remove(commandID);
+  }
+
+  ///Remove a remote command for specific tealium instance - requires string tealium instance name
+  static removeRemoteCommandForInstance(String instance, String commandID) {
+    _channel.invokeMethod('removeRemoteCommandForInstance', {'instance': instance, 'commandID' : commandID });
+    _callbacksById.remove(commandID);
+  }
 
 }
