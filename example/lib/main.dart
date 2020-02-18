@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 import 'package:tealium/tealium.dart';
@@ -12,14 +15,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   //Sample - minimum initialization for Tealium instance
-  //var teal = Tealium.initialize("tealiummobile", "android", "dev", null, null);
+  //var teal = Tealium.initialize("tealiummobile", "flutter", "dev", null, null);
 
   //Sample - initialize Tealium + enable Consent Manager
-  //var teal = Tealium.initializeWithConsentManager("tealiummobile", "android", "dev", null, null);
+  //var teal = Tealium.initializeWithConsentManager("tealiummobile", "flutter", "dev", null, null);
 
   //Sample - custom Tealium initialization
-  var teal = Tealium.initializeCustom("tealiummobile", "android", "dev", null, null,
-        "main", true, null, null, null, true);
+  var teal = Tealium.initializeCustom("tealiummobile", "flutter", "dev", null, null,
+        "main", true, null, null, null, true); 
 
   @override
   void initState() {
@@ -177,6 +180,35 @@ class _MyAppState extends State<MyApp> {
                   child: Text("Consent Manager: Reset Preferences"),
                   onPressed: () {
                     Tealium.resetUserConsentPreferences();
+                  }),
+            ),
+            ButtonTheme(
+              minWidth: 300.0,
+              child: RaisedButton(
+                  child: Text("Add Remote Command"),
+                  onPressed: () {
+                    Tealium.addRemoteCommand("test_command", "test command", (payload) => 
+                      print("Remote command payload - test_command: $payload")
+                    );
+                    Tealium.addRemoteCommand("test_command2", "test command 2", (payload) => 
+                      print("Remote command payload - test_command2: $payload")
+                    );
+                    Tealium.addRemoteCommand("display", "http command", (payload) => 
+                      print("Remote command payload - display: $payload")
+                    );
+                    Tealium.trackEvent("test_event", {"instance": "main"});
+                    Tealium.trackEvent("test_event_2", {"instance": "instance-2"});
+                    Tealium.trackEvent("display_data");
+                  }),
+            ),
+            ButtonTheme(
+              minWidth: 300.0,
+              child: RaisedButton(
+                  child: Text("Remove Remote Command"),
+                  onPressed: () {
+                    Tealium.removeRemoteCommand("test_command");
+                    Tealium.removeRemoteCommand("test_command2");
+                    Tealium.removeRemoteCommand("display");
                   }),
             )
           ],

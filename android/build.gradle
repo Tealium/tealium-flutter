@@ -37,7 +37,7 @@ android {
     }
 
     dependencies {
-        implementation 'com.tealium:library:5.5.4'
-        implementation 'com.tealium:lifecycle:1.1.2'
+        implementation 'com.tealium:library:5.7.0'
+        implementation 'com.tealium:lifecycle:1.1.3'
     }
 }
