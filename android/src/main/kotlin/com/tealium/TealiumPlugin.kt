@@ -66,8 +66,8 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun initialize(call: MethodCall, result: Result) {
+        toTealiumConfig(context as Application, call.arguments as Map<String, Any>)?.let { config ->
 
-        toTealiumConfig(context as Application, call.arguments<Map<*, *>>())?.let { config ->
             tealium = Tealium.create(INSTANCE_NAME, config) {
                 Log.d(BuildConfig.TAG, "Instance Initialized: ${this.key}")
                 dataLayer.putString("plugin_name", "Tealium-Flutter", Expiry.FOREVER)
