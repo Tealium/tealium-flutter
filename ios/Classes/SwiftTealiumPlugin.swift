@@ -20,9 +20,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    if call.method == "getPlatformVersion" {
-      result("iOS " + UIDevice.current.systemVersion)
-    } else if call.method == "initialize" {
+    if call.method == "initialize" {
       initialize(call: call, result: result);
     } else if call.method == "track" {
       track(call: call)
