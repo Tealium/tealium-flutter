@@ -222,7 +222,6 @@ class TealiumConfig {
   bool? lifecycleAutotrackingEnabled;
   bool? useRemoteLibrarySettings;
   bool? visitorServiceEnabled;
-  //Function()? onConsentExpiration;
 
   TealiumConfig(
     String account,
@@ -250,7 +249,6 @@ class TealiumConfig {
     bool? lifecycleAutotrackingEnabled,
     bool? useRemoteLibrarySettings,
     bool? visitorServiceEnabled,
-    /*Function()? onConsentExpiration*/
   }) {
     this.account = account;
     this.profile = profile;
@@ -275,6 +273,5 @@ class TealiumConfig {
     this.lifecycleAutotrackingEnabled = lifecycleAutotrackingEnabled;
     this.useRemoteLibrarySettings = useRemoteLibrarySettings;
     this.visitorServiceEnabled = visitorServiceEnabled;
-    // this.onConsentExpiration = onConsentExpiration;
   }
 }
