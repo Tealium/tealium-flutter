@@ -6,7 +6,6 @@ import 'common.dart';
 import 'events/event_emitter.dart';
 
 class Tealium {
-  static String platformVersion = "1.0.0";
   static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
   static Map<String, Function> _remoteCommands = new Map();

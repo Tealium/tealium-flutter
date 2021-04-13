@@ -65,7 +65,10 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
             return result(false)
         }
         self.config = localConfig.copy
-        tealium = Tealium(config: localConfig) { _ in 
+        tealium = Tealium(config: localConfig) { [weak self] _ in 
+            self?.tealium?.dataLayer.add(data: ["plugin_name": TealiumFlutterConstants.pluginName,
+             "plugin_version": TealiumFlutterConstants.pluginVersion],
+              expiry: .forever)
             result(true)
         }
   }
