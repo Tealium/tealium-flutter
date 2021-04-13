@@ -91,8 +91,10 @@ class Tealium {
 
   // Adds a [RemoteCommand] to the [RemoteCommands] Dispatcher
   static addRemoteCommand(String id, Function callback) async {
-    _remoteCommands[id] = callback;
-    return await _channel.invokeMethod('addRemoteCommand', {'id': id});
+    if (!_remoteCommands.containsKey(id)) {
+      _remoteCommands[id] = callback;
+      return await _channel.invokeMethod('addRemoteCommand', {'id': id});
+    }
   }
 
   // Removes a [RemoteCommand] from the [RemoteCommands] Dispatcher
@@ -114,8 +116,9 @@ class Tealium {
 
   // Sets a List of [ConsentCategories] for the user
   static setConsentCategories(List<ConsentCategories> categories) {
+    var categoriesList = categories.map((item) => item.toString()).toList();
     _channel.invokeMethod(
-        'setConsentCategories', {'categories': categories.stringify()});
+        'setConsentCategories', {'categories': categoriesList});
   }
 
   // Retrieves the current [ConsentCategories] for which the user is consented

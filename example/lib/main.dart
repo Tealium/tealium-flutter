@@ -172,7 +172,7 @@ class _MyAppState extends State<MyApp> {
       ConsentCategories.social
     ];
     list = _shuffleCategories(list)!;
-    Tealium.setConsentCategories(list.sublist(1, 5));
+    Tealium.setConsentCategories(list.sublist(0, 3));
   }
 
   List<ConsentCategories>? _shuffleCategories(List<ConsentCategories> items) {

@@ -19,7 +19,6 @@ class Collectors {
   static const Collectors Connectivity = Collectors._('Connectivity');
   static const Collectors DeviceData = Collectors._('DeviceData');
   static const Collectors Lifecycle = Collectors._('Lifecycle');
-  static const Collectors VisitorService = Collectors._('VisitorService');
 }
 
 class Dispatchers {
@@ -171,16 +170,6 @@ class ConsentCategories {
   static const ConsentCategories misc = ConsentCategories._('misc');
 }
 
-extension Stringify on List<ConsentCategories> {
-  List<String> stringify() {
-    List<String> list = [];
-    this.forEach((element) {
-      list.add(element.toString());
-    });
-    return list;
-  }
-}
-
 class ConsentExpiry {
   late int time;
   late TimeUnit unit;
@@ -233,6 +222,7 @@ class TealiumConfig {
   bool? lifecycleAutotrackingEnabled;
   bool? useRemoteLibrarySettings;
   bool? visitorServiceEnabled;
+  //Function()? onConsentExpiration;
 
   TealiumConfig(
     String account,
@@ -260,6 +250,7 @@ class TealiumConfig {
     bool? lifecycleAutotrackingEnabled,
     bool? useRemoteLibrarySettings,
     bool? visitorServiceEnabled,
+    /*Function()? onConsentExpiration*/
   }) {
     this.account = account;
     this.profile = profile;
@@ -284,5 +275,6 @@ class TealiumConfig {
     this.lifecycleAutotrackingEnabled = lifecycleAutotrackingEnabled;
     this.useRemoteLibrarySettings = useRemoteLibrarySettings;
     this.visitorServiceEnabled = visitorServiceEnabled;
+    // this.onConsentExpiration = onConsentExpiration;
   }
 }

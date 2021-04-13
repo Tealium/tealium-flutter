@@ -1,4 +1,4 @@
-group 'com.example.tealium'
+group 'com.tealium'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -18,12 +18,17 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url "http://maven.tealiumiq.com/android/releases"
+        }
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'maven'
 
+version = "2.0.0"
 android {
     compileSdkVersion 30
 
@@ -31,10 +36,20 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
+
+        buildConfigField "String", "TAG", "\"Tealium-Flutter-$version\""
     }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //Tealium
+    implementation 'com.tealium:kotlin-core:1.2.3'
+    implementation 'com.tealium:kotlin-collect-dispatcher:1.0.3'
+    implementation 'com.tealium:kotlin-tagmanagement-dispatcher:1.0.4'
+    implementation 'com.tealium:kotlin-remotecommand-dispatcher:1.0.3'
+    implementation 'com.tealium:kotlin-lifecycle:1.0.3'
+    implementation 'com.tealium:kotlin-visitor-service:1.0.3'
 }

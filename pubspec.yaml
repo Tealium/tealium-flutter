@@ -24,12 +24,8 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   plugin:
-    platforms:
-      # android:
-      #   package: com.tealium
-      #   pluginClass: TealiumPlugin
-      ios:
-        pluginClass: TealiumPlugin
+    androidPackage: com.tealium
+    pluginClass: TealiumPlugin
   # To add assets to your package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
