@@ -1,9 +1,7 @@
 import 'dart:math';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:tealium/common.dart';
 import 'package:tealium/tealium.dart';
 import 'package:tealium_example/tealium_button.dart';
@@ -18,7 +16,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   final traceIdValue = TextEditingController();
   String result = '';
 
@@ -39,22 +36,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
-
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    try {
-      platformVersion = Tealium.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   ListView _listView() {
@@ -68,7 +49,9 @@ class _MyAppState extends State<MyApp> {
           Tealium.setVisitorServiceListener(
               (profile) => _logVisitorProfile(profile)),
           Tealium.addRemoteCommand(
-              'hello', (payload) => _logRemoteCommand('Hello', payload))
+              'json-test', (payload) => {
+                _logRemoteCommand('JSON Test', payload)
+              })
         });
 
     return new ListView(
@@ -172,7 +155,7 @@ class _MyAppState extends State<MyApp> {
       ConsentCategories.social
     ];
     list = _shuffleCategories(list)!;
-    Tealium.setConsentCategories(list.sublist(0, 3));
+    Tealium.setConsentCategories(list.sublist(1, 5));
   }
 
   List<ConsentCategories>? _shuffleCategories(List<ConsentCategories> items) {

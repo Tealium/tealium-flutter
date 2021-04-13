@@ -1,6 +1,5 @@
 package com.tealium
 
-import com.tealium.core.JsonUtils
 import com.tealium.core.Logger
 import com.tealium.core.consent.ConsentManagementPolicy
 import com.tealium.core.consent.ConsentStatus
@@ -35,8 +34,8 @@ class RemoteCommandListener(private val methodChannel: MethodChannel, id: String
     public override fun onInvoke(response: Response) {
         response.requestPayload.put("emitterName", "TealiumFlutter.RemoteCommandEvent")
         try {
-            val map = JsonUtils.mapFor(response.requestPayload)
-            TealiumPlugin.invokeOnMain(methodChannel, "callListener", map)
+            val map = response.requestPayload.toFriendlyMap()
+            TealiumPlugin.invokeOnMain(methodChannel, "callListener", map.toMap())
         } catch (jex: JSONException) {
             Logger.qa(BuildConfig.TAG, "${jex.message}")
         }

@@ -23,6 +23,9 @@ import com.tealium.tagmanagementdispatcher.TagManagementDispatcher
 import com.tealium.tagmanagementdispatcher.overrideTagManagementUrl
 import com.tealium.visitorservice.VisitorProfile
 import com.tealium.visitorservice.VisitorService
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -30,7 +33,7 @@ private fun missingRequiredProperty(name: String) {
     Log.d(BuildConfig.TAG, "Missing required property: $name")
 }
 
-fun toTealiumConfig(app: Application, configMap: Map<String, Any>): TealiumConfig? {
+fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
     val account = configMap[KEY_CONFIG_ACCOUNT] as? String
     val profile = configMap[KEY_CONFIG_PROFILE] as? String
     val environmentString = configMap[KEY_CONFIG_ENV] as? String
@@ -126,7 +129,7 @@ fun toTealiumConfig(app: Application, configMap: Map<String, Any>): TealiumConfi
         }
 
         configMap[KEY_CONSENT_EXPIRY]?.let {
-            (it as? Map<String, Any>)?.let { map ->
+            (it as? Map<*, *>)?.let { map ->
                 map[KEY_CONSENT_EXPIRY_TIME]?.let { time ->
                     map[KEY_CONSENT_EXPIRY_UNIT]?.let { unit ->
                         consentExpiry = consentExpiryFromValues(time.toString().toLong(), unit.toString())
@@ -190,7 +193,7 @@ fun expiryFromString(name: String?) =
             }
         } else Expiry.SESSION
 
-fun dispatchFromArguments(data: Map<String, Any>): Dispatch {
+fun dispatchFromArguments(data: Map<*, *>): Dispatch {
     val eventType = data[KEY_TRACK_EVENT_TYPE] as String
 
     return when (eventType.toLowerCase(Locale.ROOT)) {
@@ -242,6 +245,63 @@ fun dispatcherFactoryFromString(name: String): DispatcherFactory? {
         DISPATCHERS_REMOTE_COMMANDS -> RemoteCommandDispatcher
         else -> null
     }
+}
+
+@Throws(JSONException::class)
+fun JSONObject.toFriendlyMap(): MutableMap<String, Any?> {
+    val map = mutableMapOf<String, Any?>()
+    val iterator = keys()
+    while (iterator.hasNext()) {
+        val key = iterator.next()
+        when (val value = this[key]) {
+            is JSONObject -> {
+                map[key] = value.toFriendlyMap()
+            }
+            is JSONArray -> {
+                map[key] = value.toFriendlyList()?.toList()
+            }
+            is Boolean -> {
+                map[key] = value
+            }
+            is Int -> {
+                map[key] = value
+            }
+            is Double -> {
+                map[key] = value
+            }
+            is String -> {
+                map[key] = value
+            }
+            else -> {
+                map[key] = value
+            }
+        }
+    }
+    return map
+}
+
+@Throws(JSONException::class)
+fun JSONArray.toFriendlyList(): MutableList<Any?> {
+    val list = mutableListOf<Any?>()
+    for (i in 0 until length()) {
+        val value = this[i]
+        if (value is JSONObject) {
+            list.add(value.toFriendlyMap())
+        } else if (value is JSONArray) {
+            list.add(value.toFriendlyList())
+        } else if (value is Boolean) {
+            list.add(value)
+        } else if (value is Int) {
+            list.add(value)
+        } else if (value is Double) {
+            list.add(value)
+        } else if (value is String) {
+            list.add(value)
+        } else {
+            list.add(value.toString())
+        }
+    }
+    return list
 }
 
 internal fun VisitorProfile.Companion.toFriendlyMutableMap(visitorProfile: VisitorProfile): MutableMap<String, Any> {
