@@ -1,4 +1,7 @@
 public enum TealiumFlutterConstants {
+
+    static let pluginName = "Tealium-Flutter"
+    static let pluginVersion = "2.0.0"
     
     static let tagManagement = "TagManagement"
     static let collect = "Collect"

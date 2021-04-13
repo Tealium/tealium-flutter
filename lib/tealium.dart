@@ -6,7 +6,6 @@ import 'common.dart';
 import 'events/event_emitter.dart';
 
 class Tealium {
-  static String platformVersion = "1.0.0";
   static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
   static Map<String, Function> _remoteCommands = new Map();
@@ -117,8 +116,8 @@ class Tealium {
   // Sets a List of [ConsentCategories] for the user
   static setConsentCategories(List<ConsentCategories> categories) {
     var categoriesList = categories.map((item) => item.toString()).toList();
-    _channel.invokeMethod(
-        'setConsentCategories', {'categories': categoriesList});
+    _channel
+        .invokeMethod('setConsentCategories', {'categories': categoriesList});
   }
 
   // Retrieves the current [ConsentCategories] for which the user is consented

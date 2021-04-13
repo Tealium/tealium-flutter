@@ -25,37 +25,37 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     } else if call.method == "initialize" {
       initialize(call: call, result: result);
     } else if call.method == "track" {
-      track(call: call, result: result)
+      track(call: call)
     } else if call.method == "terminateInstance" {
-        terminateInstance(call: call, result: result)
+        terminateInstance()
     } else if call.method == "addToDataLayer" {
-        addToDataLayer(call: call, result: result)
+        addToDataLayer(call: call)
     } else if call.method == "removeFromDataLayer" {
-        removeFromDataLayer(call: call, result: result)
+        removeFromDataLayer(call: call)
     } else if call.method == "deleteFromDataLayer" {
-        removeFromDataLayer(call: call, result: result)
+        removeFromDataLayer(call: call)
     } else if call.method == "getFromDataLayer" {
         getFromDataLayer(call: call, result: result)
     } else if call.method == "addRemoteCommand" {
         addRemoteCommand(call: call, result: result)
     } else if call.method == "removeRemoteCommand" {
-        removeRemoteCommand(call: call, result: result)
+        removeRemoteCommand(call: call)
     } else if call.method == "setConsentStatus" {
-        setConsentStatus(call: call, result: result)
+        setConsentStatus(call: call)
     } else if call.method == "getConsentStatus" {
-        getConsentStatus(call: call, result: result)
+        getConsentStatus(result: result)
     } else if call.method == "setConsentCategories" {
-        setConsentCategories(call: call, result: result)
+        setConsentCategories(call: call)
     } else if call.method == "getConsentCategories" {
-        getConsentCategories(call: call, result: result)
+        getConsentCategories(result: result)
     } else if call.method == "joinTrace" {
-        joinTrace(call: call, result: result)
+        joinTrace(call: call)
     } else if call.method == "leaveTrace" {
-        leaveTrace(call: call, result: result)
+        leaveTrace()
     } else if call.method == "getVisitorId" {
-        getVisitorId(call: call, result: result)
+        getVisitorId(result: result)
     } else if call.method == "setConsentExpiryListener" {
-        setConsentExpiryListener(call: call, result: result)
+        setConsentExpiryListener()
     }
   }
 
@@ -65,12 +65,15 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
             return result(false)
         }
         self.config = localConfig.copy
-        tealium = Tealium(config: localConfig) { _ in 
+        tealium = Tealium(config: localConfig) { [weak self] _ in 
+            self?.tealium?.dataLayer.add(data: ["plugin_name": TealiumFlutterConstants.pluginName,
+             "plugin_version": TealiumFlutterConstants.pluginVersion],
+              expiry: .forever)
             result(true)
         }
   }
 
-  func track(call: FlutterMethodCall, result: FlutterResult) {
+  func track(call: FlutterMethodCall) {
     guard let arguments = call.arguments as? [String: Any],
     let track = dispatchFrom(arguments) else {
             return
@@ -78,7 +81,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
      tealium?.track(track)
   }
 
-  func terminateInstance(call: FlutterMethodCall, result: FlutterResult) {
+  func terminateInstance() {
       guard let config = self.config else {
           return
       }
@@ -86,7 +89,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
       tealium = nil
   }
 
-  func addToDataLayer(call: FlutterMethodCall, result: FlutterResult) {
+  func addToDataLayer(call: FlutterMethodCall) {
       guard let arguments = call.arguments as? [String: Any],
       let data = arguments["data"] as? [String: Any],
       let expiry = arguments["expiry"] as? String else {
@@ -95,7 +98,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
       tealium?.dataLayer.add(data: data, expiry: expiryFrom(expiry))
   }
 
-  func removeFromDataLayer(call: FlutterMethodCall, result: FlutterResult) {
+  func removeFromDataLayer(call: FlutterMethodCall) {
       guard let arguments = call.arguments as? [String: Any],
        let keys = arguments["keys"] as? [String] else {
            return
@@ -112,7 +115,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
       result(value)
   }
 
-  func deleteFromDataLayer(call: FlutterMethodCall, result: FlutterResult) {
+  func deleteFromDataLayer(call: FlutterMethodCall) {
       guard let arguments = call.arguments as? [String: Any],
        let key = arguments["key"] as? String else {
            return
@@ -135,7 +138,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         tealium?.remoteCommands?.add(remoteCommand)
     }
 
-   func removeRemoteCommand(call: FlutterMethodCall, result: FlutterResult) {
+   func removeRemoteCommand(call: FlutterMethodCall) {
         guard let arguments = call.arguments as? [String: Any],
         let id = arguments["id"] as? String else {
             return
@@ -143,7 +146,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         tealium?.remoteCommands?.remove(commandWithId: id)
    }
 
-  func setConsentStatus(call: FlutterMethodCall, result: FlutterResult) {
+  func setConsentStatus(call: FlutterMethodCall) {
       guard let arguments = call.arguments as? [String: Any],
        let status = arguments["status"] as? String else {
            return
@@ -155,11 +158,11 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         }
   }
 
-  func getConsentStatus(call: FlutterMethodCall, result: FlutterResult) {
+  func getConsentStatus(result: FlutterResult) {
       result(tealium?.consentManager?.userConsentStatus.rawValue ?? "unknown")
   }
 
-  func setConsentCategories(call: FlutterMethodCall, result: FlutterResult) {
+  func setConsentCategories(call: FlutterMethodCall) {
       guard let arguments = call.arguments as? [String: Any],
             let categories = arguments["categories"] as? [String] else {
            return
@@ -167,7 +170,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     tealium?.consentManager?.userConsentCategories = TealiumConsentCategories.consentCategoriesStringArrayToEnum(categories)
   }
 
-  func getConsentCategories(call: FlutterMethodCall, result: FlutterResult) {
+  func getConsentCategories(result: FlutterResult) {
     var converted = [String]()
     tealium?.consentManager?.userConsentCategories?.forEach {
         converted.append($0.rawValue)
@@ -175,7 +178,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     result(converted)
   }
 
-  func joinTrace(call: FlutterMethodCall, result: FlutterResult) {
+  func joinTrace(call: FlutterMethodCall) {
       guard let arguments = call.arguments as? [String: Any],
        let id = arguments["id"] as? String else {
            return
@@ -183,15 +186,15 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
       tealium?.joinTrace(id: id)
   }
 
-  func leaveTrace(call: FlutterMethodCall, result: FlutterResult) {
+  func leaveTrace() {
       tealium?.leaveTrace()
   }
 
-  func getVisitorId(call: FlutterMethodCall, result: FlutterResult) {
+  func getVisitorId(result: FlutterResult) {
       result(tealium?.visitorId ?? "")
   }
 
-  func setConsentExpiryListener(call: FlutterMethodCall, result: FlutterResult) {
+  func setConsentExpiryListener() {
       tealium?.consentManager?.onConsentExpiraiton = {
           SwiftTealiumPlugin.channel?.invokeMethod("callListener",
            arguments: [TealiumFlutterConstants.Events.emitterName.rawValue: TealiumFlutterConstants.Events.consent.rawValue])
