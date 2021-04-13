@@ -1,11 +1,16 @@
-import 'dart:ffi';
-import 'dart:io' show Platform;
-
+import 'dart:math';
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
-
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import 'package:tealium/common.dart';
 import 'package:tealium/tealium.dart';
+import 'package:tealium_example/tealium_button.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -13,207 +18,189 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String _platformVersion = 'Unknown';
+  final traceIdValue = TextEditingController();
+  String result = '';
 
-  //Sample - minimum initialization for Tealium instance
-  //var teal = Tealium.initialize("tealiummobile", "flutter", "dev", null, null);
+  // MARK: Tealium Configuration
 
-  //Sample - initialize Tealium + enable Consent Manager
-  //var teal = Tealium.initializeWithConsentManager("tealiummobile", "flutter", "dev", null, null);
-
-  //Sample - custom Tealium initialization
-  var teal = Tealium.initializeCustom("tealiummobile", "flutter", "dev", null, null,
-        "main", true, null, null, null, true); 
+  var config = TealiumConfig(
+      'tealiummobile',
+      'demo',
+      TealiumEnvironment.dev,
+      [Collectors.AppData, Collectors.Lifecycle],
+      [Dispatchers.RemoteCommands, Dispatchers.TagManagement],
+      consentPolicy: ConsentPolicy.GDPR,
+      useRemoteLibrarySettings: false,
+      batchingEnabled: false,
+      visitorServiceEnabled: true,
+      consentExpiry: ConsentExpiry(5, TimeUnit.MINUTES));
 
   @override
   void initState() {
     super.initState();
+    initPlatformState();
+  }
+
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    try {
+      platformVersion = Tealium.platformVersion;
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _platformVersion = platformVersion;
+    });
+  }
+
+  ListView _listView() {
+    // MARK: Initialize Tealium
+
+    Tealium.initialize(config).then((value) => {
+          developer.log('Tealium Initialized'),
+          Tealium.setConsentStatus(ConsentStatus.consented),
+          Tealium.setConsentExpiryListener(
+              () => developer.log('Consent Expired')),
+          Tealium.setVisitorServiceListener(
+              (profile) => _logVisitorProfile(profile)),
+          Tealium.addRemoteCommand(
+              'hello', (payload) => _logRemoteCommand('Hello', payload))
+        });
+
+    return new ListView(
+      scrollDirection: Axis.vertical,
+      children: <Widget>[
+        Padding(padding: EdgeInsets.all(3.5)),
+        TextField(
+          controller: traceIdValue,
+          autocorrect: true,
+          decoration: InputDecoration(hintText: 'Enter Trace Id'),
+        ),
+        TealiumButton(
+          title: 'Join Trace',
+          onPressed: _joinTrace,
+        ),
+        TealiumButton(
+          title: 'Leave Trace',
+          onPressed: () => Tealium.leaveTrace(),
+        ),
+        TealiumButton(
+            title: 'Track Event',
+            onPressed: () => Tealium.track(
+                TealiumEvent('Some Event', {'button_click': 'test'}))),
+        TealiumButton(
+            title: 'Track View',
+            onPressed: () => Tealium.track(
+                TealiumView('Some View', {'screen_view': 'tester'}))),
+        TealiumButton(
+            title: 'Add Data',
+            onPressed: () =>
+                Tealium.addToDataLayer({'hello': 'world'}, Expiry.session)),
+        TealiumButton(
+            title: 'Get Data',
+            onPressed: () => Tealium.getFromDataLayer('hello').then(
+                (value) => developer.log('Value From Data Layer: $value'))),
+        TealiumButton(
+            title: 'Remove Data',
+            onPressed: () => Tealium.removeFromDataLayer(['hello'])),
+        TealiumButton(
+            title: 'Set Consent',
+            onPressed: () => Tealium.setConsentStatus(ConsentStatus.consented)),
+        TealiumButton(
+            title: 'Get Consent',
+            onPressed: () => Tealium.getConsentStatus()
+                .then((status) => developer.log('Consent Status: $status'))),
+        TealiumButton(
+            title: 'Set Consent Categories',
+            onPressed: () => _setRandomConsentCategories()),
+        TealiumButton(
+            title: 'Get Consent Categories',
+            onPressed: () => Tealium.getConsentCategories().then((categories) =>
+                developer.log('Consent Categories: ' + categories.join(",")))),
+        TealiumButton(
+            title: 'Add Remote Command',
+            onPressed: () => Tealium.addRemoteCommand(
+                'example', (payload) => _logRemoteCommand('Example', payload))),
+        TealiumButton(
+            title: 'Remove Remote Command',
+            onPressed: () => Tealium.removeRemoteCommand('hello')),
+        TealiumButton(
+            title: 'Get Visitor Id',
+            onPressed: () => Tealium.getVisitorId()
+                .then((visitorId) => developer.log('Visitor Id: $visitorId'))),
+        TealiumButton(
+            title: 'Terminate Tealium',
+            onPressed: () => Tealium.terminateInstance()),
+      ],
+    );
+  }
+
+  void _logVisitorProfile(dynamic profile) {
+    var encodedData = json.encode(profile);
+    var converted = json.decode(encodedData);
+    developer.log('=========Visitor Service Response=========');
+    developer
+        .log('Audiences: ' + JsonEncoder().convert(converted["audiences"]));
+    developer.log('Tallies: ' + JsonEncoder().convert(converted["tallies"]));
+    developer.log('Badges: ' + JsonEncoder().convert(converted["badges"]));
+  }
+
+  void _logRemoteCommand(String name, dynamic payload) {
+    developer.log('=========$name Remote Command Response=========');
+    developer.log(JsonEncoder().convert(payload));
+  }
+
+  void _setRandomConsentCategories() {
+    List<ConsentCategories> list = [
+      ConsentCategories.affiliates,
+      ConsentCategories.analytics,
+      ConsentCategories.bigData,
+      ConsentCategories.cdp,
+      ConsentCategories.cookieMatch,
+      ConsentCategories.crm,
+      ConsentCategories.displayAds,
+      ConsentCategories.email,
+      ConsentCategories.engagement,
+      ConsentCategories.misc,
+      ConsentCategories.mobile,
+      ConsentCategories.monitoring,
+      ConsentCategories.personalization,
+      ConsentCategories.social
+    ];
+    list = _shuffleCategories(list)!;
+    Tealium.setConsentCategories(list.sublist(1, 5));
+  }
+
+  List<ConsentCategories>? _shuffleCategories(List<ConsentCategories> items) {
+    var random = new Random();
+    for (var i = items.length - 1; i > 0; i--) {
+      var n = random.nextInt(i + 1);
+      var temp = items[i];
+      items[i] = items[n];
+      items[n] = temp;
+      return items;
+    }
+  }
+
+  _joinTrace() {
+    setState(() {
+      result = traceIdValue.text;
+      Tealium.joinTrace(result);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-            child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            ButtonTheme(
-              minWidth: 250.0,
-              child: RaisedButton(
-                  child: Text("Track Event"),
-                  onPressed: () {
-                    Tealium.trackEvent("event button click");
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Track View"),
-                  onPressed: () {
-                    Tealium.trackView("View button click");
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Get Visitor ID"),
-                  onPressed: () async {
-                    String data = await Tealium.getVisitorId();
-                    print("Visitor ID: $data");
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Set Volatile Data"),
-                  onPressed: () {
-                    Tealium.setVolatileData({
-                      "volatile_var": "volatile_val",
-                      "volatile_var2": ["vol1", "vol2", "vol3"]
-                    });
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Set Persistent Data"),
-                  onPressed: () {
-                    Tealium.setPersistentData({
-                      "persistent_var": "persistent_val",
-                      "persistent_var2": ["per1", "per2", "per3"]
-                    });
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Print Volatile data: volatile_var"),
-                  onPressed: () async {
-                    var data = await Tealium.getVolatileData("volatile_var");
-                    print("Volatile data retrieved: $data");
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Print Persistent data: persistent_var2"),
-                  onPressed: () async {
-                    var data =
-                        await Tealium.getPersistentData("persistent_var2");
-                    print("Persistent data retrieved: $data");
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Remove Volatile Data"),
-                  onPressed: () {
-                    Tealium.removeVolatileData(
-                        ["volatile_var", "volatile_var"]);
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Remove Persistent Data"),
-                  onPressed: () {
-                    Tealium.removePersistentData(
-                        ["persistent_var", "persistent_var2"]);
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Consent Manager: Consented Status"),
-                  onPressed: () {
-                    Tealium.setUserConsentStatus(1);
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Consent Manager: Not Consented Status"),
-                  onPressed: () {
-                    Tealium.setUserConsentStatus(2);
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Consent Manager: Partial Consent"),
-                  onPressed: () {
-                    Tealium.setUserConsentCategories(
-                        ["email", "personalization"]);
-                    Tealium.getUserConsentCategories();
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Get Consent Status"),
-                  onPressed: () async {
-                    String data = await Tealium.getUserConsentStatus();
-                    print("Current Consent status is: $data");
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Get Consent Categories"),
-                  onPressed: () async {
-                    List data = await Tealium.getUserConsentCategories();
-                    if (data != null) {
-                      for (var x = 0; x < data.length; x++) {
-                        print(data[x]);
-                      }
-                    } else {
-                      print(data);
-                    }
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Consent Manager: Reset Preferences"),
-                  onPressed: () {
-                    Tealium.resetUserConsentPreferences();
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Add Remote Command"),
-                  onPressed: () {
-                    Tealium.addRemoteCommand("test_command", "test command", (payload) => 
-                      print("Remote command payload - test_command: $payload")
-                    );
-                    Tealium.addRemoteCommand("test_command2", "test command 2", (payload) => 
-                      print("Remote command payload - test_command2: $payload")
-                    );
-                    Tealium.addRemoteCommand("display", "http command", (payload) => 
-                      print("Remote command payload - display: $payload")
-                    );
-                    Tealium.trackEvent("test_event", {"instance": "main"});
-                    Tealium.trackEvent("test_event_2", {"instance": "instance-2"});
-                    Tealium.trackEvent("display_data");
-                  }),
-            ),
-            ButtonTheme(
-              minWidth: 300.0,
-              child: RaisedButton(
-                  child: Text("Remove Remote Command"),
-                  onPressed: () {
-                    Tealium.removeRemoteCommand("test_command");
-                    Tealium.removeRemoteCommand("test_command2");
-                    Tealium.removeRemoteCommand("display");
-                  }),
-            )
-          ],
-        )),
-      ),
+          appBar: AppBar(
+            title: const Text('TealiumPluginExample'),
+          ),
+          body: _listView()),
     );
   }
 }

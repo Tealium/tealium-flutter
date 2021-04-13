@@ -1,289 +1,197 @@
-import 'dart:async';
-import 'package:eventify/eventify.dart';
+library tealium;
+
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'common.dart';
+import 'events/event_emitter.dart';
 
 class Tealium {
-  static const MethodChannel _channel =
-      const MethodChannel('tealium');
-  static String remoteCommandEvent = "remoteCommandEvent";
+  static String platformVersion = "1.0.0";
+  static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
-  static Map<String, Function> _callbacksById = new Map();
+  static Map<String, Function> _remoteCommands = new Map();
+  static Map<String, Function> _listeners = new Map();
 
-  static remoteCommandListener(String eventName) {
-    _channel.setMethodCallHandler(_methodCallHandler);
-    emitter.on(eventName, null, (ev, context) {
-      var encodedData = json.encode(ev.eventData);
-      var eventData = json.decode(encodedData);
-      var commandID = eventData['command_id'];
-      if (commandID != null) {
-        Function callback = _callbacksById[commandID];
-        if (callback != null) {
-          callback(eventData);
-        }
-      }
+  // Initializes Tealium with a [TealiumConfig] object
+  //
+  // [Future<bool>] upon success or failure
+  static Future<bool> initialize(TealiumConfig config) async {
+    if (config.dispatchers
+        .toString()
+        .contains(Dispatchers.RemoteCommands.toString())) {
+      _handleListener(EventListenerNames.remoteCommand);
+    }
+    return await _channel.invokeMethod('initialize', {
+      'account': config.account,
+      'profile': config.profile,
+      'environment': config.environment,
+      'collectors': config.collectors,
+      'dispatchers': config.dispatchers,
+      'dataSource': config.dataSource,
+      'customVisitorId': config.customVisitorId,
+      'memoryReportingEnabled': config.memoryReportingEnabled,
+      'overrideCollectURL': config.overrideCollectURL,
+      'overrideCollectBatchURL': config.overrideCollectBatchURL,
+      'overrideCollectDomain': config.overrideCollectDomain,
+      'overrideLibrarySettingsURL': config.overrideLibrarySettingsURL,
+      'overrideTagManagementURL': config.overrideTagManagementURL,
+      'deepLinkTrackingEnabled': config.deepLinkTrackingEnabled,
+      'qrTraceEnabled': config.qrTraceEnabled,
+      'logLevel': config.logLevel,
+      'consentLoggingEnabled': config.consentLoggingEnabled,
+      'consentPolicy': config.consentPolicy,
+      'consentExpiry': config.consentExpiry,
+      'batchingEnabled': config.batchingEnabled,
+      'lifecycleAutotrackingEnabled': config.lifecycleAutotrackingEnabled,
+      'useRemoteLibrarySettings': config.useRemoteLibrarySettings,
+      'visitorServiceEnabled': config.visitorServiceEnabled
     });
+  }
+
+  // Tracks a [TealiumDispatch]
+  //
+  // Accepts a [TealiumView] or [TealiumEvent] type
+  static track(TealiumDispatch dispatch) {
+    if (dispatch is TealiumView) {
+      _channel.invokeMethod('track', {
+        'viewName': dispatch.viewName,
+        'dataLayer': dispatch.dataLayer,
+        'type': 'view'
+      });
+    } else if (dispatch is TealiumEvent)
+      _channel.invokeMethod('track', {
+        'eventName': dispatch.eventName,
+        'dataLayer': dispatch.dataLayer,
+        'type': 'event'
+      });
+  }
+
+  // Disables the Tealium instance and all tracking
+  static terminateInstance() {
+    _channel.invokeMethod('terminateInstance');
+  }
+
+  // Adds a key value pair to the data layer with a specified [Expiry]
+  static addToDataLayer(Map<String, Object> data, Expiry expiry) {
+    _channel.invokeMethod(
+        'addToDataLayer', {'data': data, 'expiry': expiry.toString()});
+  }
+
+  // Removes a List of keys from the data layer
+  static removeFromDataLayer(List<String> keys) {
+    _channel.invokeMethod('removeFromDataLayer', {'keys': keys});
+  }
+
+  // Retrieves a value from the data layer for a specified key
+  //
+  // [Furture<dynamic>] the value for the key specified if it exists
+  static Future<dynamic> getFromDataLayer(String key) async {
+    return await _channel.invokeMethod('getFromDataLayer', {'key': key});
+  }
+
+  // Adds a [RemoteCommand] to the [RemoteCommands] Dispatcher
+  static addRemoteCommand(String id, Function callback) async {
+    _remoteCommands[id] = callback;
+    return await _channel.invokeMethod('addRemoteCommand', {'id': id});
+  }
+
+  // Removes a [RemoteCommand] from the [RemoteCommands] Dispatcher
+  static removeRemoteCommand(String id) {
+    _remoteCommands.remove(id);
+    _channel.invokeMethod('removeRemoteCommand', {'id': id});
+  }
+
+  static setConsentStatus(ConsentStatus status) {
+    _channel.invokeMethod('setConsentStatus', {'status': status.toString()});
+  }
+
+  // Retrieves the current user [ConsentStatus]
+  //
+  // [Future<String>] [ConsentStatus]
+  static Future<String> getConsentStatus() async {
+    return await _channel.invokeMethod('getConsentStatus');
+  }
+
+  // Sets a List of [ConsentCategories] for the user
+  static setConsentCategories(List<ConsentCategories> categories) {
+    _channel.invokeMethod(
+        'setConsentCategories', {'categories': categories.stringify()});
+  }
+
+  // Retrieves the current [ConsentCategories] for which the user is consented
+  //
+  // [Future<List<dynamic>>] A List of [ConsentCategories]
+  static Future<List<dynamic>> getConsentCategories() async {
+    return await _channel.invokeMethod('getConsentCategories');
+  }
+
+  // Joins a trace session for a given id
+  static joinTrace(String id) {
+    _channel.invokeMethod('joinTrace', {'id': id});
+  }
+
+  // Leaves the current trace session
+  static leaveTrace() {
+    _channel.invokeMethod('leaveTrace');
+  }
+
+  // Retrieves the visitor id for the user
+  static Future<String> getVisitorId() async {
+    return await _channel.invokeMethod('getVisitorId');
+  }
+
+  // Sets the callback for the [VisitorService] update
+  static setVisitorServiceListener(Function callback) {
+    _listeners[EventListenerNames.visitor] = callback;
+    _handleListener(EventListenerNames.visitor);
+  }
+
+  // Sets the callback for when the user [ConsentExpiry] has expired
+  static setConsentExpiryListener(Function callback) async {
+    _listeners[EventListenerNames.consentExpired] = callback;
+    _handleListener(EventListenerNames.consentExpired);
+    return await _channel.invokeMethod('setConsentExpiryListener');
   }
 
   static Future<void> _methodCallHandler(MethodCall call) async {
     if (call.method.toString() == 'callListener') {
-        emitter.emit(remoteCommandEvent, null, call.arguments);
+      emitter.emit(
+          call.arguments[EventListenerNames.name], null, call.arguments);
     }
   }
 
-  /// Initialize Tealium instance with minimum necessities
-  ///
-  static initialize(String account,
-      String profile,
-      String environment,
-      String iosDatasource,
-      String androidDatasource,
-      [String instance = "MAIN",
-        bool isLifecycleEnabled = true]) async {
-    _channel.invokeMethod('initialize', {'account' : account,
-      'profile' : profile,
-      'environment' : environment,
-      'iosDatasource' : iosDatasource,
-      'androidDatasouce' : androidDatasource,
-      'instance' :instance,
-      'isLifecycleEnabled' : isLifecycleEnabled });
-      remoteCommandListener(remoteCommandEvent);
+  static _handleListener(String eventName) {
+    _channel.setMethodCallHandler(_methodCallHandler);
+    emitter.on(eventName, {}, (ev, context) {
+      switch (eventName) {
+        case EventListenerNames.remoteCommand:
+          var encodedData = json.encode(ev.eventData);
+          var eventDataMap = json.decode(encodedData);
+          eventDataMap as Map;
+          eventDataMap.remove(EventListenerNames.name);
+          var commandID = eventDataMap['command_id'];
+          if (commandID != null) {
+            Function callback = _remoteCommands[commandID] as Function;
+            callback(eventDataMap);
+          }
+          break;
+        case EventListenerNames.consentExpired:
+          Function callback = _listeners[EventListenerNames.consentExpired] =
+              _listeners[EventListenerNames.consentExpired] as Function;
+          callback();
+          break;
+        case EventListenerNames.visitor:
+          var encodedData = json.encode(ev.eventData);
+          var eventDataMap = json.decode(encodedData);
+          eventDataMap as Map;
+          eventDataMap.remove(EventListenerNames.name);
+          Function callback = _listeners[EventListenerNames.visitor] =
+              _listeners[EventListenerNames.visitor] as Function;
+          callback(eventDataMap);
+          break;
+        default:
+          break;
+      }
+    });
   }
-
-  /// Initialize Tealium instance and enable Consent Manager
-  ///
-  static initializeWithConsentManager(String account,
-      String profile,
-      String environment,
-      String iosDatasource,
-      String androidDatasource,
-      [String instance = "MAIN",
-        bool isLifecycleEnabled = true]) {
-    _channel.invokeMethod('initializeWithConsentManager', {'account': account,
-      'profile' : profile,
-      'environment' : environment,
-      'iosDatasource' : iosDatasource,
-      'androidDatasource' : androidDatasource,
-      'instance' : instance,
-      'isLifecycleEnabled' : isLifecycleEnabled});
-      remoteCommandListener(remoteCommandEvent);
-  }
-
-  /// Initialize a custom Tealium instance
-  static initializeCustom(String account,
-      String profile,
-      String environment,
-      String iosDatasource,
-      String androidDatasource,
-      String instance,
-      bool isLifecycleEnabled,
-      String overridePublishSettingsUrl,
-      String overrideTagManagementUrl,
-      String enableVdataCollectEndpointUrl,
-      bool enableConsentManager) {
-    _channel.invokeMethod('initializeCustom', {'account': account,
-      'profile' : profile,
-      'environment' : environment,
-      'iosDatasource' : iosDatasource,
-      'androidDatasource' : androidDatasource,
-      'instance' : instance,
-      'isLifecycleEnabled' : isLifecycleEnabled,
-      'overridePublishSettingsUrl' : overridePublishSettingsUrl,
-      'overrideTagManagementUrl' : overrideTagManagementUrl,
-      'enableConsentManager' : enableConsentManager});
-      remoteCommandListener(remoteCommandEvent);
-  }
-
-  /// Track event - requires a string event name and optional data map
-  static trackEvent(String eventName, [Map<String, dynamic> data]) {
-    _channel.invokeMethod('trackEvent', {'eventName' : eventName, 'data' : data});
-  }
-
-  ///Track event for specific tealium instance - requires tealium instance name, event name, and optional data map
-  static trackEventForInstance(String instance, String eventName, [Map<String, dynamic> data]) {
-    _channel.invokeMethod('trackEventForInstance', {'instance': instance, 'eventName': eventName, 'data' : data});
-  }
-
-  ///Track view - requires string screen view name and optional data map
-  static trackView(String viewName, [Map<String, dynamic> data]) {
-    _channel.invokeMethod('trackView', {'viewName' : viewName, 'data': data});
-  }
-
-  ///Track View for specific tealium instance - requires string tealium instance name, string screen view name, and optional data map
-  static trackViewForInstance(String instance, String viewName, [Map<String, dynamic> data]) {
-    _channel.invokeMethod('trackViewForInstance', {'instance': instance, 'viewName': viewName, 'data' : data});
-  }
-
-  ///Set volatile data - requires data map
-  static setVolatileData(Map<String, dynamic> data) {
-    _channel.invokeMethod('setVolatileData', {'data' : data});
-  }
-
-  ///Set volatile data for specific tealium instance - requires string tealium instance name and data map
-  static setVolatileDataForInstance(String instance, Map<String, dynamic> data) {
-    _channel.invokeMethod('setVolatileDataForInstance', {'instance': instance, 'data' : data});
-  }
-
-  ///Set persistent data - requires data map
-  static setPersistentData(Map<String, dynamic> data) {
-    _channel.invokeMethod('setPersistentData', {'data' : data});
-  }
-
-  ///Set persistent data for specific tealium instance - requires string tealium instance name and data map
-  static setPersistentDataForInstance(String instance, Map<String, dynamic> data) {
-    _channel.invokeMethod('setPersistentDataForInstance', {'instance': instance, 'data' : data});
-  }
-
-  ///Remove volatile data - requires list with string key names
-  static removeVolatileData(List<String> keys) {
-    _channel.invokeMethod('removeVolatileData', {'keys' : keys});
-  }
-
-  ///Remove volatile data for specific tealium instance - requires string tealium instance name and list with string key names
-  static removeVolatileDataForInstance(String instance, List<String> keys) {
-    _channel.invokeMethod('removeVolatileDataForInstance', {'instance': instance, 'keys' : keys});
-  }
-
-  ///Remove persistent data - requires list with string key names
-  static removePersistentData(List<String> keys) {
-    _channel.invokeMethod('removePersistentData', {'keys' : keys});
-  }
-
-  ///Remove persistent data for specific tealium instance - requires string tealium instance name and list with string key names
-  static removePersistentDataForInstance(String instance, List<String> keys) {
-    _channel.invokeMethod('removePersistentDataForInstance', {'instance': instance, 'keys' : keys});
-  }
-
-  ///Retrieve volatile data - requires string key name
-  static  getVolatileData(String key) async{
-    return await _channel.invokeMethod('getVolatileData', {'key' : key});
-  }
-
-  ///Retrieve volatile data for specific tealium instance - requires string tealium instance name and string key name
-  static getVolatileDataForInstance(String instance, String key) async{
-    return await _channel.invokeMethod('getVolatileDataForInstance', {'instance': instance, 'key' : key});
-  }
-
-  ///Retrieve persistent data - requires string key name
-  static getPersistentData(String key) async{
-    return await _channel.invokeMethod('getPersistentData', {'key' : key});
-  }
-
-  ///Retrieve persistent data for specific tealium instance - requires string tealium instance name and string key name
-  static getPersistentDataForInstance(String instance, String key) async{
-    return await _channel.invokeMethod('getPersistentDataForInstance', {'instance': instance, 'key' : key});
-  }
-
-  ///Retrieve visitor id
-  static getVisitorId() async{
-    final String visitorId = await _channel.invokeMethod('getVisitorId');
-    return visitorId;
-  }
-
-  ///Retrieve visitor id for specific tealium instance - requires string tealium instance name
-  static getVisitorIdForInstance(String instance) async{
-    final String visitorId = await _channel.invokeMethod('getVisitorIdForInstance', {'instance': instance});
-    return visitorId;
-  }
-
-  ///Retrieve consent status for user
-  static getUserConsentStatus() async{
-    final String userConsentStatus = await _channel.invokeMethod('getUserConsentStatus');
-    return userConsentStatus;
-  }
-
-  ///Retrieve consent status for user for a specific tealium instance - requires string tealium instance name
-  static getUserConsentStatusForInstance(String instance) async{
-    final String userConsentStatus = await _channel.invokeMethod('getUserConsentStatusForInstance', {'instance': instance});
-    return userConsentStatus;
-  }
-
-  ///Set constent status for user - requires int consent status
-  static setUserConsentStatus(int userConsentStatus) {
-    _channel.invokeMethod('setUserConsentStatus', {'userConsentStatus' : userConsentStatus});
-  }
-
-  ///Set constent status for user for specific tealium instance - requires string tealium instance name and int consent status
-  static setUserConsentStatusForInstance(String instance, int userConsentStatus) {
-    _channel.invokeMethod('setUserConsentStatusForInstance', {'instance': instance, 'userConsentStatus' : userConsentStatus});
-  }
-
-  ///Retrieve consent categories for user
-  static getUserConsentCategories() async{
-    final List categories = await _channel.invokeMethod('getUserConsentCategories');
-    return categories;
-  }
-
-  ///Retrieve consent categories for user for specific tealium instance - requires tealium instance name
-  static getUserConsentCategoriesForInstance(String instance) async{
-    final List categories = await _channel.invokeMethod('getUserConsentCategories');
-    return categories;
-  }
-
-  ///Set consent categories for user - requires list of string categories
-  static setUserConsentCategories(List<String> categories) {
-    _channel.invokeMethod('setUserConsentCategories', {'categories' : categories});
-  }
-
-  ///Set consent categories for user for specific tealium instance - requires string tealium instance name and list of string categories
-  static setUserConsentCategoriesForInstance(String instance, List<String> categories) {
-    _channel.invokeMethod('setUserConsentCategoriesForInstance', {'instance': instance, 'categories' : categories});
-  }
-
-  ///Reset user's consent preferences
-  static resetUserConsentPreferences() {
-    _channel.invokeMethod('resetUserConsentPreferences');
-  }
-
-  ///Reset user's consent preferences for specific tealium instance - requires string tealium instance name
-  static resetUserConsentPreferencesForInstance(String instance) {
-    _channel.invokeMethod('resetUserConsentPreferences', {'instance' : instance});
-  }
-
-  ///Set consent logging - requires bool
-  static setConsentLoggingEnabled(bool isConsentLoggingEnabled) {
-    _channel.invokeMethod('setConsentLoggingEnabled', {'isConsentLoggingEnabled' : isConsentLoggingEnabled});
-  }
-
-  ///Set consent logging for specific tealium instance - requires string tealium instance name and bool
-  static setConsentLoggingEnabledForInstance(String instance, bool isConsentLoggingEnabled) {
-    _channel.invokeMethod('setConsentLoggingEnabledForInstance', {'instance': instance, 'isConsentLoggingEnabled' : isConsentLoggingEnabled});
-  }
-
-  ///Retrieve consent logging preference
-  static isConsentLoggingEnabled() async{
-    final bool isConsentLoggingEnabled = await _channel.invokeMethod('isConsentLoggingEnabled');
-    return isConsentLoggingEnabled;
-  }
-
-  ///Retrieve consent logging preference for specific tealium instance - requires string tealium instance name
-  static isConsentLoggingEnabledForInstance(String instance) async{
-    final bool isConsentLoggingEnabled = await _channel.invokeMethod('isConsentLoggingEnabledForInstance', {'instance': instance});
-    return isConsentLoggingEnabled;
-  }
-
-  ///Add a remote command
-  static addRemoteCommand(String commandID, String description, Function callback) async {
-    _channel.invokeMethod('addRemoteCommand', {'commandID' : commandID, 'description': description});
-    _callbacksById[commandID] = callback;
-  }
-
-  ///Add a remote command for specific tealium instance - requires string tealium instance name
-  static addRemoteCommandForInstance(String instance, String commandID, String description, Function callback) async {
-    _channel.invokeMethod('addRemoteCommandForInstance', {'instance': instance, 'commandID' : commandID, 'description': description});
-    _callbacksById[commandID] = callback;
-  }
-
-  ///Remove a remote command
-  static removeRemoteCommand(String commandID) {
-    _channel.invokeMethod('removeRemoteCommand', {'commandID': commandID});
-    _callbacksById.remove(commandID);
-  }
-
-  ///Remove a remote command for specific tealium instance - requires string tealium instance name
-  static removeRemoteCommandForInstance(String instance, String commandID) {
-    _channel.invokeMethod('removeRemoteCommandForInstance', {'instance': instance, 'commandID' : commandID });
-    _callbacksById.remove(commandID);
-  }
-
 }

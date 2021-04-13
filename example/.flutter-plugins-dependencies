@@ -1,1 +1,1 @@
-{"_info":"// This is a generated file; do not edit or check into version control.","dependencyGraph":[{"name":"tealium","dependencies":[]}]}
+{"info":"This is a generated file; do not edit or check into version control.","plugins":{"ios":[{"name":"tealium","path":"/Users/christina/Projects/work-repos/github/tealium-flutter/","dependencies":[]}],"android":[],"macos":[],"linux":[],"windows":[],"web":[]},"dependencyGraph":[{"name":"tealium","dependencies":[]}],"date_created":"2021-04-12 18:27:54.766125","version":"2.0.3"}
