@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
       [Collectors.AppData, Collectors.Lifecycle],
       [Dispatchers.RemoteCommands, Dispatchers.TagManagement],
       consentPolicy: ConsentPolicy.GDPR,
-      useRemoteLibrarySettings: false,
+      useRemoteLibrarySettings: true,
       batchingEnabled: false,
       visitorServiceEnabled: true,
       consentExpiry: ConsentExpiry(5, TimeUnit.MINUTES));
@@ -127,9 +127,10 @@ class _MyAppState extends State<MyApp> {
     var converted = json.decode(encodedData);
     developer.log('=========Visitor Service Response=========');
     developer
-        .log('Audiences: ' + JsonEncoder().convert(converted["audiences"]));
-    developer.log('Tallies: ' + JsonEncoder().convert(converted["tallies"]));
-    developer.log('Badges: ' + JsonEncoder().convert(converted["badges"]));
+        .log('Audiences: ' + JsonEncoder().convert(converted['audiences']));
+    developer.log('Visit Tallies: ' +
+        JsonEncoder().convert(converted['currentVisit']['tallies']));
+    developer.log('Badges: ' + JsonEncoder().convert(converted['badges']));
   }
 
   void _logRemoteCommand(String name, dynamic payload) {
@@ -155,7 +156,7 @@ class _MyAppState extends State<MyApp> {
       ConsentCategories.social
     ];
     list = _shuffleCategories(list)!;
-    Tealium.setConsentCategories(list.sublist(1, 5));
+    Tealium.setConsentCategories(list.sublist(0, 3));
   }
 
   List<ConsentCategories>? _shuffleCategories(List<ConsentCategories> items) {
@@ -181,7 +182,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('TealiumPluginExample'),
+            title: const Text('TealiumFlutterPluginExample'),
           ),
           body: _listView()),
     );

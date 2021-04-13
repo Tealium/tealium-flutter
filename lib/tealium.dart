@@ -116,8 +116,8 @@ class Tealium {
   // Sets a List of [ConsentCategories] for the user
   static setConsentCategories(List<ConsentCategories> categories) {
     var categoriesList = categories.map((item) => item.toString()).toList();
-    _channel.invokeMethod(
-        'setConsentCategories', {'categories': categoriesList});
+    _channel
+        .invokeMethod('setConsentCategories', {'categories': categoriesList});
   }
 
   // Retrieves the current [ConsentCategories] for which the user is consented
