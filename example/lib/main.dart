@@ -1,9 +1,7 @@
 import 'dart:math';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:tealium/common.dart';
 import 'package:tealium/tealium.dart';
 import 'package:tealium_example/tealium_button.dart';
@@ -51,7 +49,9 @@ class _MyAppState extends State<MyApp> {
           Tealium.setVisitorServiceListener(
               (profile) => _logVisitorProfile(profile)),
           Tealium.addRemoteCommand(
-              'hello', (payload) => _logRemoteCommand('Hello', payload))
+              'json-test', (payload) => {
+                _logRemoteCommand('JSON Test', payload)
+              })
         });
 
     return new ListView(
