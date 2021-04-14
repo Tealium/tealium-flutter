@@ -258,19 +258,7 @@ fun JSONObject.toFriendlyMap(): MutableMap<String, Any?> {
                 map[key] = value.toFriendlyMap()
             }
             is JSONArray -> {
-                map[key] = value.toFriendlyList()?.toList()
-            }
-            is Boolean -> {
-                map[key] = value
-            }
-            is Int -> {
-                map[key] = value
-            }
-            is Double -> {
-                map[key] = value
-            }
-            is String -> {
-                map[key] = value
+                map[key] = value.toFriendlyList().toList()
             }
             else -> {
                 map[key] = value
@@ -284,21 +272,19 @@ fun JSONObject.toFriendlyMap(): MutableMap<String, Any?> {
 fun JSONArray.toFriendlyList(): MutableList<Any?> {
     val list = mutableListOf<Any?>()
     for (i in 0 until length()) {
-        val value = this[i]
-        if (value is JSONObject) {
-            list.add(value.toFriendlyMap())
-        } else if (value is JSONArray) {
-            list.add(value.toFriendlyList())
-        } else if (value is Boolean) {
-            list.add(value)
-        } else if (value is Int) {
-            list.add(value)
-        } else if (value is Double) {
-            list.add(value)
-        } else if (value is String) {
-            list.add(value)
-        } else {
-            list.add(value.toString())
+        when (val value = this[i]) {
+            is JSONObject -> {
+                list.add(value.toFriendlyMap())
+            }
+            is JSONArray -> {
+                list.add(value.toFriendlyList())
+            }
+            is Boolean, is Int, is Double, is String -> {
+                list.add(value)
+            }
+            else -> {
+                list.add(value.toString())
+            }
         }
     }
     return list
