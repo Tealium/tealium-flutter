@@ -1,0 +1,6 @@
+package com.example.tealium_example
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
