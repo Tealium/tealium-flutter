@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
-import com.tealium.core.JsonUtils
 import com.tealium.core.Tealium
 import com.tealium.core.consent.ConsentCategory
 import com.tealium.core.consent.ConsentStatus
@@ -68,10 +67,11 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun initialize(call: MethodCall, result: Result) {
         toTealiumConfig(context as Application, call.arguments as Map<String, Any>)?.let { config ->
+
             tealium = Tealium.create(INSTANCE_NAME, config) {
-                Log.d(BuildConfig.TAG, "Instance Initialized: ${this.key}")
-                dataLayer.putString("plugin_name", "Tealium-Flutter", Expiry.FOREVER)
-                dataLayer.putString("plugin_version", "2.0.0", Expiry.FOREVER)
+                Log.d(BuildConfig.TAG, "Instance Initialized")
+                dataLayer.putString("plugin_name", PLUGIN_NAME, Expiry.FOREVER)
+                dataLayer.putString("plugin_version", PLUGIN_VERSION, Expiry.FOREVER)
                 events.subscribe(EmitterListeners(channel))
                 result.onMain().success(true)
             }
@@ -88,7 +88,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun track(call: MethodCall) {
-        dispatchFromArguments(call.arguments as Map<String, Any>).let {
+        dispatchFromArguments(call.arguments<Map<*, *>>()).let {
             tealium?.track(it)
         }
     }
@@ -152,7 +152,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
             tealium?.dataLayer?.all()?.get(it)?.let { data ->
                 val payload = when (data) {
                     is Array<*> -> data.toList()
-                    is JSONObject -> JsonUtils.mapFor(data)
+                    is JSONObject -> data.toFriendlyMap()
                     else -> data
                 }
                 result.onMain().success(payload)
