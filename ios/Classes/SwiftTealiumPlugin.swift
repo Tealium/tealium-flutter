@@ -63,7 +63,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
             return result(false)
         }
         self.config = localConfig.copy
-        tealium = Tealium(config: localConfig) { [weak self] _ in
+        tealium = Tealium(config: localConfig) { _ in
             result(true)
         }
   }
