@@ -48,10 +48,8 @@ class _MyAppState extends State<MyApp> {
               () => developer.log('Consent Expired')),
           Tealium.setVisitorServiceListener(
               (profile) => _logVisitorProfile(profile)),
-          Tealium.addRemoteCommand(
-              'json-test', (payload) => {
-                _logRemoteCommand('JSON Test', payload)
-              })
+          Tealium.addRemoteCommand('json-test',
+              (payload) => {_logRemoteCommand('JSON Test', payload)})
         });
 
     return new ListView(
@@ -110,7 +108,7 @@ class _MyAppState extends State<MyApp> {
                 'example', (payload) => _logRemoteCommand('Example', payload))),
         TealiumButton(
             title: 'Remove Remote Command',
-            onPressed: () => Tealium.removeRemoteCommand('hello')),
+            onPressed: () => Tealium.removeRemoteCommand('json-test')),
         TealiumButton(
             title: 'Get Visitor Id',
             onPressed: () => Tealium.getVisitorId()
