@@ -6,6 +6,8 @@ import 'common.dart';
 import 'events/event_emitter.dart';
 
 class Tealium {
+  static const String plugin_name= 'Tealium-Flutter';
+  static const String plugin_version = '2.0.0';
   static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
   static Map<String, Function> _remoteCommands = new Map();
@@ -20,7 +22,7 @@ class Tealium {
         .contains(Dispatchers.RemoteCommands.toString())) {
       _handleListener(EventListenerNames.remoteCommand);
     }
-    return await _channel.invokeMethod('initialize', {
+    var initialized = await _channel.invokeMethod('initialize', {
       'account': config.account,
       'profile': config.profile,
       'environment': config.environment,
@@ -45,6 +47,14 @@ class Tealium {
       'useRemoteLibrarySettings': config.useRemoteLibrarySettings,
       'visitorServiceEnabled': config.visitorServiceEnabled
     });
+
+    if (initialized) {
+      addToDataLayer(
+          {'plugin_name': plugin_name, 'plugin_version': plugin_version},
+          Expiry.forever);
+    }
+
+    return initialized;
   }
 
   // Tracks a [TealiumDispatch]
@@ -179,7 +189,7 @@ class Tealium {
           break;
         case EventListenerNames.consentExpired:
           Function callback = _listeners[EventListenerNames.consentExpired] =
-              _listeners[EventListenerNames.consentExpired] as Function;
+          _listeners[EventListenerNames.consentExpired] as Function;
           callback();
           break;
         case EventListenerNames.visitor:
@@ -188,7 +198,7 @@ class Tealium {
           eventDataMap as Map;
           eventDataMap.remove(EventListenerNames.name);
           Function callback = _listeners[EventListenerNames.visitor] =
-              _listeners[EventListenerNames.visitor] as Function;
+          _listeners[EventListenerNames.visitor] as Function;
           callback(eventDataMap);
           break;
         default:

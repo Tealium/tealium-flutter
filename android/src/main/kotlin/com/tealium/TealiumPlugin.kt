@@ -70,8 +70,6 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
 
             tealium = Tealium.create(INSTANCE_NAME, config) {
                 Log.d(BuildConfig.TAG, "Instance Initialized")
-                dataLayer.putString("plugin_name", PLUGIN_NAME, Expiry.FOREVER)
-                dataLayer.putString("plugin_version", PLUGIN_VERSION, Expiry.FOREVER)
                 events.subscribe(EmitterListeners(channel))
                 result.onMain().success(true)
             }
