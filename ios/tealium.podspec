@@ -1,24 +1,26 @@
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
-#
 Pod::Spec.new do |s|
-  s.name             = 'tealium'
-  s.version          = '0.0.2'
-  s.summary          = 'A Tealium Flutter plugin.'
-  s.description      = <<-DESC
-A new Flutter plugin.
-                       DESC
-  s.homepage         = 'https://tealium.com'
-  s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Tealium Mobile Team' => 'integrations.device@tealium.com' }
-  s.source           = { :path => '.' }
+  s.name = 'tealium'
+  s.version = '2.0.0'
+  s.summary = 'Tealium Flutter Plugin'
+  s.description = <<-DESC
+                  A Flutter plugin for the Tealium Swift and Kotlin SDKs.
+                  DESC
+  s.homepage = 'https://github.com/tealium/tealium-flutter'
+  s.license = { :file => '../LICENSE' }
+  s.authors = { 'Tealium Mobile Team' => 'mobile-team@tealium.com' }
+  s.source = { :path => '.' }
   s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.platform = :ios, '9.0'
+
+  # Flutter.framework does not contain a i386 slice.
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+  s.swift_version = '5.0'
+
   s.dependency 'Flutter'
-  s.dependency 'TealiumIOS', '<= 5.6.6'
-  s.dependency 'TealiumIOSLifecycle', '<= 5.6.6'
-
-  s.ios.deployment_target = '9.0'
-  s.static_framework = true
+  s.dependency 'tealium-swift/Core', '~> 2.3'
+  s.dependency 'tealium-swift/TagManagement', '~> 2.3'
+  s.dependency 'tealium-swift/Collect', '~> 2.3'
+  s.dependency 'tealium-swift/Lifecycle', '~> 2.3'
+  s.dependency 'tealium-swift/RemoteCommands', '~> 2.3'
+  s.dependency 'tealium-swift/VisitorService', '~> 2.3'
 end
-
