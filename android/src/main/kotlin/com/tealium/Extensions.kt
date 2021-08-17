@@ -198,6 +198,7 @@ fun expiryFromString(name: String?) =
         if (!name.isNullOrBlank()) {
             when (name.toLowerCase(Locale.ROOT)) {
                 "forever" -> Expiry.FOREVER
+                "untilrestart" -> Expiry.UNTIL_RESTART
                 else -> Expiry.SESSION
             }
         } else Expiry.SESSION
