@@ -53,3 +53,4 @@ const val KEY_CONSENT_EXPIRY_UNIT = "unit"
 const val KEY_LIFECYCLE_AUTO_TRACKING_ENABLED = "lifecycleAutotrackingEnabled"
 
 const val KEY_VISITOR_SERVICE_ENABLED = "visitorServiceEnabled"
+const val KEY_CUSTOM_VISITOR_ID = "customVisitorId"

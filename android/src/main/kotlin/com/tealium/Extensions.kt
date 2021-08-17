@@ -56,6 +56,9 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
     }
 
     val collectors = (configMap[KEY_CONFIG_COLLECTORS] as? List<*>)?.toCollectorFactories()
+    // Swift has this enabled by default
+    collectors?.add(TimeCollector)
+
     val modules = mutableListOf<Any>().apply {
         (configMap[KEY_VISITOR_SERVICE_ENABLED] as? Boolean)?.let {
             if (it)  add(MODULES_VISITOR_SERVICE)
@@ -94,6 +97,10 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
             overrideCollectDomain = it.toString()
         }
 
+        configMap[KEY_CUSTOM_VISITOR_ID]?.let {
+            existingVisitorId = it.toString()
+        }
+
         // Library Settings
         if (configMap.containsKey(KEY_SETTINGS_USE_REMOTE)) {
             useRemoteLibrarySettings = configMap[KEY_SETTINGS_USE_REMOTE].toString().toBoolean()
@@ -116,8 +123,10 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         }
 
         // Log Level
-        configMap[KEY_LOG_LEVEL]?.let {
-            Logger.logLevel = LogLevel.fromString(it as String)
+        configMap[KEY_LOG_LEVEL]?.let { logLevel ->
+            (logLevel as? String)?.let {
+                Logger.logLevel = LogLevel.fromString(it)
+            }
         }
 
         // Consent
