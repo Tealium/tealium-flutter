@@ -2,6 +2,14 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.0.0 (August 2021)
+
+- 2.0.1
+	- Kotlin 
+        - Changed collectors to include TimeCollector by default in keeping with Swift.
+        - Updated Kotlin SDK dependencies
+        - Fix - LogLevel configuration was being ignored
+
 ### 2.0.0 (April 2021)
 
 - 2.0.0
