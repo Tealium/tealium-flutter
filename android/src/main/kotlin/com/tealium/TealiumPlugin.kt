@@ -6,6 +6,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
+import com.tealium.core.LogLevel
+import com.tealium.core.Logger
 import com.tealium.core.Tealium
 import com.tealium.core.consent.ConsentCategory
 import com.tealium.core.consent.ConsentStatus
@@ -66,9 +68,17 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun initialize(call: MethodCall, result: Result) {
-        toTealiumConfig(context as Application, call.arguments as Map<String, Any>)?.let { config ->
+        val args = call.arguments as Map<*, *>
+        toTealiumConfig(context as Application, args)?.let { config ->
 
             tealium = Tealium.create(INSTANCE_NAME, config) {
+                // Log Level
+                args[KEY_LOG_LEVEL]?.let { logLevel ->
+                    (logLevel as? String)?.let {
+                        Logger.logLevel = LogLevel.fromString(it)
+                    }
+                }
+
                 Log.d(BuildConfig.TAG, "Instance Initialized")
                 events.subscribe(EmitterListeners(channel))
                 result.onMain().success(true)

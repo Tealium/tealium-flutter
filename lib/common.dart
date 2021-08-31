@@ -265,7 +265,7 @@ class TealiumConfig {
     this.overrideTagManagementURL = overrideTagManagementURL;
     this.deepLinkTrackingEnabled = deepLinkTrackingEnabled;
     this.qrTraceEnabled = qrTraceEnabled;
-    this.logLevel = logLevel?.toString();
+    this.logLevel = loglevel?.toString();
     this.consentLoggingEnabled = consentLoggingEnabled;
     this.consentPolicy = consentPolicy?.toString();
     this.consentExpiry = consentExpiry?.toJson();
