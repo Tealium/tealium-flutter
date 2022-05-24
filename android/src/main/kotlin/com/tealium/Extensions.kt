@@ -2,10 +2,7 @@ package com.tealium
 
 import android.app.Application
 import android.util.Log
-import com.tealium.collectdispatcher.CollectDispatcher
-import com.tealium.collectdispatcher.overrideCollectBatchUrl
-import com.tealium.collectdispatcher.overrideCollectDomain
-import com.tealium.collectdispatcher.overrideCollectUrl
+import com.tealium.collectdispatcher.*
 import com.tealium.core.*
 import com.tealium.core.collection.AppCollector
 import com.tealium.core.collection.ConnectivityCollector
@@ -95,6 +92,9 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         }
         configMap[KEY_COLLECT_OVERRIDE_DOMAIN]?.let {
             overrideCollectDomain = it.toString()
+        }
+        configMap[KEY_COLLECT_OVERRIDE_PROFILE]?.let {
+            overrideCollectProfile = it.toString()
         }
 
         configMap[KEY_CUSTOM_VISITOR_ID]?.let {

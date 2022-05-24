@@ -96,8 +96,10 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun track(call: MethodCall) {
-        dispatchFromArguments(call.arguments<Map<*, *>>()).let {
-            tealium?.track(it)
+        call.arguments<Map<*, *>>()?.let { map ->
+            dispatchFromArguments(map).let {
+                tealium?.track(it)
+            }
         }
     }
 
