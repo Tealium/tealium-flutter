@@ -210,6 +210,7 @@ class TealiumConfig {
   String? overrideCollectURL;
   String? overrideCollectBatchURL;
   String? overrideCollectDomain;
+  String? overrideCollectProfile;
   String? overrideLibrarySettingsURL;
   String? overrideTagManagementURL;
   bool? deepLinkTrackingEnabled;
@@ -235,6 +236,7 @@ class TealiumConfig {
     String? customVisitorId,
     bool? memoryReportingEnabled,
     String? overrideCollectURL,
+    String? overrideCollectProfile,
     String? overrideCollectBatchURL,
     String? overrideCollectDomain,
     String? overrideLibrarySettingsURL,
@@ -259,6 +261,7 @@ class TealiumConfig {
     this.customVisitorId = customVisitorId;
     this.memoryReportingEnabled = memoryReportingEnabled;
     this.overrideCollectURL = overrideCollectURL;
+    this.overrideCollectProfile = overrideCollectProfile;
     this.overrideCollectBatchURL = overrideCollectBatchURL;
     this.overrideCollectDomain = overrideCollectDomain;
     this.overrideLibrarySettingsURL = overrideLibrarySettingsURL;

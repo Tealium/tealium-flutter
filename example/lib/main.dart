@@ -26,10 +26,11 @@ class _MyAppState extends State<MyApp> {
       'demo',
       TealiumEnvironment.dev,
       [Collectors.AppData, Collectors.Lifecycle],
-      [Dispatchers.RemoteCommands, Dispatchers.TagManagement],
+      [Dispatchers.RemoteCommands, Dispatchers.Collect],
       consentPolicy: ConsentPolicy.GDPR,
       useRemoteLibrarySettings: true,
       batchingEnabled: false,
+      overrideCollectProfile: 'asd',
       visitorServiceEnabled: true,
       consentExpiry: ConsentExpiry(5, TimeUnit.MINUTES));
 

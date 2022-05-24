@@ -95,6 +95,10 @@ public extension SwiftTealiumPlugin {
             localConfig.overrideCollectURL = overrideCollectURL
         }
         
+        if let overrideCollectProfile = dictionary[.overrideCollectProfile] as? String {
+            localConfig.overrideCollectProfile = overrideCollectProfile
+        }
+        
         if let overrideTagManagementURL = dictionary[.overrideTagManagementURL] as? String {
             localConfig.tagManagementOverrideURL = overrideTagManagementURL
         }

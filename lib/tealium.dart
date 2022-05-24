@@ -6,7 +6,7 @@ import 'common.dart';
 import 'events/event_emitter.dart';
 
 class Tealium {
-  static const String plugin_name= 'Tealium-Flutter';
+  static const String plugin_name = 'Tealium-Flutter';
   static const String plugin_version = '2.0.2';
   static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
@@ -32,6 +32,7 @@ class Tealium {
       'customVisitorId': config.customVisitorId,
       'memoryReportingEnabled': config.memoryReportingEnabled,
       'overrideCollectURL': config.overrideCollectURL,
+      'overrideCollectProfile': config.overrideCollectProfile,
       'overrideCollectBatchURL': config.overrideCollectBatchURL,
       'overrideCollectDomain': config.overrideCollectDomain,
       'overrideLibrarySettingsURL': config.overrideLibrarySettingsURL,
@@ -189,7 +190,7 @@ class Tealium {
           break;
         case EventListenerNames.consentExpired:
           Function callback = _listeners[EventListenerNames.consentExpired] =
-          _listeners[EventListenerNames.consentExpired] as Function;
+              _listeners[EventListenerNames.consentExpired] as Function;
           callback();
           break;
         case EventListenerNames.visitor:
@@ -198,7 +199,7 @@ class Tealium {
           eventDataMap as Map;
           eventDataMap.remove(EventListenerNames.name);
           Function callback = _listeners[EventListenerNames.visitor] =
-          _listeners[EventListenerNames.visitor] as Function;
+              _listeners[EventListenerNames.visitor] as Function;
           callback(eventDataMap);
           break;
         default:

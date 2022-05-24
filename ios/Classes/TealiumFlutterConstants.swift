@@ -39,6 +39,7 @@ public enum TealiumFlutterConstants {
         case useRemoteLibrarySettings
         case logLevel
         case overrideCollectURL
+        case overrideCollectProfile
         case overrideCollectBatchURL
         case overrideTagManagementURL
         case overrideLibrarySettingsURL
