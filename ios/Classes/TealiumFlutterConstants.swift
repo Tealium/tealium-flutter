@@ -47,6 +47,7 @@ public enum TealiumFlutterConstants {
         case deepLinkTrackingEnabled
         case visitorServiceEnabled
         case memoryReportingEnabled
+        case sessionCountingEnabled
     }
     
     enum Dispatch: String {

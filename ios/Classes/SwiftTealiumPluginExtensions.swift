@@ -123,6 +123,9 @@ public extension SwiftTealiumPlugin {
         localConfig.memoryReportingEnabled = dictionary[.memoryReportingEnabled] as? Bool ?? true
         localConfig.collectors = configCollectors
         localConfig.dispatchers = configDispatchers
+        if let sessionCountingEnabled = dictionary[.sessionCountingEnabled] as? Bool {
+            localConfig.sessionCountingEnabled = sessionCountingEnabled
+        }
         
         return localConfig
     }

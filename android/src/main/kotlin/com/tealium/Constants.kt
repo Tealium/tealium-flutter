@@ -41,6 +41,7 @@ const val KEY_TAG_MANAGEMENT_OVERRIDE_URL = "overrideTagManagementURL"
 const val KEY_QR_TRACE_ENABLED = "qrTraceEnabled"
 
 const val KEY_DEEPLINK_TRACKING_ENABLED = "deepLinkTrackingEnabled"
+const val KEY_SESSION_COUNTING_ENABLED = "sessionCountingEnabled"
 
 const val KEY_LOG_LEVEL = "logLevel"
 

@@ -46,7 +46,8 @@ class Tealium {
       'batchingEnabled': config.batchingEnabled,
       'lifecycleAutotrackingEnabled': config.lifecycleAutotrackingEnabled,
       'useRemoteLibrarySettings': config.useRemoteLibrarySettings,
-      'visitorServiceEnabled': config.visitorServiceEnabled
+      'visitorServiceEnabled': config.visitorServiceEnabled,
+      'sessionCountingEnabled': config.sessionCountingEnabled
     });
 
     if (initialized) {

@@ -223,6 +223,7 @@ class TealiumConfig {
   bool? lifecycleAutotrackingEnabled;
   bool? useRemoteLibrarySettings;
   bool? visitorServiceEnabled;
+  bool? sessionCountingEnabled;
 
   TealiumConfig(
     String account,
@@ -251,6 +252,7 @@ class TealiumConfig {
     bool? lifecycleAutotrackingEnabled,
     bool? useRemoteLibrarySettings,
     bool? visitorServiceEnabled,
+    bool? sessionCountingEnabled,
   }) {
     this.account = account;
     this.profile = profile;
@@ -276,5 +278,6 @@ class TealiumConfig {
     this.lifecycleAutotrackingEnabled = lifecycleAutotrackingEnabled;
     this.useRemoteLibrarySettings = useRemoteLibrarySettings;
     this.visitorServiceEnabled = visitorServiceEnabled;
+    this.sessionCountingEnabled = sessionCountingEnabled;
   }
 }

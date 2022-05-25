@@ -17,6 +17,7 @@ import com.tealium.lifecycle.Lifecycle
 import com.tealium.lifecycle.isAutoTrackingEnabled
 import com.tealium.remotecommanddispatcher.RemoteCommandDispatcher
 import com.tealium.tagmanagementdispatcher.TagManagementDispatcher
+import com.tealium.tagmanagementdispatcher.sessionCountingEnabled
 import com.tealium.tagmanagementdispatcher.overrideTagManagementUrl
 import com.tealium.visitorservice.VisitorProfile
 import com.tealium.visitorservice.VisitorService
@@ -107,6 +108,10 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         }
         configMap[KEY_SETTINGS_OVERRIDE_URL]?.let {
             overrideLibrarySettingsUrl = it as String
+        }
+
+        configMap[KEY_SESSION_COUNTING_ENABLED]?.let {
+            sessionCountingEnabled = it.toString().toBoolean()
         }
 
         // Tag Management
