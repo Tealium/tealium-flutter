@@ -114,6 +114,10 @@ class _MyAppState extends State<MyApp> {
             onPressed: () => Tealium.getVisitorId()
                 .then((visitorId) => developer.log('Visitor Id: $visitorId'))),
         TealiumButton(
+            title: 'Gather Track Data',
+            onPressed: () => Tealium.gatherTrackData()
+                .then((data) => developer.log('Gather track Data: $data'))),
+        TealiumButton(
             title: 'Terminate Tealium',
             onPressed: () => Tealium.terminateInstance()),
       ],

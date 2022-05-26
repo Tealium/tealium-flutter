@@ -54,6 +54,8 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         getVisitorId(result: result)
     } else if call.method == "setConsentExpiryListener" {
         setConsentExpiryListener()
+    } else if call.method == "gatherTrackData" {
+        gatherTrackData(call: call, result: result)
     }
   }
 
@@ -196,4 +198,16 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
       }
   }
 
+    func gatherTrackData(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let arguments = call.arguments as? [String: Any],
+              let retrieveCachedData = arguments["retrieveCachedData"] as? Bool else {
+            tealium?.gatherTrackData(completion: { data in
+                result(data)
+            })
+            return
+        }
+        tealium?.gatherTrackData(retrieveCachedData: retrieveCachedData, completion: { data in
+            result(data)
+        })
+    }
 }

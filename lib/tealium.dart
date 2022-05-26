@@ -174,6 +174,13 @@ class Tealium {
     }
   }
 
+  /// Retrieves the tracking data from collectors and DataLayer
+  ///
+  /// [Future<Map<dynamic, dynamic>>] The gathered data
+  static Future<Map<dynamic, dynamic>> gatherTrackData() async {
+    return await _channel.invokeMethod('gatherTrackData');
+  }
+
   static _handleListener(String eventName) {
     _channel.setMethodCallHandler(_methodCallHandler);
     emitter.on(eventName, {}, (ev, context) {
