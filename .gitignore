@@ -52,7 +52,6 @@ build/
 **/ios/**/DerivedData/
 **/ios/**/Icon?
 **/ios/**/Pods/
-**/ios/**/Podfile.lock
 **/ios/**/.symlinks/
 **/ios/**/profile
 **/ios/**/xcuserdata
@@ -75,4 +74,3 @@ build/
 !**/ios/**/default.perspectivev3
 
 /example/ios/Pods
-/example/ios/Podfile.lock

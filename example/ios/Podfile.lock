@@ -1,0 +1,44 @@
+PODS:
+  - Flutter (1.0.0)
+  - tealium (2.0.3):
+    - Flutter
+    - tealium-swift/Collect (~> 2.6.4)
+    - tealium-swift/Core (~> 2.6.4)
+    - tealium-swift/Lifecycle (~> 2.6.4)
+    - tealium-swift/RemoteCommands (~> 2.6.4)
+    - tealium-swift/TagManagement (~> 2.6.4)
+    - tealium-swift/VisitorService (~> 2.6.4)
+  - tealium-swift/Collect (2.6.4):
+    - tealium-swift/Core
+  - tealium-swift/Core (2.6.4)
+  - tealium-swift/Lifecycle (2.6.4):
+    - tealium-swift/Core
+  - tealium-swift/RemoteCommands (2.6.4):
+    - tealium-swift/Core
+  - tealium-swift/TagManagement (2.6.4):
+    - tealium-swift/Core
+  - tealium-swift/VisitorService (2.6.4):
+    - tealium-swift/Core
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - tealium (from `.symlinks/plugins/tealium/ios`)
+
+SPEC REPOS:
+  trunk:
+    - tealium-swift
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  tealium:
+    :path: ".symlinks/plugins/tealium/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  tealium: 32e65fabf83207fc8b54a9d200e43825988a8764
+  tealium-swift: c5e2c806149e1203648ae22c44572e6321732c2d
+
+PODFILE CHECKSUM: 17813cc9fc9dee2c0182772d7e55a87d51bb53e5
+
+COCOAPODS: 1.11.2
