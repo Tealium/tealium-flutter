@@ -62,7 +62,7 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
             if (it)  add(MODULES_VISITOR_SERVICE)
         }
         (configMap[KEY_CONFIG_COLLECTORS] as? List<*>)?.contains(MODULES_LIFECYCLE)?.let {
-            add(MODULES_LIFECYCLE)
+            if (it) add(MODULES_LIFECYCLE)
         }
         (configMap[KEY_CONFIG_MODULES] as? List<*>)?.let { modules ->
             val mods = modules.map { it.toString() }.toList()
