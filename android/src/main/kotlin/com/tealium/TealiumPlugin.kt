@@ -252,28 +252,15 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun gatherTrackData(result: Result) {
         tealium?.apply {
-            result.success(sanitizeMap(gatherTrackData()))
-        }
-    }
-
-    /// Converts enums to strings
-    private fun sanitizeMap(map: Map<String, Any>): Map<String, *> {
-        val str = JsonUtils.jsonFor(map).toString()
-        val obj = JSONObject(str)
-        return obj.toMap()
-    }
-
-    private fun JSONObject.toMap(): Map<String, *> = keys().asSequence().associateWith {
-        when (val value = this[it])
-        {
-            is JSONArray ->
-            {
-                val map = (0 until value.length()).associate { Pair(it.toString(), value[it]) }
-                JSONObject(map).toMap().values.toList()
-            }
-            is JSONObject -> value.toMap()
-            JSONObject.NULL -> null
-            else            -> value
+            val data = gatherTrackData()
+            result.success(data.mapValues{
+                val value = it.value
+                when(value) {
+                    is JSONObject -> value.toFriendlyMap()
+                    is JSONArray -> value.toFriendlyList().toList()
+                    else -> value
+                }
+            })
         }
     }
 
