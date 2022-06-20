@@ -13,6 +13,7 @@ import com.tealium.core.consent.ConsentCategory
 import com.tealium.core.consent.ConsentStatus
 import com.tealium.core.persistence.Expiry
 import com.tealium.remotecommanddispatcher.remoteCommands
+import com.tealium.core.JsonUtils
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -20,6 +21,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
+import org.json.JSONArray
 import kotlin.collections.ArrayList
 
 /** TealiumPlugin */
@@ -59,6 +61,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
             "setConsentExpiryListener" -> {
                 /** do nothing **/
             }
+            "gatherTrackData" -> gatherTrackData(result)
             else -> result.onMain().notImplemented()
         }
     }
@@ -96,8 +99,10 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     private fun track(call: MethodCall) {
-        dispatchFromArguments(call.arguments<Map<*, *>>()).let {
-            tealium?.track(it)
+        call.arguments<Map<*, *>>()?.let { map ->
+            dispatchFromArguments(map).let {
+                tealium?.track(it)
+            }
         }
     }
 
@@ -243,6 +248,20 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun getVisitorId(result: Result) {
         result.onMain().success(tealium?.visitorId ?: "")
+    }
+
+    private fun gatherTrackData(result: Result) {
+        tealium?.apply {
+            val data = gatherTrackData()
+            result.success(data.mapValues{
+                val value = it.value
+                when(value) {
+                    is JSONObject -> value.toFriendlyMap()
+                    is JSONArray -> value.toFriendlyList().toList()
+                    else -> value
+                }
+            })
+        }
     }
 
     companion object {

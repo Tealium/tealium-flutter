@@ -210,6 +210,7 @@ class TealiumConfig {
   String? overrideCollectURL;
   String? overrideCollectBatchURL;
   String? overrideCollectDomain;
+  String? overrideCollectProfile;
   String? overrideLibrarySettingsURL;
   String? overrideTagManagementURL;
   bool? deepLinkTrackingEnabled;
@@ -222,6 +223,7 @@ class TealiumConfig {
   bool? lifecycleAutotrackingEnabled;
   bool? useRemoteLibrarySettings;
   bool? visitorServiceEnabled;
+  bool? sessionCountingEnabled;
 
   TealiumConfig(
     String account,
@@ -235,6 +237,7 @@ class TealiumConfig {
     String? customVisitorId,
     bool? memoryReportingEnabled,
     String? overrideCollectURL,
+    String? overrideCollectProfile,
     String? overrideCollectBatchURL,
     String? overrideCollectDomain,
     String? overrideLibrarySettingsURL,
@@ -249,6 +252,7 @@ class TealiumConfig {
     bool? lifecycleAutotrackingEnabled,
     bool? useRemoteLibrarySettings,
     bool? visitorServiceEnabled,
+    bool? sessionCountingEnabled,
   }) {
     this.account = account;
     this.profile = profile;
@@ -259,6 +263,7 @@ class TealiumConfig {
     this.customVisitorId = customVisitorId;
     this.memoryReportingEnabled = memoryReportingEnabled;
     this.overrideCollectURL = overrideCollectURL;
+    this.overrideCollectProfile = overrideCollectProfile;
     this.overrideCollectBatchURL = overrideCollectBatchURL;
     this.overrideCollectDomain = overrideCollectDomain;
     this.overrideLibrarySettingsURL = overrideLibrarySettingsURL;
@@ -273,5 +278,6 @@ class TealiumConfig {
     this.lifecycleAutotrackingEnabled = lifecycleAutotrackingEnabled;
     this.useRemoteLibrarySettings = useRemoteLibrarySettings;
     this.visitorServiceEnabled = visitorServiceEnabled;
+    this.sessionCountingEnabled = sessionCountingEnabled;
   }
 }

@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
       'demo',
       TealiumEnvironment.dev,
       [Collectors.AppData, Collectors.Lifecycle],
-      [Dispatchers.RemoteCommands, Dispatchers.TagManagement],
+      [Dispatchers.RemoteCommands, Dispatchers.Collect],
       consentPolicy: ConsentPolicy.GDPR,
       useRemoteLibrarySettings: true,
       batchingEnabled: false,
@@ -113,6 +113,10 @@ class _MyAppState extends State<MyApp> {
             title: 'Get Visitor Id',
             onPressed: () => Tealium.getVisitorId()
                 .then((visitorId) => developer.log('Visitor Id: $visitorId'))),
+        TealiumButton(
+            title: 'Gather Track Data',
+            onPressed: () => Tealium.gatherTrackData()
+                .then((data) => developer.log('Gather track Data: $data'))),
         TealiumButton(
             title: 'Terminate Tealium',
             onPressed: () => Tealium.terminateInstance()),

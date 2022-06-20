@@ -2,10 +2,7 @@ package com.tealium
 
 import android.app.Application
 import android.util.Log
-import com.tealium.collectdispatcher.CollectDispatcher
-import com.tealium.collectdispatcher.overrideCollectBatchUrl
-import com.tealium.collectdispatcher.overrideCollectDomain
-import com.tealium.collectdispatcher.overrideCollectUrl
+import com.tealium.collectdispatcher.*
 import com.tealium.core.*
 import com.tealium.core.collection.AppCollector
 import com.tealium.core.collection.ConnectivityCollector
@@ -20,6 +17,7 @@ import com.tealium.lifecycle.Lifecycle
 import com.tealium.lifecycle.isAutoTrackingEnabled
 import com.tealium.remotecommanddispatcher.RemoteCommandDispatcher
 import com.tealium.tagmanagementdispatcher.TagManagementDispatcher
+import com.tealium.tagmanagementdispatcher.sessionCountingEnabled
 import com.tealium.tagmanagementdispatcher.overrideTagManagementUrl
 import com.tealium.visitorservice.VisitorProfile
 import com.tealium.visitorservice.VisitorService
@@ -64,7 +62,7 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
             if (it)  add(MODULES_VISITOR_SERVICE)
         }
         (configMap[KEY_CONFIG_COLLECTORS] as? List<*>)?.contains(MODULES_LIFECYCLE)?.let {
-            add(MODULES_LIFECYCLE)
+            if (it) add(MODULES_LIFECYCLE)
         }
         (configMap[KEY_CONFIG_MODULES] as? List<*>)?.let { modules ->
             val mods = modules.map { it.toString() }.toList()
@@ -96,6 +94,9 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         configMap[KEY_COLLECT_OVERRIDE_DOMAIN]?.let {
             overrideCollectDomain = it.toString()
         }
+        configMap[KEY_COLLECT_OVERRIDE_PROFILE]?.let {
+            overrideCollectProfile = it.toString()
+        }
 
         configMap[KEY_CUSTOM_VISITOR_ID]?.let {
             existingVisitorId = it.toString()
@@ -107,6 +108,10 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         }
         configMap[KEY_SETTINGS_OVERRIDE_URL]?.let {
             overrideLibrarySettingsUrl = it as String
+        }
+
+        configMap[KEY_SESSION_COUNTING_ENABLED]?.let {
+            sessionCountingEnabled = it.toString().toBoolean()
         }
 
         // Tag Management

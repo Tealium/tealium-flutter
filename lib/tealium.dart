@@ -6,8 +6,8 @@ import 'common.dart';
 import 'events/event_emitter.dart';
 
 class Tealium {
-  static const String plugin_name= 'Tealium-Flutter';
-  static const String plugin_version = '2.0.2';
+  static const String plugin_name = 'Tealium-Flutter';
+  static const String plugin_version = '2.0.3';
   static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
   static Map<String, Function> _remoteCommands = new Map();
@@ -32,6 +32,7 @@ class Tealium {
       'customVisitorId': config.customVisitorId,
       'memoryReportingEnabled': config.memoryReportingEnabled,
       'overrideCollectURL': config.overrideCollectURL,
+      'overrideCollectProfile': config.overrideCollectProfile,
       'overrideCollectBatchURL': config.overrideCollectBatchURL,
       'overrideCollectDomain': config.overrideCollectDomain,
       'overrideLibrarySettingsURL': config.overrideLibrarySettingsURL,
@@ -45,7 +46,8 @@ class Tealium {
       'batchingEnabled': config.batchingEnabled,
       'lifecycleAutotrackingEnabled': config.lifecycleAutotrackingEnabled,
       'useRemoteLibrarySettings': config.useRemoteLibrarySettings,
-      'visitorServiceEnabled': config.visitorServiceEnabled
+      'visitorServiceEnabled': config.visitorServiceEnabled,
+      'sessionCountingEnabled': config.sessionCountingEnabled
     });
 
     if (initialized) {
@@ -172,6 +174,13 @@ class Tealium {
     }
   }
 
+  /// Retrieves the tracking data from collectors and DataLayer
+  ///
+  /// [Future<Map<dynamic, dynamic>>] The gathered data
+  static Future<Map<dynamic, dynamic>> gatherTrackData() async {
+    return await _channel.invokeMethod('gatherTrackData');
+  }
+
   static _handleListener(String eventName) {
     _channel.setMethodCallHandler(_methodCallHandler);
     emitter.on(eventName, {}, (ev, context) {
@@ -189,7 +198,7 @@ class Tealium {
           break;
         case EventListenerNames.consentExpired:
           Function callback = _listeners[EventListenerNames.consentExpired] =
-          _listeners[EventListenerNames.consentExpired] as Function;
+              _listeners[EventListenerNames.consentExpired] as Function;
           callback();
           break;
         case EventListenerNames.visitor:
@@ -198,7 +207,7 @@ class Tealium {
           eventDataMap as Map;
           eventDataMap.remove(EventListenerNames.name);
           Function callback = _listeners[EventListenerNames.visitor] =
-          _listeners[EventListenerNames.visitor] as Function;
+              _listeners[EventListenerNames.visitor] as Function;
           callback(eventDataMap);
           break;
         default:

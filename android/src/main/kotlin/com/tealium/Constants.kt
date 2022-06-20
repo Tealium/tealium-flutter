@@ -32,6 +32,7 @@ const val DISPATCHERS_REMOTE_COMMANDS = "RemoteCommands"
 const val KEY_COLLECT_OVERRIDE_URL = "overrideCollectURL"
 const val KEY_COLLECT_OVERRIDE_BATCH_URL = "overrideCollectBatchURL"
 const val KEY_COLLECT_OVERRIDE_DOMAIN = "overrideCollectDomain"
+const val KEY_COLLECT_OVERRIDE_PROFILE = "overrideCollectProfile"
 
 const val KEY_SETTINGS_OVERRIDE_URL = "overrideLibrarySettingsURL"
 const val KEY_SETTINGS_USE_REMOTE = "useRemoteLibrarySettings"
@@ -40,6 +41,7 @@ const val KEY_TAG_MANAGEMENT_OVERRIDE_URL = "overrideTagManagementURL"
 const val KEY_QR_TRACE_ENABLED = "qrTraceEnabled"
 
 const val KEY_DEEPLINK_TRACKING_ENABLED = "deepLinkTrackingEnabled"
+const val KEY_SESSION_COUNTING_ENABLED = "sessionCountingEnabled"
 
 const val KEY_LOG_LEVEL = "logLevel"
 
