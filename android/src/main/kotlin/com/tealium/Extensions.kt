@@ -16,6 +16,7 @@ import com.tealium.dispatcher.TealiumView
 import com.tealium.lifecycle.Lifecycle
 import com.tealium.lifecycle.isAutoTrackingEnabled
 import com.tealium.remotecommanddispatcher.RemoteCommandDispatcher
+import com.tealium.remotecommands.RemoteCommand
 import com.tealium.tagmanagementdispatcher.TagManagementDispatcher
 import com.tealium.tagmanagementdispatcher.sessionCountingEnabled
 import com.tealium.tagmanagementdispatcher.overrideTagManagementUrl
@@ -72,7 +73,7 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
     val dispatchers = (configMap[KEY_CONFIG_DISPATCHERS] as? List<*>)?.toDispatcherFactories()
 
     val config = TealiumConfig(app, account, profile, environment,
-            collectors = collectors ?: Collectors.core,
+            collectors = collectors ?: Collectors.core.toMutableSet(),
             modules = modules ?: mutableSetOf(),
             dispatchers = dispatchers ?: mutableSetOf()
     )

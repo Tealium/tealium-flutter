@@ -11,9 +11,7 @@ import com.tealium.core.Logger
 import com.tealium.core.Tealium
 import com.tealium.core.consent.ConsentCategory
 import com.tealium.core.consent.ConsentStatus
-import com.tealium.core.persistence.Expiry
 import com.tealium.remotecommanddispatcher.remoteCommands
-import com.tealium.core.JsonUtils
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -22,6 +20,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 import org.json.JSONArray
+import java.util.*
 import kotlin.collections.ArrayList
 
 /** TealiumPlugin */
@@ -82,6 +81,17 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
                     }
                 }
 
+                args[KEY_REMOTE_COMMANDS]?.let { remoteCommands ->
+                    (remoteCommands as? List<Map<*, *>>)?.forEach {
+                        (it["id"] as? String)?.let { id ->
+                            val path = it["path"] as? String?
+                            val url = it["url"] as? String?
+
+                            addRemoteCommand(id, path, url)
+                        }
+                    }
+                }
+
                 Log.d(BuildConfig.TAG, "Instance Initialized")
                 events.subscribe(EmitterListeners(channel))
                 result.onMain().success(true)
@@ -124,32 +134,32 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
                         when (value.toList().first()) {
                             is Int -> {
                                 val formatted = value.toList()
-                                        .map { i -> i.toString().toInt() }
-                                        .toTypedArray()
+                                    .map { i -> i.toString().toInt() }
+                                    .toTypedArray()
                                 tealium?.dataLayer?.putIntArray(key, formatted, exp)
                             }
                             is Boolean -> {
                                 val formatted = value.toList()
-                                        .map { i -> i.toString().toBoolean() }
-                                        .toTypedArray()
+                                    .map { i -> i.toString().toBoolean() }
+                                    .toTypedArray()
                                 tealium?.dataLayer?.putBooleanArray(key, formatted, exp)
                             }
                             is Long -> {
                                 val formatted = value.toList()
-                                        .map { i -> i.toString().toLong() }
-                                        .toTypedArray()
+                                    .map { i -> i.toString().toLong() }
+                                    .toTypedArray()
                                 tealium?.dataLayer?.putLongArray(key, formatted, exp)
                             }
                             is Double -> {
                                 val formatted = value.toList()
-                                        .map { i -> i.toString().toDouble() }
-                                        .toTypedArray()
+                                    .map { i -> i.toString().toDouble() }
+                                    .toTypedArray()
                                 tealium?.dataLayer?.putDoubleArray(key, formatted, exp)
                             }
                             else -> {
                                 val formatted = value.toList()
-                                        .map { i -> i.toString() }
-                                        .toTypedArray()
+                                    .map { i -> i.toString() }
+                                    .toTypedArray()
                                 tealium?.dataLayer?.putStringArray(key, formatted, exp)
                             }
                         }
@@ -202,23 +212,31 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
         categories?.let {
             tealium?.apply {
                 val categoryStrings = it.toTypedArray()
-                consentManager.userConsentCategories = ConsentCategory.consentCategories(categoryStrings.toSet())
+                consentManager.userConsentCategories =
+                    ConsentCategory.consentCategories(categoryStrings.toSet())
             }
         }
     }
 
     private fun getConsentCategories(result: Result) {
-        val categories = tealium?.consentManager?.userConsentCategories?.map { it -> it.toString() }?.toList()
+        val categories =
+            tealium?.consentManager?.userConsentCategories?.map { it -> it.toString() }?.toList()
         result.onMain().success(categories)
     }
 
     private fun addRemoteCommand(call: MethodCall) {
-        val id = call.argument<String>("id")
+        call.argument<String>("id")?.let { id ->
+            val path = call.argument<String?>("path")
+            val url = call.argument<String?>("url")
+            addRemoteCommand(id, path, url)
+        }
+    }
 
+    private fun addRemoteCommand(id: String, path: String? = null, url: String? = null) {
         tealium?.apply {
-            id?.let {
-                tealium?.remoteCommands?.add(RemoteCommandListener(channel, id))
-            }
+            val factory = getRemoteCommandFactory(id)
+            val remoteCommand = factory?.create() ?: RemoteCommandListener(channel, id)
+            tealium?.remoteCommands?.add(remoteCommand, filename = path, remoteUrl = url)
         }
     }
 
@@ -253,9 +271,9 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
     private fun gatherTrackData(result: Result) {
         tealium?.apply {
             val data = gatherTrackData()
-            result.success(data.mapValues{
+            result.success(data.mapValues {
                 val value = it.value
-                when(value) {
+                when (value) {
                     is JSONObject -> value.toFriendlyMap()
                     is JSONArray -> value.toFriendlyList().toList()
                     else -> value
@@ -269,6 +287,19 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
             Handler(Looper.getMainLooper()).post {
                 methodChannel.invokeMethod(listener, data)
             }
+        }
+
+        private val remoteCommandFactories: MutableMap<String, RemoteCommandFactory> =
+            Collections.synchronizedMap(
+                mutableMapOf()
+            )
+
+        fun registerRemoteCommandFactory(factory: RemoteCommandFactory) {
+            remoteCommandFactories[factory.name] = factory
+        }
+
+        fun getRemoteCommandFactory(name: String) : RemoteCommandFactory? {
+            return remoteCommandFactories[name]
         }
     }
 }

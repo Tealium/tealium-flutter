@@ -48,6 +48,7 @@ public enum TealiumFlutterConstants {
         case visitorServiceEnabled
         case memoryReportingEnabled
         case sessionCountingEnabled
+        case remoteCommands
     }
     
     enum Dispatch: String {
@@ -78,5 +79,4 @@ public enum TealiumFlutterConstants {
         static let arraysOfStrings = "arraysOfStrings"
         static let setsOfStrings = "setsOfStrings"
     }
-
 }

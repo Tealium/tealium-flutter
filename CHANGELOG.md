@@ -2,6 +2,11 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.1.0 (Sep 2022)
+* Support for packaged Remote Commands
+* Fix for RemoteCommands callback not being executed
+* Breaking change - new `addRemoteCommand` method added to accept more flexible implementation. Previous method renamed to `addCustomRemoteCommand`
+
 ### 2.0.3 (June 2022)
 * Kotlin dependency upgraded to 1.4.1.
 * Swift dependency upgraded to 2.6.4.

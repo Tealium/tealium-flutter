@@ -33,6 +33,7 @@ class EmitterListeners(private val methodChannel: MethodChannel) : VisitorUpdate
 class RemoteCommandListener(private val methodChannel: MethodChannel, id: String, description: String = id) : RemoteCommand(id, description) {
     public override fun onInvoke(response: Response) {
         response.requestPayload.put("emitterName", "TealiumFlutter.RemoteCommandEvent")
+        response.requestPayload.put("command_id", commandName)
         try {
             val map = response.requestPayload.toFriendlyMap()
             TealiumPlugin.invokeOnMain(methodChannel, "callListener", map.toMap())

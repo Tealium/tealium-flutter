@@ -127,6 +127,10 @@ public extension SwiftTealiumPlugin {
             localConfig.sessionCountingEnabled = sessionCountingEnabled
         }
         
+        if let remoteCommandsArray = dictionary[.remoteCommands] as? [Any] {
+            localConfig.remoteCommands = remoteCommandsFrom(remoteCommandsArray)
+        }
+        
         return localConfig
     }
     
@@ -183,7 +187,48 @@ public extension SwiftTealiumPlugin {
             return .error
         }
     }
+    
+    func remoteCommandsFrom(_ commands: [Any]) -> [RemoteCommandProtocol] {
+        var remoteCommands = [RemoteCommandProtocol]()
+        commands.forEach { commandPayload in
+            
+            guard let commandPayload = commandPayload as? [String: Any],
+                  let id = commandPayload["id"] as? String else {
+                return
+            }
+            
+            let path = commandPayload["path"] as? String
+            let url = commandPayload["url"] as? String
+            
+            remoteCommands.append(remoteCommandFor(id, path: path, url: url))
+        }
+        return remoteCommands
+    }
 
+    func remoteCommandFor(_ id: String, path: String? = nil, url: String? = nil) -> RemoteCommand {
+        var type: RemoteCommandType
+        if let path = path {
+            type = .local(file: (path as NSString).deletingPathExtension, bundle: nil)
+        } else if let url = url {
+            type = .remote(url: url)
+        } else {
+            type = .webview
+        }
+        var command: RemoteCommand
+        if let factory = SwiftTealiumPlugin.remoteCommandFactories[id] {
+            command = factory.create()
+        } else {
+            command = RemoteCommand(commandId: id, description: nil, type: type) { response in
+                guard var payload = response.payload else {
+                    return
+                }
+                payload[TealiumFlutterConstants.Events.emitterName.rawValue] = TealiumFlutterConstants.Events.remoteCommand.rawValue
+                SwiftTealiumPlugin.channel?.invokeMethod("callListener", arguments: payload)
+           }
+        }
+        
+        return command
+    }
 }
 
 extension Dictionary where Key: ExpressibleByStringLiteral {
