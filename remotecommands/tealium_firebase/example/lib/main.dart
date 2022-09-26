@@ -45,8 +45,8 @@ class _MyAppState extends State<MyApp> {
     // MARK: Initialize Tealium
 
     var config = TealiumConfig(
-        'services-james',
-        'lib-mobile',
+        'tealiummobile',
+        'demo',
         TealiumEnvironment.dev,
         [Collectors.AppData],
         [Dispatchers.RemoteCommands],
