@@ -9,6 +9,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
   var visitorServiceDelegate: VisitorServiceDelegate = VisitorDelegate()
   var consentExpiryCallback: (() -> Void)?
   static var channel: FlutterMethodChannel?
+  static var remoteCommandFactories = [String: RemoteCommandFactory]()
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     channel = FlutterMethodChannel(name: "tealium", binaryMessenger: registrar.messenger())
@@ -17,6 +18,10 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         return
     }
     registrar.addMethodCallDelegate(instance, channel: channel)
+  }
+    
+  public static func registerRemoteCommandFactory(_ factory: RemoteCommandFactory) {
+    remoteCommandFactories[factory.name] = factory
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -125,13 +130,9 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         let id = arguments["id"] as? String else {
             return
         }
-        let remoteCommand = RemoteCommand(commandId: id, description: nil) { response in
-             guard var payload = response.payload else {
-                 return
-             }
-             payload[TealiumFlutterConstants.Events.emitterName.rawValue] = TealiumFlutterConstants.Events.remoteCommand.rawValue
-             SwiftTealiumPlugin.channel?.invokeMethod("callListener", arguments: payload)
-        }
+        let path = arguments["path"] as? String
+        let url = arguments["url"] as? String
+        let remoteCommand = remoteCommandFor(id, path: path, url: url)
         tealium?.remoteCommands?.add(remoteCommand)
     }
 

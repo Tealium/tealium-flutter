@@ -198,6 +198,22 @@ class TimeUnit {
   static const TimeUnit DAYS = TimeUnit._('days');
 }
 
+class RemoteCommand {
+  final String id;
+  final String? path;
+  final String? url;
+  final Function? callback;
+  
+  RemoteCommand(
+    this.id,
+    {
+      this.path,
+      this.url,
+      this.callback
+    }
+  );
+}
+
 class TealiumConfig {
   late String account;
   late String profile;
@@ -224,6 +240,7 @@ class TealiumConfig {
   bool? useRemoteLibrarySettings;
   bool? visitorServiceEnabled;
   bool? sessionCountingEnabled;
+  List<RemoteCommand>? remoteCommands;
 
   TealiumConfig(
     String account,
@@ -253,6 +270,7 @@ class TealiumConfig {
     bool? useRemoteLibrarySettings,
     bool? visitorServiceEnabled,
     bool? sessionCountingEnabled,
+    List<RemoteCommand>? remoteCommands
   }) {
     this.account = account;
     this.profile = profile;
@@ -279,5 +297,6 @@ class TealiumConfig {
     this.useRemoteLibrarySettings = useRemoteLibrarySettings;
     this.visitorServiceEnabled = visitorServiceEnabled;
     this.sessionCountingEnabled = sessionCountingEnabled;
+    this.remoteCommands = remoteCommands;
   }
 }

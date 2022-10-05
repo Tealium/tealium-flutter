@@ -7,7 +7,7 @@ import 'events/event_emitter.dart';
 
 class Tealium {
   static const String plugin_name = 'Tealium-Flutter';
-  static const String plugin_version = '2.0.3';
+  static const String plugin_version = '2.1.0';
   static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
   static Map<String, Function> _remoteCommands = new Map();
@@ -22,6 +22,13 @@ class Tealium {
         .contains(Dispatchers.RemoteCommands.toString())) {
       _handleListener(EventListenerNames.remoteCommand);
     }
+    config.remoteCommands?.forEach((command) {
+      var callback = command.callback;
+      if (callback != null) {
+        _addRemoteCommandListener(command.id, callback);
+      }
+    });
+
     var initialized = await _channel.invokeMethod('initialize', {
       'account': config.account,
       'profile': config.profile,
@@ -47,7 +54,13 @@ class Tealium {
       'lifecycleAutotrackingEnabled': config.lifecycleAutotrackingEnabled,
       'useRemoteLibrarySettings': config.useRemoteLibrarySettings,
       'visitorServiceEnabled': config.visitorServiceEnabled,
-      'sessionCountingEnabled': config.sessionCountingEnabled
+      'sessionCountingEnabled': config.sessionCountingEnabled,
+      'test': "test",
+      'remoteCommands': config.remoteCommands?.map((e) => {
+          "id": e.id,
+          "url": e.url,
+          "path": e.path
+      }).toList()
     });
 
     if (initialized) {
@@ -101,10 +114,27 @@ class Tealium {
   }
 
   /// Adds a [RemoteCommand] to the [RemoteCommands] Dispatcher
-  static addRemoteCommand(String id, Function callback) async {
-    if (!_remoteCommands.containsKey(id)) {
-      _remoteCommands[id] = callback;
-      return await _channel.invokeMethod('addRemoteCommand', {'id': id});
+  static addCustomRemoteCommand(String id, Function callback) async {
+    return await addRemoteCommand(RemoteCommand(id, 
+      callback: callback,
+      path: null, 
+      url: null
+    ));
+  }
+
+  /// Adds a [RemoteCommand] to the [RemoteCommands] Dispatcher
+  static addRemoteCommand(RemoteCommand remoteCommand) async {
+    if (!_remoteCommands.containsKey(remoteCommand.id)) {
+      final callback = remoteCommand.callback;
+      if (callback != null) {
+        _addRemoteCommandListener(remoteCommand.id, callback);
+      }
+    
+      return await _channel.invokeMethod('addRemoteCommand', {
+        'id': remoteCommand.id,
+        'path': remoteCommand.path,
+        'url': remoteCommand.url,
+      });
     }
   }
 
@@ -113,6 +143,10 @@ class Tealium {
     _remoteCommands.remove(id);
     _channel.invokeMethod('removeRemoteCommand', {'id': id});
   }
+
+  static _addRemoteCommandListener(String id, Function callback) {
+    _remoteCommands[id] = callback;
+  } 
 
   static setConsentStatus(ConsentStatus status) {
     _channel.invokeMethod('setConsentStatus', {'status': status.toString()});

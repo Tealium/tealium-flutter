@@ -44,6 +44,7 @@ const val KEY_DEEPLINK_TRACKING_ENABLED = "deepLinkTrackingEnabled"
 const val KEY_SESSION_COUNTING_ENABLED = "sessionCountingEnabled"
 
 const val KEY_LOG_LEVEL = "logLevel"
+const val KEY_REMOTE_COMMANDS = "remoteCommands"
 
 const val KEY_CONSENT_LOGGING_ENABLED = "consentLoggingEnabled"
 const val KEY_CONSENT_LOGGING_URL = "consentLoggingURL"
