@@ -1,4 +1,4 @@
-# Tealium Flutter Plugin
+# Firebase for Tealium Flutter Plugin
 
 ## Documentation
 For full documentation, please see the Tealium Learning Community:
@@ -12,3 +12,5 @@ Use of this software is subject to the terms and conditions of the license agree
 
 ---
 Copyright (C) 2012-2022, Tealium Inc.
+
+
