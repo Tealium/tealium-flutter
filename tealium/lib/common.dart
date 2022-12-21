@@ -1,6 +1,7 @@
 class EventListenerNames {
   static const name = 'emitterName';
   static const visitor = 'TealiumFlutter.VisitorServiceEvent';
+  static const visitorId = 'TealiumFlutter.VisitorIdUpdatedEvent';
   static const remoteCommand = 'TealiumFlutter.RemoteCommandEvent';
   static const consentExpired = 'TealiumFlutter.ConsentExpiredEvent';
 }
@@ -241,6 +242,7 @@ class TealiumConfig {
   bool? visitorServiceEnabled;
   bool? sessionCountingEnabled;
   List<RemoteCommand>? remoteCommands;
+  String? visitorIdentityKey;
 
   TealiumConfig(
     String account,
@@ -270,7 +272,8 @@ class TealiumConfig {
     bool? useRemoteLibrarySettings,
     bool? visitorServiceEnabled,
     bool? sessionCountingEnabled,
-    List<RemoteCommand>? remoteCommands
+    List<RemoteCommand>? remoteCommands,
+    String? visitorIdentityKey
   }) {
     this.account = account;
     this.profile = profile;
@@ -298,5 +301,6 @@ class TealiumConfig {
     this.visitorServiceEnabled = visitorServiceEnabled;
     this.sessionCountingEnabled = sessionCountingEnabled;
     this.remoteCommands = remoteCommands;
+    this.visitorIdentityKey = visitorIdentityKey;
   }
 }

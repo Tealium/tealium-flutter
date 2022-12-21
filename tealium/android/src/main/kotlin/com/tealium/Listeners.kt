@@ -5,13 +5,15 @@ import com.tealium.core.consent.ConsentManagementPolicy
 import com.tealium.core.consent.ConsentStatus
 import com.tealium.core.consent.UserConsentPreferences
 import com.tealium.core.messaging.UserConsentPreferencesUpdatedListener
+import com.tealium.core.messaging.VisitorIdUpdatedListener
 import com.tealium.remotecommands.RemoteCommand
 import com.tealium.visitorservice.VisitorProfile
 import com.tealium.visitorservice.VisitorUpdatedListener
 import io.flutter.plugin.common.MethodChannel
 import org.json.JSONException
 
-class EmitterListeners(private val methodChannel: MethodChannel) : VisitorUpdatedListener, UserConsentPreferencesUpdatedListener {
+class EmitterListeners(private val methodChannel: MethodChannel) : VisitorUpdatedListener,
+    VisitorIdUpdatedListener, UserConsentPreferencesUpdatedListener {
     override fun onVisitorUpdated(visitorProfile: VisitorProfile) {
         try {
             VisitorProfile.toFriendlyMutableMap(visitorProfile).let {
@@ -23,14 +25,34 @@ class EmitterListeners(private val methodChannel: MethodChannel) : VisitorUpdate
         }
     }
 
-    override fun onUserConsentPreferencesUpdated(userConsentPreferences: UserConsentPreferences, policy: ConsentManagementPolicy) {
+    override fun onVisitorIdUpdated(visitorId: String) {
+        TealiumPlugin.invokeOnMain(
+            methodChannel, "callListener", mapOf(
+                "emitterName" to "TealiumFlutter.VisitorIdUpdatedEvent",
+                "visitorId" to visitorId
+            )
+        )
+    }
+
+    override fun onUserConsentPreferencesUpdated(
+        userConsentPreferences: UserConsentPreferences,
+        policy: ConsentManagementPolicy
+    ) {
         if (userConsentPreferences.consentStatus != ConsentStatus.UNKNOWN) return
 
-        TealiumPlugin.invokeOnMain(methodChannel, "callListener", mapOf("emitterName" to "TealiumFlutter.ConsentExpiredEvent"))
+        TealiumPlugin.invokeOnMain(
+            methodChannel,
+            "callListener",
+            mapOf("emitterName" to "TealiumFlutter.ConsentExpiredEvent")
+        )
     }
 }
 
-class RemoteCommandListener(private val methodChannel: MethodChannel, id: String, description: String = id) : RemoteCommand(id, description) {
+class RemoteCommandListener(
+    private val methodChannel: MethodChannel,
+    id: String,
+    description: String = id
+) : RemoteCommand(id, description) {
     public override fun onInvoke(response: Response) {
         response.requestPayload.put("emitterName", "TealiumFlutter.RemoteCommandEvent")
         response.requestPayload.put("command_id", commandName)

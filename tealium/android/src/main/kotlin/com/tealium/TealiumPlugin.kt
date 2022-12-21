@@ -57,6 +57,8 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
             "joinTrace" -> joinTrace(call)
             "leaveTrace" -> leaveTrace()
             "getVisitorId" -> getVisitorId(result)
+            "resetVisitorId" -> resetVisitorId()
+            "clearStoredVisitorIds" -> clearStoredVisitorIds()
             "setConsentExpiryListener" -> {
                 /** do nothing **/
             }
@@ -266,6 +268,16 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun getVisitorId(result: Result) {
         result.onMain().success(tealium?.visitorId ?: "")
+    }
+
+    private fun resetVisitorId() {
+        tealium?.apply {
+            resetVisitorId()
+        }
+    }
+
+    private fun clearStoredVisitorIds() {
+        tealium?.clearStoredVisitorIds()
     }
 
     private fun gatherTrackData(result: Result) {
