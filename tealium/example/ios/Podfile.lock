@@ -1,23 +1,23 @@
 PODS:
   - Flutter (1.0.0)
-  - tealium (2.1.0):
+  - tealium (2.2.0):
     - Flutter
-    - tealium-swift/Collect (~> 2.6.4)
-    - tealium-swift/Core (~> 2.6.4)
-    - tealium-swift/Lifecycle (~> 2.6.4)
-    - tealium-swift/RemoteCommands (~> 2.6.4)
-    - tealium-swift/TagManagement (~> 2.6.4)
-    - tealium-swift/VisitorService (~> 2.6.4)
-  - tealium-swift/Collect (2.6.4):
+    - tealium-swift/Collect (~> 2.8)
+    - tealium-swift/Core (~> 2.8)
+    - tealium-swift/Lifecycle (~> 2.8)
+    - tealium-swift/RemoteCommands (~> 2.8)
+    - tealium-swift/TagManagement (~> 2.8)
+    - tealium-swift/VisitorService (~> 2.8)
+  - tealium-swift/Collect (2.8.2):
     - tealium-swift/Core
-  - tealium-swift/Core (2.6.4)
-  - tealium-swift/Lifecycle (2.6.4):
+  - tealium-swift/Core (2.8.2)
+  - tealium-swift/Lifecycle (2.8.2):
     - tealium-swift/Core
-  - tealium-swift/RemoteCommands (2.6.4):
+  - tealium-swift/RemoteCommands (2.8.2):
     - tealium-swift/Core
-  - tealium-swift/TagManagement (2.6.4):
+  - tealium-swift/TagManagement (2.8.2):
     - tealium-swift/Core
-  - tealium-swift/VisitorService (2.6.4):
+  - tealium-swift/VisitorService (2.8.2):
     - tealium-swift/Core
 
 DEPENDENCIES:
@@ -36,8 +36,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  tealium: 05cecfc1fd46e0dcfa5aa9a01ff27fbf6153ef26
-  tealium-swift: c5e2c806149e1203648ae22c44572e6321732c2d
+  tealium: 8d89fd11995fa878d71c18678635a6680966608a
+  tealium-swift: aa249f29ee10924c1cb373c5313e91a99276bfe6
 
 PODFILE CHECKSUM: 17813cc9fc9dee2c0182772d7e55a87d51bb53e5
 

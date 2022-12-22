@@ -131,6 +131,10 @@ public extension SwiftTealiumPlugin {
             localConfig.remoteCommands = remoteCommandsFrom(remoteCommandsArray)
         }
         
+        if let visitorIdentityKey = dictionary[.visitorIdentityKey] as? String {
+            localConfig.visitorIdentityKey = visitorIdentityKey
+        }
+        
         return localConfig
     }
     
