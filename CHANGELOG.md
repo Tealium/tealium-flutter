@@ -2,6 +2,13 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.2.0 (Jan 2023)
+* Support for Visitor Switching
+    - New config key: `visitorIdentityKey`
+    - New methods: `resetVisitorId()` and `clearStoredVisitorIds()`
+    - New Visitor Id Updated listener: `setVisitorIdListener((visitorId) => { /* */ })`
+* Tealium Swift/Kotlin SDK Dependency updates
+
 ### 2.1.0 (Sep 2022)
 * Support for packaged Remote Commands
 * Fix for RemoteCommands callback not being executed

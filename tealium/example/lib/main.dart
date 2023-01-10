@@ -16,7 +16,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  static final visitorIdentityKey = "visitor_identity";
   final traceIdValue = TextEditingController();
+  final userIdValue = TextEditingController();
   String result = '';
 
   // MARK: Tealium Configuration
@@ -31,7 +33,9 @@ class _MyAppState extends State<MyApp> {
       useRemoteLibrarySettings: true,
       batchingEnabled: false,
       visitorServiceEnabled: true,
-      consentExpiry: ConsentExpiry(5, TimeUnit.MINUTES));
+      consentExpiry: ConsentExpiry(5, TimeUnit.MINUTES),
+      visitorIdentityKey: visitorIdentityKey
+      );
 
   @override
   void initState() {
@@ -48,6 +52,8 @@ class _MyAppState extends State<MyApp> {
               () => developer.log('Consent Expired')),
           Tealium.setVisitorServiceListener(
               (profile) => _logVisitorProfile(profile)),
+          Tealium.setVisitorIdListener(
+              (visitorId) => _logVisitorId(visitorId)),
           Tealium.addCustomRemoteCommand('json-test',
               (payload) => {_logRemoteCommand('JSON Test', payload)})
         });
@@ -120,6 +126,23 @@ class _MyAppState extends State<MyApp> {
         TealiumButton(
             title: 'Terminate Tealium',
             onPressed: () => Tealium.terminateInstance()),
+        TextField(
+          controller: userIdValue,
+          autocorrect: true,
+          decoration: InputDecoration(hintText: 'Enter an Identity'),
+        ),
+        TealiumButton(
+          title: 'Set Identity',
+          onPressed: _setIdentity,
+        ),
+        TealiumButton(
+          title: 'Reset Visitor Id',
+          onPressed: () => Tealium.resetVisitorId(),
+        ),
+        TealiumButton(
+          title: 'Clear Stored Visitor Ids',
+          onPressed: () => Tealium.clearStoredVisitorIds(),
+        ),
       ],
     );
   }
@@ -133,6 +156,11 @@ class _MyAppState extends State<MyApp> {
     developer.log('Visit Tallies: ' +
         JsonEncoder().convert(converted['currentVisit']['tallies']));
     developer.log('Badges: ' + JsonEncoder().convert(converted['badges']));
+  }
+  
+  void _logVisitorId(String visitorId) {
+    developer.log('=========Visitor Id Changed =========');
+    developer.log('VisitorId: ' + visitorId);
   }
 
   void _logRemoteCommand(String name, dynamic payload) {
@@ -177,6 +205,11 @@ class _MyAppState extends State<MyApp> {
       result = traceIdValue.text;
       Tealium.joinTrace(result);
     });
+  }
+
+  _setIdentity() {
+      var identity = userIdValue.text;
+      Tealium.addToDataLayer({visitorIdentityKey: identity}, Expiry.forever);
   }
 
   @override

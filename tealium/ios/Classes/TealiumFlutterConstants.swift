@@ -49,6 +49,7 @@ public enum TealiumFlutterConstants {
         case memoryReportingEnabled
         case sessionCountingEnabled
         case remoteCommands
+        case visitorIdentityKey
     }
     
     enum Dispatch: String {
@@ -62,6 +63,7 @@ public enum TealiumFlutterConstants {
         case emitterName = "emitterName";
         case remoteCommand = "TealiumFlutter.RemoteCommandEvent"
         case visitorService = "TealiumFlutter.VisitorServiceEvent"
+        case visitorId = "TealiumFlutter.VisitorIdUpdatedEvent"
         case consent = "TealiumFlutter.ConsentExpiredEvent"
     }
     

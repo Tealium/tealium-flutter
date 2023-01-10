@@ -7,7 +7,7 @@ import 'events/event_emitter.dart';
 
 class Tealium {
   static const String plugin_name = 'Tealium-Flutter';
-  static const String plugin_version = '2.1.0';
+  static const String plugin_version = '2.2.0';
   static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
   static Map<String, Function> _remoteCommands = new Map();
@@ -60,7 +60,8 @@ class Tealium {
           "id": e.id,
           "url": e.url,
           "path": e.path
-      }).toList()
+      }).toList(),
+      'visitorIdentityKey': config.visitorIdentityKey
     });
 
     if (initialized) {
@@ -188,10 +189,26 @@ class Tealium {
     return await _channel.invokeMethod('getVisitorId');
   }
 
+  /// Resets the visitor id for the user
+  static resetVisitorId() {
+    _channel.invokeMethod('resetVisitorId');
+  }
+
+  /// Clears all stored visitor ids.
+  static clearStoredVisitorIds() {
+    _channel.invokeMethod('clearStoredVisitorIds');
+  }
+
   /// Sets the callback for the [VisitorService] update
   static setVisitorServiceListener(Function callback) {
     _listeners[EventListenerNames.visitor] = callback;
     _handleListener(EventListenerNames.visitor);
+  }
+
+  /// Sets the callback for the Visitor Id update
+  static setVisitorIdListener(Function callback) {
+    _listeners[EventListenerNames.visitorId] = callback;
+    _handleListener(EventListenerNames.visitorId);
   }
 
   /// Sets the callback for when the user [ConsentExpiry] has expired
@@ -243,6 +260,18 @@ class Tealium {
           Function callback = _listeners[EventListenerNames.visitor] =
               _listeners[EventListenerNames.visitor] as Function;
           callback(eventDataMap);
+          break;
+        case EventListenerNames.visitorId:
+          var encodedData = json.encode(ev.eventData);
+          var eventDataMap = json.decode(encodedData);
+          eventDataMap as Map;
+          eventDataMap.remove(EventListenerNames.name);
+          var visitorId = eventDataMap['visitorId'];
+          if (visitorId != null) {
+            Function callback = _listeners[EventListenerNames.visitorId] =
+              _listeners[EventListenerNames.visitorId] as Function;
+            callback(visitorId);
+          }
           break;
         default:
           break;
