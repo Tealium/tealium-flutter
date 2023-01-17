@@ -1,0 +1,57 @@
+PODS:
+  - Flutter (1.0.0)
+  - tealium (2.3.0):
+    - Flutter
+    - tealium-swift/Collect (~> 2.8)
+    - tealium-swift/Core (~> 2.8)
+    - tealium-swift/Lifecycle (~> 2.8)
+    - tealium-swift/RemoteCommands (~> 2.8)
+    - tealium-swift/TagManagement (~> 2.8)
+    - tealium-swift/VisitorService (~> 2.8)
+  - tealium-swift/Collect (2.8.2):
+    - tealium-swift/Core
+  - tealium-swift/Core (2.8.2)
+  - tealium-swift/Lifecycle (2.8.2):
+    - tealium-swift/Core
+  - tealium-swift/RemoteCommands (2.8.2):
+    - tealium-swift/Core
+  - tealium-swift/TagManagement (2.8.2):
+    - tealium-swift/Core
+  - tealium-swift/VisitorService (2.8.2):
+    - tealium-swift/Core
+  - tealium_adobevisitor (1.0.0):
+    - Flutter
+    - tealium (~> 2.3)
+    - tealium-swift/Core (~> 2.8)
+    - TealiumAdobeVisitorAPI (~> 1.1)
+  - TealiumAdobeVisitorAPI (1.1.0):
+    - tealium-swift/Core (~> 2.8)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - tealium (from `.symlinks/plugins/tealium/ios`)
+  - tealium_adobevisitor (from `.symlinks/plugins/tealium_adobevisitor/ios`)
+
+SPEC REPOS:
+  trunk:
+    - tealium-swift
+    - TealiumAdobeVisitorAPI
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  tealium:
+    :path: ".symlinks/plugins/tealium/ios"
+  tealium_adobevisitor:
+    :path: ".symlinks/plugins/tealium_adobevisitor/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  tealium: a1447987744b00ec39db5240f86afc65725d136a
+  tealium-swift: aa249f29ee10924c1cb373c5313e91a99276bfe6
+  tealium_adobevisitor: 4fb3f19e5e3bd3c493d4c2e75d02013efb77c9c6
+  TealiumAdobeVisitorAPI: 461c387286df99cb17ffb342a56b02d852978240
+
+PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+
+COCOAPODS: 1.11.3

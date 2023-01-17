@@ -7,7 +7,7 @@ import 'events/event_emitter.dart';
 
 class Tealium {
   static const String plugin_name = 'Tealium-Flutter';
-  static const String plugin_version = '2.2.0';
+  static const String plugin_version = '2.3.0';
   static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
   static Map<String, Function> _remoteCommands = new Map();
