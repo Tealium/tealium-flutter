@@ -1,11 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
 
-import 'package:flutter/services.dart';
 import 'package:tealium_adobevisitor/tealium_adobevisitor.dart';
 
 import 'tealium_button.dart';
@@ -25,15 +21,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _adobeOrgIdController =
-      TextEditingController();
+  final _adobeOrgIdController = TextEditingController();
   var _adobeOrgSet = false;
   AdobeVisitor? _adobeVisitor;
 
   final _knownIdController = TextEditingController();
   final _dataProviderIdController = TextEditingController();
-  final _authStateController = TextEditingController();
   var _linkEcidReady = false;
+  final _authStateOptions = [
+        const DropdownMenuItem<int>(
+          value: -1,
+          child: Text("Not Set"),
+        )
+      ] +
+      AuthState.values.map<DropdownMenuItem<int>>((AuthState authState) {
+        return DropdownMenuItem<int>(
+          value: authState.intValue,
+          child: Text(authState.name),
+        );
+      }).toList();
+  int? _authStateSelection;
 
   final _urlController = TextEditingController(text: "https://mysite.com/");
   var _decoratedUrl = "";
@@ -105,10 +112,12 @@ class _MyAppState extends State<MyApp> {
             TealiumButton(
                 disabled: !_adobeOrgSet,
                 title: 'Decorate Url',
-                onPressed: () => TealiumAdobeVisitor.decorateUrl(_urlController.text).then((value) => setState(() => {
-                  _decoratedUrl = value as String
-                }))),
-            Visibility(visible: _decoratedUrl.isNotEmpty, child: Text(_decoratedUrl)),
+                onPressed: () =>
+                    TealiumAdobeVisitor.decorateUrl(_urlController.text).then(
+                        (value) =>
+                            setState(() => {_decoratedUrl = value as String}))),
+            Visibility(
+                visible: _decoratedUrl.isNotEmpty, child: Text(_decoratedUrl)),
             const Padding(padding: EdgeInsets.all(8)),
             TextField(
               enabled: _adobeOrgSet,
@@ -124,22 +133,26 @@ class _MyAppState extends State<MyApp> {
               decoration:
                   const InputDecoration(hintText: 'Enter the dataProviderId.'),
             ),
-            TextField(
-              enabled: _adobeOrgSet,
-              controller: _authStateController,
-              autocorrect: true,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                  hintText: '(Optional) Enter the authState.'),
+            const Padding(padding: EdgeInsets.all(8)),
+            DropdownButton<int>(
+              value: _authStateSelection,
+              hint: const Text("(Optional) Select an AuthState."),
+              elevation: 16,
+              onChanged: (int? value) {
+                setState(() {
+                  _authStateSelection = value!;
+                });
+              },
+              items: _authStateOptions,
             ),
             TealiumButton(
                 disabled: !_linkEcidReady,
                 title: 'Link known Id',
                 onPressed: () => TealiumAdobeVisitor.linkEcidToKnownIdentifier(
-                    _knownIdController.text,
-                    _dataProviderIdController.text,
-                    int.tryParse(_authStateController.text))
-                  .then((visitor) => _setAdobeVisitor(visitor))),
+                        _knownIdController.text,
+                        _dataProviderIdController.text,
+                        _getSelectedAuthState())
+                    .then((visitor) => _setAdobeVisitor(visitor))),
             const Padding(padding: EdgeInsets.all(8)),
             const Padding(
               padding: EdgeInsets.all(4),
@@ -153,28 +166,36 @@ class _MyAppState extends State<MyApp> {
         ));
   }
 
+  AuthState? _getSelectedAuthState() {
+    var authState = _authStateSelection;
+
+    if (authState == null) {
+      return null;
+    } else {
+      return AuthState.fromIntValue(authState);
+    }
+  }
+
   void _fetchAdobeVisitor() {
-    TealiumAdobeVisitor.getAdobeVisitor().then((visitor) => {
-          _log(visitor),
-          _setAdobeVisitor(visitor)
-        });
+    TealiumAdobeVisitor.getAdobeVisitor()
+        .then((visitor) => {_log(visitor), _setAdobeVisitor(visitor)});
   }
 
   void _resetVisitor() {
-    TealiumAdobeVisitor.resetVisitor(); 
+    TealiumAdobeVisitor.resetVisitor();
     _fetchAdobeVisitor();
   }
 
   void _setAdobeVisitor(AdobeVisitor? adobeVisitor) {
-setState(() {
-            _adobeVisitor = adobeVisitor;
-          });
+    setState(() {
+      _adobeVisitor = adobeVisitor;
+    });
   }
 
   void _validateLinkSettings() {
     setState(() {
-      _linkEcidReady = _knownIdController.text != "" 
-                          && _dataProviderIdController.text != "";
+      _linkEcidReady =
+          _knownIdController.text != "" && _dataProviderIdController.text != "";
     });
   }
 

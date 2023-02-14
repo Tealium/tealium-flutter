@@ -1,4 +1,4 @@
-#import "TealiumAdobevisitorPlugin.h"
+#import "TealiumAdobeVisitorPlugin.h"
 #if __has_include(<tealium_adobevisitor/tealium_adobevisitor-Swift.h>)
 #import <tealium_adobevisitor/tealium_adobevisitor-Swift.h>
 #else
@@ -8,8 +8,8 @@
 #import "tealium_adobevisitor-Swift.h"
 #endif
 
-@implementation TealiumAdobevisitorPlugin
+@implementation TealiumAdobeVisitorPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  [SwiftTealiumAdobevisitorPlugin registerWithRegistrar:registrar];
+  [SwiftTealiumAdobeVisitorPlugin registerWithRegistrar:registrar];
 }
 @end

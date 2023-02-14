@@ -31,12 +31,30 @@ class AdobeVisitor {
   }
 }
 
+enum AuthState {
+  unknown(0),
+  authenticated(1),
+  loggedOut(2);
+
+  const AuthState(this.intValue);
+  final int intValue;
+
+  static AuthState? fromIntValue(int intValue) {
+    try {
+      return AuthState.values
+            .firstWhere((authState) => authState.intValue == intValue);
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
 class AdobeVisitorConfig {
   final String adobeVisitorOrgId;
   final String? adobeVisitorExistingEcid;
   final int? adobeVisitorRetries;
 
-  final int? adobeVisitorAuthState;
+  final AuthState? adobeVisitorAuthState;
   final String? adobeVisitorDataProviderId;
   final String? adobeVisitorCustomVisitorId;
   

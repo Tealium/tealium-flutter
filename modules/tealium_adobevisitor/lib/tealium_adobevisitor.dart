@@ -11,7 +11,7 @@ class TealiumAdobeVisitor {
       "adobeVisitorOrgId": config.adobeVisitorOrgId,
       "adobeVisitorRetries": config.adobeVisitorRetries,
       "adobeVisitorDataProviderId": config.adobeVisitorDataProviderId,
-      "adobeVisitorAuthState": config.adobeVisitorAuthState,
+      "adobeVisitorAuthState": config.adobeVisitorAuthState?.intValue,
       "adobeVisitorExistingEcid": config.adobeVisitorExistingEcid,
       "adobeVisitorCustomVisitorId": config.adobeVisitorCustomVisitorId,
     });
@@ -31,11 +31,11 @@ class TealiumAdobeVisitor {
     return _channel.invokeMethod("decorateUrl", { "url": url });
   }
 
-  static Future<AdobeVisitor?> linkEcidToKnownIdentifier(String knownId, String adobeDataProviderId, int? authState) async {
+  static Future<AdobeVisitor?> linkEcidToKnownIdentifier(String knownId, String adobeDataProviderId, AuthState? authState) async {
     var visitorMap = await _channel.invokeMethod("linkEcidToKnownIdentifier", { 
         "knownId": knownId, 
         "adobeDataProviderId" : adobeDataProviderId, 
-        "authState" : authState 
+        "authState" : authState?.intValue
       });
 
     return adobeVisitorFromMap(visitorMap);

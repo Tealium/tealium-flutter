@@ -4,7 +4,7 @@ import TealiumSwift
 import tealium
 import TealiumAdobeVisitorAPI
 
-public class SwiftTealiumAdobevisitorPlugin: NSObject, FlutterPlugin, OptionalModule {
+public class SwiftTealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalModule {
     
     private var adobeVisitorOrgId: String? = nil
     private var adobeVisitorExistingEcid: String? = nil
@@ -15,7 +15,7 @@ public class SwiftTealiumAdobevisitorPlugin: NSObject, FlutterPlugin, OptionalMo
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "tealium_adobevisitor", binaryMessenger: registrar.messenger())
-        let instance = SwiftTealiumAdobevisitorPlugin()
+        let instance = SwiftTealiumAdobeVisitorPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
         
         SwiftTealiumPlugin.registerOptionalModule(instance)
