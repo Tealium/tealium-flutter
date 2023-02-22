@@ -2,6 +2,10 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.3.0 (Jan 2023)
+* `OptionalModule` added to support adding of additional modules
+* Adobe Visitor API module support
+
 ### 2.2.0 (Jan 2023)
 * Support for Visitor Switching
     - New config key: `visitorIdentityKey`

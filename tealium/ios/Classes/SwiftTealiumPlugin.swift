@@ -4,24 +4,44 @@ import TealiumSwift
 
 public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     
-    var tealium: Tealium?
+    var tealiumInstance: Tealium?
     private var config: TealiumConfig?
     var visitorServiceDelegate: VisitorServiceDelegate = VisitorDelegate()
     var consentExpiryCallback: (() -> Void)?
     static var channel: FlutterMethodChannel?
     static var remoteCommandFactories = [String: RemoteCommandFactory]()
+    static var optionalModules = [OptionalModule]()
+    static var pluginInstance: SwiftTealiumPlugin? = nil
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         channel = FlutterMethodChannel(name: "tealium", binaryMessenger: registrar.messenger())
-        let instance = SwiftTealiumPlugin()
+        pluginInstance = SwiftTealiumPlugin()
         guard let channel = channel else {
             return
         }
-        registrar.addMethodCallDelegate(instance, channel: channel)
+        if let instance = pluginInstance {
+            registrar.addMethodCallDelegate(instance, channel: channel)
+        }
     }
     
     public static func registerRemoteCommandFactory(_ factory: RemoteCommandFactory) {
         remoteCommandFactories[factory.name] = factory
+    }
+    
+    public static func registerOptionalModule(_ module: OptionalModule) {
+        optionalModules.append(module)
+    }
+
+    public static var instance: SwiftTealiumPlugin? {
+        get {
+            pluginInstance
+        }
+    }
+
+    public var tealium: Tealium? {
+        get {
+            tealiumInstance
+        }
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -74,7 +94,12 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
             return result(false)
         }
         self.config = localConfig.copy
-        tealium = Tealium(config: localConfig) { _ in
+        
+        SwiftTealiumPlugin.optionalModules.forEach { module in
+            module.configure(config: localConfig)
+        }
+        
+        tealiumInstance = Tealium(config: localConfig) { _ in
             
             self.tealium?.onVisitorId?.subscribe { visitorId in
                 SwiftTealiumPlugin.channel?.invokeMethod("callListener",
@@ -98,7 +123,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
             return
         }
         TealiumInstanceManager.shared.removeInstance(config: config)
-        tealium = nil
+        tealiumInstance = nil
     }
     
     func addToDataLayer(call: FlutterMethodCall) {

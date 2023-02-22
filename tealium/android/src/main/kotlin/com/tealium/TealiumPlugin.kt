@@ -33,7 +33,6 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
     private var tealium: Tealium? = null
     private var context: Context? = null
 
-
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "tealium")
         channel.setMethodCallHandler(this)
@@ -74,6 +73,10 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
     private fun initialize(call: MethodCall, result: Result) {
         val args = call.arguments as Map<*, *>
         toTealiumConfig(context as Application, args)?.let { config ->
+
+            getOptionalModules().forEach { module ->
+                module.configure(config)
+            }
 
             tealium = Tealium.create(INSTANCE_NAME, config) {
                 // Log Level
@@ -312,6 +315,19 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
 
         fun getRemoteCommandFactory(name: String) : RemoteCommandFactory? {
             return remoteCommandFactories[name]
+        }
+
+        private val optionalModules: MutableList<OptionalModule> =
+            Collections.synchronizedList(
+                mutableListOf()
+            )
+
+        fun registerOptionalModule(module: OptionalModule) {
+            optionalModules.add(module)
+        }
+
+        fun getOptionalModules() : List<OptionalModule> {
+            return optionalModules.toList()
         }
     }
 }
