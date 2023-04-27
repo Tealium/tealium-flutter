@@ -159,8 +159,8 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         }
 
         // Lifecycle
-        if (configMap.containsKey(KEY_LIFECYCLE_AUTO_TRACKING_ENABLED)) {
-            isAutoTrackingEnabled = configMap[KEY_LIFECYCLE_AUTO_TRACKING_ENABLED].toString().toBoolean()
+        configMap[KEY_LIFECYCLE_AUTO_TRACKING_ENABLED]?.let { value ->
+            isAutoTrackingEnabled = value.toString().toBoolean()
         }
 
         configMap[KEY_VISITOR_IDENTITY_KEY]?.let { key ->

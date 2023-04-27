@@ -1,5 +1,6 @@
 package com.tealium
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Handler
@@ -11,9 +12,12 @@ import com.tealium.core.Logger
 import com.tealium.core.Tealium
 import com.tealium.core.consent.ConsentCategory
 import com.tealium.core.consent.ConsentStatus
+import com.tealium.lifecycle.lifecycle
 import com.tealium.remotecommanddispatcher.remoteCommands
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -24,7 +28,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 /** TealiumPlugin */
-class TealiumPlugin : FlutterPlugin, MethodCallHandler {
+class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -32,6 +36,9 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
     private var tealium: Tealium? = null
     private var context: Context? = null
+
+    private var sentLaunchActivity = false
+    private var launchActivity: Activity? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "tealium")
@@ -79,6 +86,16 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
             }
 
             tealium = Tealium.create(INSTANCE_NAME, config) {
+                if (!sentLaunchActivity) {
+                    // Some cases miss the first Activity
+                    lifecycle?.apply {
+                        onActivityResumed(launchActivity)
+                    }
+
+                    sentLaunchActivity = true
+                    launchActivity = null
+                }
+
                 // Log Level
                 args[KEY_LOG_LEVEL]?.let { logLevel ->
                     (logLevel as? String)?.let {
@@ -295,6 +312,24 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler {
                 }
             })
         }
+    }
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        if (launchActivity == null && !sentLaunchActivity) {
+            launchActivity = binding.activity
+        }
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        Log.d("TealiumPlugin-Lifecycle", "onDetachedFromActivityForConfigChanges")
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        Log.d("TealiumPlugin-Lifecycle", "onReattachedToActivityForConfigChanges")
+    }
+
+    override fun onDetachedFromActivity() {
+        Log.d("TealiumPlugin-Lifecycle", "onDetachedFromActivity")
     }
 
     companion object {
