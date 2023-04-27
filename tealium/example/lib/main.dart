@@ -20,6 +20,7 @@ class _MyAppState extends State<MyApp> {
   final traceIdValue = TextEditingController();
   final userIdValue = TextEditingController();
   String result = '';
+  String currentVisitorId = '';
 
   // MARK: Tealium Configuration
 
@@ -34,17 +35,11 @@ class _MyAppState extends State<MyApp> {
       batchingEnabled: false,
       visitorServiceEnabled: true,
       consentExpiry: ConsentExpiry(5, TimeUnit.MINUTES),
-      visitorIdentityKey: visitorIdentityKey
-      );
+      visitorIdentityKey: visitorIdentityKey);
 
   @override
   void initState() {
-    super.initState();
-  }
-
-  ListView _listView() {
     // MARK: Initialize Tealium
-
     Tealium.initialize(config).then((value) => {
           developer.log('Tealium Initialized'),
           Tealium.setConsentStatus(ConsentStatus.consented),
@@ -52,16 +47,23 @@ class _MyAppState extends State<MyApp> {
               () => developer.log('Consent Expired')),
           Tealium.setVisitorServiceListener(
               (profile) => _logVisitorProfile(profile)),
-          Tealium.setVisitorIdListener(
-              (visitorId) => _logVisitorId(visitorId)),
+          Tealium.getVisitorId().then((value) => _logVisitorId(value)),
+          Tealium.setVisitorIdListener((visitorId) => _logVisitorId(visitorId)),
           Tealium.addCustomRemoteCommand('json-test',
-              (payload) => {_logRemoteCommand('JSON Test', payload)})
+              (payload) => {_logRemoteCommand('JSON Test', payload)}),
+          Tealium.getFromDataLayer(visitorIdentityKey)
+              .then((value) => setState(() {
+                    userIdValue.text = value;
+                  })),
         });
+    super.initState();
+  }
 
+  ListView _listView() {
     return new ListView(
       scrollDirection: Axis.vertical,
+      padding: EdgeInsets.all(5),
       children: <Widget>[
-        Padding(padding: EdgeInsets.all(3.5)),
         TextField(
           controller: traceIdValue,
           autocorrect: true,
@@ -126,10 +128,24 @@ class _MyAppState extends State<MyApp> {
         TealiumButton(
             title: 'Terminate Tealium',
             onPressed: () => Tealium.terminateInstance()),
-        TextField(
-          controller: userIdValue,
-          autocorrect: true,
-          decoration: InputDecoration(hintText: 'Enter an Identity'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Identity:'),
+            Padding(padding: EdgeInsets.all(3)),
+            Expanded(
+                child: TextField(
+              controller: userIdValue,
+              autocorrect: true,
+              decoration: InputDecoration(hintText: 'Enter an Identity'),
+            ))
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Text('Current Visitor ID: $currentVisitorId',
+              textAlign: TextAlign.center),
         ),
         TealiumButton(
           title: 'Set Identity',
@@ -157,10 +173,13 @@ class _MyAppState extends State<MyApp> {
         JsonEncoder().convert(converted['currentVisit']['tallies']));
     developer.log('Badges: ' + JsonEncoder().convert(converted['badges']));
   }
-  
+
   void _logVisitorId(String visitorId) {
     developer.log('=========Visitor Id Changed =========');
     developer.log('VisitorId: ' + visitorId);
+    setState(() {
+      currentVisitorId = visitorId;
+    });
   }
 
   void _logRemoteCommand(String name, dynamic payload) {
@@ -208,8 +227,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   _setIdentity() {
-      var identity = userIdValue.text;
-      Tealium.addToDataLayer({visitorIdentityKey: identity}, Expiry.forever);
+    var identity = userIdValue.text;
+    Tealium.addToDataLayer({visitorIdentityKey: identity}, Expiry.forever);
   }
 
   @override
