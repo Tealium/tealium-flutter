@@ -321,15 +321,12 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        Log.d("TealiumPlugin-Lifecycle", "onDetachedFromActivityForConfigChanges")
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        Log.d("TealiumPlugin-Lifecycle", "onReattachedToActivityForConfigChanges")
     }
 
     override fun onDetachedFromActivity() {
-        Log.d("TealiumPlugin-Lifecycle", "onDetachedFromActivity")
     }
 
     companion object {
