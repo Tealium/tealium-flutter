@@ -104,8 +104,8 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         }
 
         // Library Settings
-        if (configMap.containsKey(KEY_SETTINGS_USE_REMOTE)) {
-            useRemoteLibrarySettings = configMap[KEY_SETTINGS_USE_REMOTE].toString().toBoolean()
+        configMap[KEY_SETTINGS_USE_REMOTE]?.let {
+            useRemoteLibrarySettings = it.toString().toBoolean()
         }
         configMap[KEY_SETTINGS_OVERRIDE_URL]?.let {
             overrideLibrarySettingsUrl = it as String
@@ -121,11 +121,11 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         }
 
         // Deep Links
-        if (configMap.containsKey(KEY_QR_TRACE_ENABLED)) {
-            qrTraceEnabled = configMap[KEY_QR_TRACE_ENABLED].toString().toBoolean()
+        configMap[KEY_QR_TRACE_ENABLED]?.let {
+            qrTraceEnabled = it.toString().toBoolean()
         }
-        if (configMap.containsKey(KEY_DEEPLINK_TRACKING_ENABLED)) {
-            deepLinkTrackingEnabled = configMap[KEY_DEEPLINK_TRACKING_ENABLED].toString().toBoolean()
+        configMap[KEY_DEEPLINK_TRACKING_ENABLED]?.let {
+            deepLinkTrackingEnabled = it.toString().toBoolean()
         }
 
         // Log Level
@@ -136,8 +136,8 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         }
 
         // Consent
-        if (configMap.containsKey(KEY_CONSENT_LOGGING_ENABLED)) {
-            consentManagerLoggingEnabled = configMap[KEY_CONSENT_LOGGING_ENABLED].toString().toBoolean()
+        configMap[KEY_CONSENT_LOGGING_ENABLED]?.let {
+            consentManagerLoggingEnabled = it.toString().toBoolean()
         }
         configMap[KEY_CONSENT_LOGGING_URL]?.let {
             consentManagerLoggingUrl = it as String
@@ -159,8 +159,8 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         }
 
         // Lifecycle
-        if (configMap.containsKey(KEY_LIFECYCLE_AUTO_TRACKING_ENABLED)) {
-            isAutoTrackingEnabled = configMap[KEY_LIFECYCLE_AUTO_TRACKING_ENABLED].toString().toBoolean()
+        configMap[KEY_LIFECYCLE_AUTO_TRACKING_ENABLED]?.let { value ->
+            isAutoTrackingEnabled = value.toString().toBoolean()
         }
 
         configMap[KEY_VISITOR_IDENTITY_KEY]?.let { key ->

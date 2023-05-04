@@ -27,7 +27,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-version = "2.3.0"
+version = "2.4.0"
 android {
     compileSdkVersion 30
 
@@ -45,10 +45,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //Tealium
-    implementation 'com.tealium:kotlin-core:1.5.1'
+    implementation 'com.tealium:kotlin-core:1.5.2'
     implementation 'com.tealium:kotlin-collect-dispatcher:1.1.0'
     implementation 'com.tealium:kotlin-tagmanagement-dispatcher:1.2.0'
     implementation 'com.tealium:kotlin-remotecommand-dispatcher:1.2.1'
     implementation 'com.tealium:kotlin-lifecycle:1.1.1'
-    implementation 'com.tealium:kotlin-visitor-service:1.1.1'
+    implementation 'com.tealium:kotlin-visitor-service:1.2.0'
 }
