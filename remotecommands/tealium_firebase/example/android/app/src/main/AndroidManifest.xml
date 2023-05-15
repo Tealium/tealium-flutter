@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tealium.remotecommands.firebase.tealium_firebase_example">
+    package="com.tealium.flutter.remotecommands.firebase.tealium_firebase_example">
    <application
         android:label="tealium_firebase_example"
         android:name="${applicationName}"
