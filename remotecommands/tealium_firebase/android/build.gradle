@@ -1,4 +1,4 @@
-group 'com.tealium.remotecommands.firebase'
+group 'com.tealium.flutter.remotecommands.firebase'
 version '1.0-SNAPSHOT'
 
 buildscript {

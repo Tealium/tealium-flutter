@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Fix: Duplicated BuildConfig class
+
 ## 1.0.0
 
 * Initial release of Tealium-Firebase for Flutter
