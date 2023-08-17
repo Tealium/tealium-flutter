@@ -64,6 +64,8 @@ public class SwiftTealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalMo
             resetVisitor()
         } else if call.method == "decorateUrl" {
             decorateUrl(call, result: result)
+        } else if call.method == "getUrlParameters" {
+          getUrlParameters(call, result: result)
         } else {
             result(false)
         }
@@ -140,4 +142,19 @@ public class SwiftTealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalMo
             result(url.absoluteString)
         })
     }
+
+    func getUrlParameters(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let module = adobeModule else {
+            return result(nil)
+        }
+
+        module.getURLParameters(completion: { parameters in
+            guard let parameters = parameters else {
+                result(FlutterError(code: "Adobe Visitor", message: "Adobe Visitor was null. Check for valid Adobe Org ID.", details: nil))
+                return
+            }
+            result([parameters.name:  parameters.value])
+        })
+    }
+
 }

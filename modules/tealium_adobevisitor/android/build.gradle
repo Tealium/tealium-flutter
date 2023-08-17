@@ -48,6 +48,6 @@ android {
         compileOnly rootProject.findProject(":tealium")
 
         implementation 'com.tealium:kotlin-core:1.5.1'
-        implementation 'com.tealium:kotlin-adobe-visitor:1.1.0'
+        implementation 'com.tealium:kotlin-adobe-visitor:1.1.2'
     }
 }

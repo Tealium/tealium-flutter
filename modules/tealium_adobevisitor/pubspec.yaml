@@ -1,6 +1,6 @@
 name: tealium_adobevisitor
 description: A Flutter plugin for using Tealium's Adobe Visitor Module with the Tealium Flutter Plugin.
-version: 1.0.0
+version: 1.0.1
 homepage: https://docs.tealium.com/platforms/flutter/
 
 environment:

@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
 
   final _urlController = TextEditingController(text: "https://mysite.com/");
   var _decoratedUrl = "";
+  var _urlParameters = "";
 
   @override
   void initState() {
@@ -115,9 +116,21 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () =>
                     TealiumAdobeVisitor.decorateUrl(_urlController.text).then(
                         (value) =>
-                            setState(() => {_decoratedUrl = value as String}))),
+                            setState(() => _decoratedUrl = value as String))),
             Visibility(
                 visible: _decoratedUrl.isNotEmpty, child: Text(_decoratedUrl)),
+            TealiumButton(
+                disabled: !_adobeOrgSet,
+                title: 'Get URL Parameters',
+                onPressed: () =>
+                    TealiumAdobeVisitor.getUrlParameters().then(
+                            (value) =>
+                            setState(() => _urlParameters = value?["adobe_mc"] as String)).catchError(
+                        (error) =>
+                          setState(() => _urlParameters = "Adobe Visitor could not be retrieved. Check Org ID."
+                    ))),
+            Visibility(
+                visible: _urlParameters.isNotEmpty, child: Text(_urlParameters)),
             const Padding(padding: EdgeInsets.all(8)),
             TextField(
               enabled: _adobeOrgSet,

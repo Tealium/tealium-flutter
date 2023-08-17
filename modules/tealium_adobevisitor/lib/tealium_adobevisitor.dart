@@ -31,6 +31,10 @@ class TealiumAdobeVisitor {
     return _channel.invokeMethod("decorateUrl", { "url": url });
   }
 
+  static Future<Map<Object?, Object?>?> getUrlParameters() async {
+    return _channel.invokeMethod("getUrlParameters");
+  }
+
   static Future<AdobeVisitor?> linkEcidToKnownIdentifier(String knownId, String adobeDataProviderId, AuthState? authState) async {
     var visitorMap = await _channel.invokeMethod("linkEcidToKnownIdentifier", { 
         "knownId": knownId, 

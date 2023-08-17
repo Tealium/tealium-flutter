@@ -7,6 +7,7 @@ import com.tealium.TealiumPlugin
 import com.tealium.adobe.api.AdobeVisitor
 import com.tealium.adobe.api.ResponseListener
 import com.tealium.adobe.api.UrlDecoratorHandler
+import com.tealium.adobe.api.GetUrlParametersHandler
 import com.tealium.adobe.kotlin.AdobeVisitor
 import com.tealium.adobe.kotlin.AdobeVisitorModule
 import com.tealium.adobe.kotlin.adobeVisitorApi
@@ -86,6 +87,7 @@ class TealiumAdobeVisitorPlugin : FlutterPlugin, MethodChannel.MethodCallHandler
             "getAdobeVisitor" -> getAdobeVisitor(result)
             "resetVisitor" -> resetVisitor(result)
             "decorateUrl" -> decorateUrl(call, result)
+            "getUrlParameters" -> getUrlParameters(result)
             else -> result.onMain().notImplemented()
         }
     }
@@ -179,6 +181,24 @@ class TealiumAdobeVisitorPlugin : FlutterPlugin, MethodChannel.MethodCallHandler
                 null
             )
         }
+    }
+
+    fun getUrlParameters(result: MethodChannel.Result) {
+        adobeVisitorApi?.getUrlParameters(
+            object : GetUrlParametersHandler {
+                override fun onRetrieveParameters(params: Map<String, String>?) {
+                    params?.let {
+                        result.success(params)
+                    } ?: run {
+                        result.error(
+                            "Adobe Visitor",
+                            "Adobe Visitor was null. Check for valid Adobe Org ID.",
+                            null
+                        )
+                    }
+                }
+            }
+        )
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
