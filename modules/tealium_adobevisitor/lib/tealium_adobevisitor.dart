@@ -32,7 +32,7 @@ class TealiumAdobeVisitor {
   }
 
   static Future<Map<Object?, Object?>?> getUrlParameters() async {
-    return _channel.invokeMethod("getUrlParameters", {});
+    return _channel.invokeMethod("getUrlParameters");
   }
 
   static Future<AdobeVisitor?> linkEcidToKnownIdentifier(String knownId, String adobeDataProviderId, AuthState? authState) async {

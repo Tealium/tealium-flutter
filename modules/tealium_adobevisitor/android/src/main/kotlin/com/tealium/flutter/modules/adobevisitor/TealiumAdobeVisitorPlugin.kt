@@ -87,7 +87,7 @@ class TealiumAdobeVisitorPlugin : FlutterPlugin, MethodChannel.MethodCallHandler
             "getAdobeVisitor" -> getAdobeVisitor(result)
             "resetVisitor" -> resetVisitor(result)
             "decorateUrl" -> decorateUrl(call, result)
-            "getUrlParameters" -> getUrlParameters(call, result)
+            "getUrlParameters" -> getUrlParameters(result)
             else -> result.onMain().notImplemented()
         }
     }
@@ -183,7 +183,7 @@ class TealiumAdobeVisitorPlugin : FlutterPlugin, MethodChannel.MethodCallHandler
         }
     }
 
-    fun getUrlParameters(call: MethodCall, result: MethodChannel.Result) {
+    fun getUrlParameters(result: MethodChannel.Result) {
         adobeVisitorApi?.getUrlParameters(
             object : GetUrlParametersHandler {
                 override fun onRetrieveParameters(params: Map<String, String>?) {
