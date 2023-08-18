@@ -65,7 +65,7 @@ public class SwiftTealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalMo
         } else if call.method == "decorateUrl" {
             decorateUrl(call, result: result)
         } else if call.method == "getUrlParameters" {
-          getUrlParameters(call, result: result)
+          getUrlParameters(result: result)
         } else {
             result(false)
         }
@@ -143,7 +143,7 @@ public class SwiftTealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalMo
         })
     }
 
-    func getUrlParameters(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    func getUrlParameters(result: @escaping FlutterResult) {
         guard let module = adobeModule else {
             return result(nil)
         }
