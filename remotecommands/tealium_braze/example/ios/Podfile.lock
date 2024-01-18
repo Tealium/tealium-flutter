@@ -1,7 +1,7 @@
 PODS:
   - BrazeKit (5.14.0)
   - Flutter (1.0.0)
-  - tealium (2.4.0):
+  - tealium (2.4.1):
     - Flutter
     - tealium-swift/Collect (~> 2.8)
     - tealium-swift/Core (~> 2.8)
@@ -20,7 +20,7 @@ PODS:
     - tealium-swift/Core
   - tealium-swift/VisitorService (2.10.1):
     - tealium-swift/Core
-  - tealium_braze (0.0.1):
+  - tealium_braze (1.0.0):
     - Flutter
     - tealium
     - tealium-swift/Core (~> 2.6)
@@ -52,11 +52,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   BrazeKit: 2df1928c02f5630ed718f06b7bdeecc9faf8d970
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  tealium: 4f5b515b2c5087f59708106040692a90918afcc5
+  tealium: 93359bdcf4aabe596585e7362c2e81e1de435ca1
   tealium-swift: 9ec83baf5419d0bb1e95b184288231e27385015b
-  tealium_braze: c2bc42530f3b042a5c9c752df4f2891f28b2c1ae
+  tealium_braze: 3263b97d78ba5f3270ff9ecb9e5977f144bf3660
   TealiumBraze: df84e4b662a376d165025d9c84cf7141bfd6505e
 
-PODFILE CHECKSUM: 591c2f6ebe3cf80eddf9823806df57e06447523e
+PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
 COCOAPODS: 1.14.2

@@ -16,7 +16,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  tealium:
+    path: ../../../tealium
   tealium_braze:
     # When depending on this package from a real application you should use:
     #   tealium_braze: ^x.y.z

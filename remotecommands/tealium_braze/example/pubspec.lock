@@ -169,13 +169,12 @@ packages:
     source: hosted
     version: "1.2.0"
   tealium:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      name: tealium
-      sha256: fc7593a979a43303830be3b878d2d6b2be9a6aa7cd5a5df281d1a06e21f5a79d
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.0"
+      path: "../../../tealium"
+      relative: true
+    source: path
+    version: "2.4.1"
   tealium_braze:
     dependency: "direct main"
     description:

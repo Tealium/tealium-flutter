@@ -60,10 +60,10 @@ class _MyAppState extends State<MyApp> {
         ]);
 
     Tealium.initialize(config).then((value) => {
-          developer.log('Tealium Initialized'),
-          Tealium.setConsentStatus(ConsentStatus.consented),
-          Tealium.track(TealiumEvent("launch", {}))
-        });
+        developer.log('Tealium Initialized'),
+        Tealium.setConsentStatus(ConsentStatus.consented),
+        Tealium.track(TealiumEvent("launch", {}))
+      });
   }
 
   ListView _listView() {
@@ -141,7 +141,7 @@ class _MyAppState extends State<MyApp> {
       "product_category": ["clothes", "shoes"],
       "product_quantity": [1, 2],
       "product_price": [10.0, 5.0],
-      "order_currency": "USD",
+      "currency_code": "USD",
       "order_total": 20.0,
       "order_id": "ORD-${_generateOrderId()}",
     }));
