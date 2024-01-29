@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.version          = '1.0.0'
   s.summary          = 'Tealium for Braze and Flutter.'
   s.description      = <<-DESC
-        Tealium for Firebase and Flutter.
+        Tealium for Braze and Flutter.
                        DESC
   s.homepage         = 'https://github.com/tealium/tealium-flutter'
   s.license          = { :file => '../LICENSE' }
