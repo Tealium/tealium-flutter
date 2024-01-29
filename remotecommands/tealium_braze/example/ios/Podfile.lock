@@ -1,5 +1,5 @@
 PODS:
-  - BrazeKit (5.14.0)
+  - BrazeKit (7.5.0)
   - Flutter (1.0.0)
   - tealium (2.4.1):
     - Flutter
@@ -9,24 +9,24 @@ PODS:
     - tealium-swift/RemoteCommands (~> 2.8)
     - tealium-swift/TagManagement (~> 2.8)
     - tealium-swift/VisitorService (~> 2.8)
-  - tealium-swift/Collect (2.10.1):
+  - tealium-swift/Collect (2.11.1):
     - tealium-swift/Core
-  - tealium-swift/Core (2.10.1)
-  - tealium-swift/Lifecycle (2.10.1):
+  - tealium-swift/Core (2.11.1)
+  - tealium-swift/Lifecycle (2.11.1):
     - tealium-swift/Core
-  - tealium-swift/RemoteCommands (2.10.1):
+  - tealium-swift/RemoteCommands (2.11.1):
     - tealium-swift/Core
-  - tealium-swift/TagManagement (2.10.1):
+  - tealium-swift/TagManagement (2.11.1):
     - tealium-swift/Core
-  - tealium-swift/VisitorService (2.10.1):
+  - tealium-swift/VisitorService (2.11.1):
     - tealium-swift/Core
   - tealium_braze (1.0.0):
     - Flutter
     - tealium
     - tealium-swift/Core (~> 2.6)
     - TealiumBraze (~> 3.0)
-  - TealiumBraze (3.0.0):
-    - BrazeKit (~> 5.8)
+  - TealiumBraze (3.1.1):
+    - BrazeKit (~> 7.2)
     - tealium-swift/Core (~> 2.8)
     - tealium-swift/RemoteCommands (~> 2.8)
 
@@ -50,12 +50,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/tealium_braze/ios"
 
 SPEC CHECKSUMS:
-  BrazeKit: 2df1928c02f5630ed718f06b7bdeecc9faf8d970
+  BrazeKit: 55dfadd08105765a568137f5d24d46894186db65
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   tealium: 93359bdcf4aabe596585e7362c2e81e1de435ca1
-  tealium-swift: 9ec83baf5419d0bb1e95b184288231e27385015b
+  tealium-swift: e904760e180bada93e78e760d5349c0be06f350f
   tealium_braze: 3263b97d78ba5f3270ff9ecb9e5977f144bf3660
-  TealiumBraze: df84e4b662a376d165025d9c84cf7141bfd6505e
+  TealiumBraze: 41dd55b1032ae58cb6adbfdc45b1f03a52d49019
 
 PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
