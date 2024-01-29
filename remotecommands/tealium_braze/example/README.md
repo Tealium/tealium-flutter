@@ -1,16 +1,14 @@
-# tealium_braze_example
+# Braze for Tealium Flutter Plugin
 
-Demonstrates how to use the tealium_braze plugin.
+## Documentation
+For full documentation, please see the Tealium Learning Community:
 
-## Getting Started
+[Tealium for Flutter](https://docs.tealium.com/platforms/flutter/)
 
-This project is a starting point for a Flutter application.
+## License
 
-A few resources to get you started if this is your first Flutter project:
+Use of this software is subject to the terms and conditions of the license agreement contained in the file titled "LICENSE.txt".  Please read the license before downloading or using any of the files contained in this repository. By downloading or using any of these files, you are agreeing to be bound by and comply with the license agreement.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+Copyright (C) 2012-2024, Tealium Inc.
