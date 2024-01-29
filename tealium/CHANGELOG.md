@@ -2,6 +2,9 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.4.1 (Jan 2024)
+* Fix: Remote Commands with local mappings incorrectly set as `.webview`
+
 ### 2.4.0 (Apr 2023)
 * Visitor Service (Android)
     - Fixed a case where event tracking would be delayed whilst fetching an updated visitor profile.

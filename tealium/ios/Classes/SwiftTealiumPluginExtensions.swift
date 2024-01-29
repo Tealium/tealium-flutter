@@ -221,6 +221,7 @@ public extension SwiftTealiumPlugin {
         var command: RemoteCommand
         if let factory = SwiftTealiumPlugin.remoteCommandFactories[id] {
             command = factory.create()
+            command.type = type
         } else {
             command = RemoteCommand(commandId: id, description: nil, type: type) { response in
                 guard var payload = response.payload else {
