@@ -2,6 +2,10 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.5.0 (Feb 2024)
+* Updated iOS dependencies to support XCode 15
+* Increased minimum iOS deployment target to 12.0
+
 ### 2.4.1 (Jan 2024)
 * Fix: Remote Commands with local mappings incorrectly set as `.webview`
 

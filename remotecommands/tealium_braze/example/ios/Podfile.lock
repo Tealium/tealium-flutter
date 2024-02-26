@@ -1,30 +1,30 @@
 PODS:
   - BrazeKit (7.5.0)
   - Flutter (1.0.0)
-  - tealium (2.4.1):
+  - tealium (2.5.0):
     - Flutter
-    - tealium-swift/Collect (~> 2.8)
-    - tealium-swift/Core (~> 2.8)
-    - tealium-swift/Lifecycle (~> 2.8)
-    - tealium-swift/RemoteCommands (~> 2.8)
-    - tealium-swift/TagManagement (~> 2.8)
-    - tealium-swift/VisitorService (~> 2.8)
-  - tealium-swift/Collect (2.11.1):
+    - tealium-swift/Collect (~> 2.12)
+    - tealium-swift/Core (~> 2.12)
+    - tealium-swift/Lifecycle (~> 2.12)
+    - tealium-swift/RemoteCommands (~> 2.12)
+    - tealium-swift/TagManagement (~> 2.12)
+    - tealium-swift/VisitorService (~> 2.12)
+  - tealium-swift/Collect (2.12.2):
     - tealium-swift/Core
-  - tealium-swift/Core (2.11.1)
-  - tealium-swift/Lifecycle (2.11.1):
+  - tealium-swift/Core (2.12.2)
+  - tealium-swift/Lifecycle (2.12.2):
     - tealium-swift/Core
-  - tealium-swift/RemoteCommands (2.11.1):
+  - tealium-swift/RemoteCommands (2.12.2):
     - tealium-swift/Core
-  - tealium-swift/TagManagement (2.11.1):
+  - tealium-swift/TagManagement (2.12.2):
     - tealium-swift/Core
-  - tealium-swift/VisitorService (2.11.1):
+  - tealium-swift/VisitorService (2.12.2):
     - tealium-swift/Core
-  - tealium_braze (1.0.0):
+  - tealium_braze (1.1.0):
     - Flutter
-    - tealium
-    - tealium-swift/Core (~> 2.6)
-    - TealiumBraze (~> 3.0)
+    - tealium (~> 2.5)
+    - tealium-swift/Core (~> 2.12)
+    - TealiumBraze (~> 3.1)
   - TealiumBraze (3.1.1):
     - BrazeKit (~> 7.2)
     - tealium-swift/Core (~> 2.8)
@@ -52,11 +52,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   BrazeKit: 55dfadd08105765a568137f5d24d46894186db65
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  tealium: 93359bdcf4aabe596585e7362c2e81e1de435ca1
-  tealium-swift: e904760e180bada93e78e760d5349c0be06f350f
-  tealium_braze: 3263b97d78ba5f3270ff9ecb9e5977f144bf3660
+  tealium: 78a288dbb0cd3dbdcbec000b21189f8664b2af89
+  tealium-swift: 4b7e3dda42d7c1de6acb769abad9920346d17d43
+  tealium_braze: f367de48b50c7801e32f987d9d22f5e92dccaba3
   TealiumBraze: 41dd55b1032ae58cb6adbfdc45b1f03a52d49019
 
 PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
-COCOAPODS: 1.14.2
+COCOAPODS: 1.15.2
