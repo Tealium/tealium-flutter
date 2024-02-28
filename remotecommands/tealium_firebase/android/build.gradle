@@ -47,6 +47,6 @@ android {
     dependencies {
         compileOnly rootProject.findProject(":tealium")
 
-        implementation 'com.tealium.remotecommands:firebase:1.3.0'
+        implementation 'com.tealium.remotecommands:firebase:1.5.0'
     }
 }
