@@ -1,5 +1,5 @@
 PODS:
-  - BrazeKit (7.5.0)
+  - BrazeKit (7.7.0)
   - Flutter (1.0.0)
   - tealium (2.5.0):
     - Flutter
@@ -24,11 +24,11 @@ PODS:
     - Flutter
     - tealium (~> 2.5)
     - tealium-swift/Core (~> 2.12)
-    - TealiumBraze (~> 3.1)
-  - TealiumBraze (3.1.1):
+    - TealiumBraze (~> 3.2)
+  - TealiumBraze (3.2.0):
     - BrazeKit (~> 7.2)
-    - tealium-swift/Core (~> 2.8)
-    - tealium-swift/RemoteCommands (~> 2.8)
+    - tealium-swift/Core (~> 2.12)
+    - tealium-swift/RemoteCommands (~> 2.12)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -50,12 +50,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/tealium_braze/ios"
 
 SPEC CHECKSUMS:
-  BrazeKit: 55dfadd08105765a568137f5d24d46894186db65
+  BrazeKit: ee31d3b5113646cbd6ad44eafc93b14c3c3c504c
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   tealium: 78a288dbb0cd3dbdcbec000b21189f8664b2af89
   tealium-swift: 4b7e3dda42d7c1de6acb769abad9920346d17d43
-  tealium_braze: f367de48b50c7801e32f987d9d22f5e92dccaba3
-  TealiumBraze: 41dd55b1032ae58cb6adbfdc45b1f03a52d49019
+  tealium_braze: 14683fa98486f32446fad92267a455812ea22a90
+  TealiumBraze: 9de0067b72a00c7d3b0ad67bee501a34518b4e06
 
 PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
