@@ -76,3 +76,6 @@ build/
 /example/ios/Pods
 
 google-services.json
+
+# FVM Version Cache
+.fvm/
