@@ -27,9 +27,9 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-version = "2.5.0"
+version = "2.6.0"
 android {
-    compileSdk 33
+    compileSdk 34
 
     if (project.android.hasProperty("namespace")) {
         namespace = 'com.tealium'
