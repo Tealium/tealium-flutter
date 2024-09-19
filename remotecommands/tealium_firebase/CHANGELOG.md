@@ -1,3 +1,6 @@
+## 1.4.0
+* Android - Fix to resolve missing `namespace` issue when using AGP v8
+
 ## 1.3.0
 * Removed arm64 exclusion
 * Updated dependencies for XCode 15
