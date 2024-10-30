@@ -1,0 +1,57 @@
+group = "com.tealium.flutter.moments_api.tealium_moments_api"
+version = "1.0-SNAPSHOT"
+
+buildscript {
+    ext.kotlin_version = "1.7.10"
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.3.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    if (project.android.hasProperty("namespace")) {
+        namespace = "com.tealium.flutter.moments_api.tealium_moments_api"
+    }
+
+    compileSdk = 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+    }
+
+    defaultConfig {
+        minSdk = 21
+    }
+
+    dependencies {
+        compileOnly rootProject.findProject(":tealium")
+
+        implementation 'com.tealium:kotlin-core:1.6.0'
+        implementation 'com.tealium:kotlin-momentsapi:1.0.2'
+    }
+}
