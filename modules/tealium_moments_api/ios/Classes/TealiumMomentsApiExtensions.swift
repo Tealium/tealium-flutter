@@ -14,7 +14,6 @@ extension EngineResponse {
         if let badges = self.badges {
             dict["badges"] = badges
         }
-        
         if let audiences = self.audiences {
             dict["audiences"] = audiences
         }
@@ -24,18 +23,16 @@ extension EngineResponse {
         if let booleans = self.booleans {
             dict["booleans"] = booleans
         }
-        
         if let dateAttributes = self.dates {
             dict["dates"] = dateAttributes
         }
-        
         if let numbers = self.numbers {
             dict["numbers"] = numbers
         }
-        
         return dict
     }
 }
+
 extension MomentsAPIRegion {
     static func regionFrom(region: String) -> MomentsAPIRegion {
         switch region.lowercased() {

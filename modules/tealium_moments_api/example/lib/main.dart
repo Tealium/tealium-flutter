@@ -20,9 +20,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  final TextEditingController _momentsApiReferrerController = TextEditingController();
-  final TextEditingController _momentsApiEngineIdController = TextEditingController();
+  final TextEditingController _momentsApiReferrerController =
+      TextEditingController();
+  final TextEditingController _momentsApiEngineIdController =
+      TextEditingController();
   String? _momentsApiReferrer;
   String _momentsApiEngineId = '';
   MomentsApiRegion _currentRegion = MomentsApiRegion.GERMANY;
@@ -41,9 +42,8 @@ class _MyAppState extends State<MyApp> {
 
   void newTealiumMomentsApiConfig() {
     MomentsApiConfig config = MomentsApiConfig(
-      momentsApiRegion: _momentsApiRegion, 
-      momentsApiReferrer: _momentsApiReferrer
-    );
+        momentsApiRegion: _momentsApiRegion,
+        momentsApiReferrer: _momentsApiReferrer);
 
     TealiumMomentsApi.configure(config);
 
@@ -59,12 +59,11 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> initTealium() async {
     await Tealium.initialize(tealiumConfig).then((value) => {
-      setConsentStatus(),
-      Tealium.getVisitorId().then((value) => _logVisitorId(value)),
-      Tealium.setVisitorIdListener((visitorId) => _logVisitorId(visitorId)),
-      debugPrint('Tealium Initialized')
-      }
-    );
+          setConsentStatus(),
+          Tealium.getVisitorId().then((value) => _logVisitorId(value)),
+          Tealium.setVisitorIdListener((visitorId) => _logVisitorId(visitorId)),
+          debugPrint('Tealium Initialized')
+        });
   }
 
   @override
@@ -76,73 +75,62 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-            
-                Text(
-                  "MomentsAPI Config\nEngineId: $_momentsApiEngineId\nRegion: ${_momentsApiRegion.name}\nReferrer: $_momentsApiReferrer",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20
+            child: Column(children: [
+              Text(
+                "MomentsAPI Config\nEngineId: $_momentsApiEngineId\nRegion: ${_momentsApiRegion.name}\nReferrer: $_momentsApiReferrer",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 20),
+              ),
+              _gap(12),
+              Padding(
+                padding: const EdgeInsets.only(top: 30, right: 20, left: 20),
+                child: TextFormField(
+                  onTapOutside: (event) =>
+                      FocusManager.instance.primaryFocus?.unfocus(),
+                  controller: _momentsApiEngineIdController,
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    hintText: 'Specify an Engine Id',
+                    labelText: "Engine Id",
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
                   ),
                 ),
-            
-                _gap(12),
-            
-                Padding(
-                  padding: const EdgeInsets.only(top:30,right: 20,left: 20),
-                  child: TextFormField(
-                    onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-                    controller: _momentsApiEngineIdController,
-                    decoration: const InputDecoration(
-                      contentPadding:  EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                      hintText: 'Specify an Engine Id',
-                      labelText: "Engine Id",
-                      border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
-                    ), 
-                    
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30, right: 20, left: 20),
+                child: TextFormField(
+                  onTapOutside: (event) =>
+                      FocusManager.instance.primaryFocus?.unfocus(),
+                  controller: _momentsApiReferrerController,
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    hintText: 'Specify a referrer URL - Optional',
+                    helperText: 'Must match the “Domain Allow List” in Tealium',
+                    labelText: "Referrer URL - Optional",
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
                   ),
                 ),
-            
-                Padding(
-                  padding: const EdgeInsets.only(top:30,right: 20,left: 20),
-                  child: TextFormField(
-                    onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-                    controller: _momentsApiReferrerController,
-                    decoration: const InputDecoration(
-                      contentPadding:  EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                      hintText: 'Specify a referrer URL - Optional',
-                      helperText: 'Must match the “Domain Allow List” in Tealium',
-                      labelText: "Referrer URL - Optional",
-                      border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
-                    ), 
-                    
-                  ),
-                ),
-            
-                _gap(12),
-            
-                DropdownButton<MomentsApiRegion>(
-                  isDense: true,
-                  value: _currentRegion,
-                  onChanged: (MomentsApiRegion? newValue) {
-                    setState(() {
-                      _currentRegion = newValue!;
-                    });
-                  },
-                  items: MomentsApiRegion.values.map((MomentsApiRegion region) {
-                    return DropdownMenuItem<MomentsApiRegion>(
-                      value: region,
-                      child: Text(region.name)
-                    );
-                  }).toList(),
-                ),
-            
-                _gap(12),
-            
-                ElevatedButton(
+              ),
+              _gap(12),
+              DropdownButton<MomentsApiRegion>(
+                isDense: true,
+                value: _currentRegion,
+                onChanged: (MomentsApiRegion? newValue) {
+                  setState(() {
+                    _currentRegion = newValue!;
+                  });
+                },
+                items: MomentsApiRegion.values.map((MomentsApiRegion region) {
+                  return DropdownMenuItem<MomentsApiRegion>(
+                      value: region, child: Text(region.name));
+                }).toList(),
+              ),
+              _gap(12),
+              ElevatedButton(
                   onPressed: () {
                     setState(() {
                       _momentsApiReferrer = null;
@@ -150,13 +138,10 @@ class _MyAppState extends State<MyApp> {
                       _momentsApiRegion = _currentRegion;
                       newTealiumMomentsApiConfig();
                     });
-                  }, 
-                  child: const Text("Set Moments w/out Referrer")
-                ),
-            
-                _gap(12),
-            
-                ElevatedButton(
+                  },
+                  child: const Text("Set Moments w/out Referrer")),
+              _gap(12),
+              ElevatedButton(
                   onPressed: () {
                     setState(() {
                       _momentsApiReferrer = _momentsApiReferrerController.text;
@@ -164,53 +149,41 @@ class _MyAppState extends State<MyApp> {
                       _momentsApiRegion = _currentRegion;
                       newTealiumMomentsApiConfig();
                     });
-                  }, 
-                  child: const Text("Set Moments w/ Referrer")
-                ),
-            
-                _gap(50),
-            
-                const Text("Establish tealium connection"),
-            
-                _gap(12),
-            
-                ElevatedButton(
-                  onPressed: () => Tealium.track(TealiumEvent("new event", {"new":"event"})), 
-                  child: const Text("Send Event")
-                ),
-                
-                _gap(12),
-            
-                ElevatedButton(
-                  onPressed: fetchMomentsResponse, 
-                  child: const Text("Print moments data")
-                ),
-              ]
-            ),
+                  },
+                  child: const Text("Set Moments w/ Referrer")),
+              _gap(50),
+              const Text("Establish tealium connection"),
+              _gap(12),
+              ElevatedButton(
+                  onPressed: () => Tealium.track(
+                      TealiumEvent("new event", {"new": "event"})),
+                  child: const Text("Send Event")),
+              _gap(12),
+              ElevatedButton(
+                  onPressed: fetchMomentsResponse,
+                  child: const Text("Print moments data")),
+            ]),
           ),
         ),
       ),
     );
   }
 
-  void fetchMomentsResponse(){
+  void fetchMomentsResponse() {
     TealiumMomentsApi.fetchEngineResponse(
       engineId: _momentsApiEngineId,
       callback: (response) {
         if (response is EngineResponse) {
-
           _logResponseAttributes(response);
-
-        } else if (response is String){
+        } else if (response is String) {
           debugPrint('Error: $response');
-        }
-        else {
+        } else {
           debugPrint('Error: Invalid type returned');
         }
       }
     );
   }
-  
+
   Future setConsentStatus() async {
     return Tealium.setConsentStatus(ConsentStatus.consented);
   }
@@ -221,14 +194,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _logResponseAttributes(EngineResponse response) {
-    final singleResponseAttribute = StringBuffer("""
-
-<BADGE DATA>
-
-    Badges: ${response.badges}
-
-<BADGE DATA>""");
-
     final allResponseAttributes = StringBuffer("""
 
 <MOMENTS API DATA>
@@ -242,7 +207,6 @@ class _MyAppState extends State<MyApp> {
 
 </MOMENTS API DATA>""");
 
-    debugPrint(singleResponseAttribute.toString());
     debugPrint(allResponseAttributes.toString());
   }
 
@@ -250,4 +214,3 @@ class _MyAppState extends State<MyApp> {
     return SizedBox(height: height);
   }
 }
-
