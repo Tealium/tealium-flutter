@@ -60,8 +60,6 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule{
         
         let referrer = arguments[KEY_MOMENTS_API_REFERRER] as? String
         setMomentsReferrer(referrer: referrer)
-        
-        print("Moments config updated successfully.")
     }
     
     // Fetch Engine Response
@@ -75,19 +73,20 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule{
             return
         }
         
-        if let momentsInstance = SwiftTealiumPlugin.instance?.tealium?.momentsAPI {
-            momentsInstance.fetchEngineResponse(engineID: engineId as String, completion: { engineResponse in
-                switch engineResponse {
-                case .success(let response):
-                    result(response.asDictionary())
-                case .failure(let error):
-                    result("Failed to fetch engine response with error code: \(error.localizedDescription)")
-                }
-            })
-        }
-        else {
+        guard let momentsInstance = SwiftTealiumPlugin.instance?.tealium?.momentsAPI else {
             result("Failed to fetch engine response as a Tealuim instance is not currently initialised")
+            return
         }
+            
+        
+        momentsInstance.fetchEngineResponse(engineID: engineId as String, completion: { engineResponse in
+            switch engineResponse {
+            case .success(let response):
+                result(response.asDictionary())
+            case .failure(let error):
+                result("Failed to fetch engine response with error code: \(error.localizedDescription)")
+            }
+        })
     }
     
     func setMomentsRegion(region: String) {

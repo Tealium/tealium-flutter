@@ -92,6 +92,7 @@ class _MyAppState extends State<MyApp> {
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     hintText: 'Specify an Engine Id',
+                    helperText: 'Engine Id must be configured with Tealium account',
                     labelText: "Engine Id",
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
@@ -151,9 +152,11 @@ class _MyAppState extends State<MyApp> {
                     });
                   },
                   child: const Text("Set Moments w/ Referrer")),
-              _gap(50),
+              _gap(30),
               const Text("Establish tealium connection"),
-              _gap(12),
+              _gap(6),
+              const Text("Switch Tealium account & profile in `tealiumConfig` var"),
+              _gap(6),
               ElevatedButton(
                   onPressed: () => Tealium.track(
                       TealiumEvent("new event", {"new": "event"})),

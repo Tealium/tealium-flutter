@@ -2,7 +2,7 @@ group = "com.tealium.flutter.moments_api.tealium_moments_api"
 version = "1.0-SNAPSHOT"
 
 buildscript {
-    ext.kotlin_version = "1.7.10"
+    ext.kotlin_version = rootProject.ext.has('kotlin_version') ? rootProject.ext.get('kotlin_version') : '1.8.0'
     repositories {
         google()
         mavenCentral()
