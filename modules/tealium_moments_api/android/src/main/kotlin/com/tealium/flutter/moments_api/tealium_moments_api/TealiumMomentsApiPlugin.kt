@@ -82,8 +82,17 @@ class TealiumMomentsApiPlugin : FlutterPlugin, MethodCallHandler, OptionalModule
             return
         }
 
-        Tealium[INSTANCE_NAME]?.momentsApi?.fetchEngineResponse(
-            engineId,
+        val momentsApi = Tealium[INSTANCE_NAME]?.momentsApi
+        if (momentsApi == null) {
+            result.error(
+                "ConfigurationError",
+                "Unable to retrieve MomentsAPI module. Please check your configuration.",
+                null
+            )
+            return
+        }
+
+        momentsApi.fetchEngineResponse(engineId,
             object : ResponseListener<EngineResponse> {
                 override fun success(data: EngineResponse) {
                     result.success(data.toMap())
@@ -96,10 +105,7 @@ class TealiumMomentsApiPlugin : FlutterPlugin, MethodCallHandler, OptionalModule
                         null
                     )
                 }
-            }) ?: result.error(
-            "ConfigurationError",
-            "Unable to retrieve MomentsAPI module. Please check your configuration.",
-            null
+            }
         )
     }
 

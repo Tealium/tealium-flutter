@@ -74,7 +74,9 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule{
         }
         
         guard let momentsInstance = SwiftTealiumPlugin.instance?.tealium?.momentsAPI else {
-            result("Failed to fetch engine response as a Tealuim instance is not currently initialised")
+            result(FlutterError(code: "ConfigurationError",
+                                message: "Unable to retrieve MomentsAPI module. Please check your configuration.",
+                                details: nil))
             return
         }
             
@@ -84,7 +86,9 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule{
             case .success(let response):
                 result(response.asDictionary())
             case .failure(let error):
-                result("Failed to fetch engine response with error code: \(error.localizedDescription)")
+                result(FlutterError(code: "ErrorFetchingEngineResponse", 
+                                    message: "Failed to fetch engine response with error code: \(error.localizedDescription)",
+                                    details: nil))
             }
         })
     }
