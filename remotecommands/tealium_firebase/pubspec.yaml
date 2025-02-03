@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
-  tealium: ^2.5.0
+  tealium: ^2.6.1
   # for local testing
   # tealium:
   #   path: ../../tealium/
