@@ -108,7 +108,7 @@ PODS:
     - tealium-swift/Core
   - tealium-swift/VisitorService (2.15.0):
     - tealium-swift/Core
-  - tealium_firebase (1.4.0):
+  - tealium_firebase (1.5.0):
     - Flutter
     - tealium (~> 2.5)
     - tealium-swift/Core (~> 2.15)
@@ -159,7 +159,7 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   tealium: abace3619a08a744f174c937059cda20a7de8c16
   tealium-swift: 452713faa749291049ca039b9c02139a559084c8
-  tealium_firebase: 2d4b238ef46471415fbe42798ea3a90df409f6c3
+  tealium_firebase: 9ff6fb8515e273040effc7ca91a437c4e0ffc356
   TealiumFirebase: 4c81de8f1ae6cfabdd637198981f18e0177f1a7f
 
 PODFILE CHECKSUM: cb8a9ab615ed4185cd8fa2140c71a3ea0aa439c6

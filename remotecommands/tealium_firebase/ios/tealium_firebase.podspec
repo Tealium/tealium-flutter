@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tealium_firebase'
-  s.version          = '1.4.0'
+  s.version          = '1.5.0'
   s.summary          = 'Tealium for Firebase and Flutter.'
   s.description      = <<-DESC
         Tealium for Firebase and Flutter.

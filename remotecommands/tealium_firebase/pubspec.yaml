@@ -1,6 +1,6 @@
 name: tealium_firebase
 description: A Flutter plugin for using Tealium's Firebase Remote Command with the Tealium Flutter Plugin.
-version: 1.4.0
+version: 1.5.0
 homepage: https://docs.tealium.com/platforms/flutter/
 
 environment:
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
-  tealium: ^2.6.1
+  tealium: ^2.5.0
   # for local testing
   # tealium:
   #   path: ../../tealium/
