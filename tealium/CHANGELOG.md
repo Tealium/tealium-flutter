@@ -2,6 +2,9 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.6.1 (Feb 2025)
+* Bumped Tealium dependencies
+
 ### 2.6.0 (Sep 2024)
 * Android 
     * Fix to resolve missing `namespace` issue when using AGP v8

@@ -1,3 +1,6 @@
+## 1.5.0
+* Firebase Remote Command dependency update
+
 ## 1.4.0
 * Android 
     * Fix to resolve missing `namespace` issue when using AGP v8
