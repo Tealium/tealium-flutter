@@ -10,18 +10,19 @@ enum MomentsApiRegion {
 }
 
 class MomentsApiConfig {
-  final MomentsApiRegion momentsApiRegion;
-  final String? momentsApiReferrer;
+  final String _momentsApiRegion;
+  final String? _momentsApiReferrer;
 
-  MomentsApiConfig({
-    required this.momentsApiRegion,
-    required this.momentsApiReferrer
-  });
+  MomentsApiConfig(MomentsApiRegion momentsApiRegion, String? momentsApiReferrer) : this._(momentsApiRegion.name, momentsApiReferrer);
+
+  MomentsApiConfig._(this._momentsApiRegion, this._momentsApiReferrer);
+
+  MomentsApiConfig.withCustomRegion(String momentsApiRegion, String? momentsApiReferrer) : this._(momentsApiRegion, momentsApiReferrer);
 
   Map <String, dynamic> toMap() {
     return {
-      'momentsApiRegion': momentsApiRegion.name,
-      'momentsApiReferrer': momentsApiReferrer,
+      'momentsApiRegion': _momentsApiRegion,
+      'momentsApiReferrer': _momentsApiReferrer,
     };
   }
 }

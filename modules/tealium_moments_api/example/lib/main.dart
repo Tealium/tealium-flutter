@@ -41,9 +41,12 @@ class _MyAppState extends State<MyApp> {
   );
 
   void newTealiumMomentsApiConfig() {
+    // MomentsApiConfig config = MomentsApiConfig.withCustomRegion(
+    //     "custom",
+    //     _momentsApiReferrer);
     MomentsApiConfig config = MomentsApiConfig(
-        momentsApiRegion: _momentsApiRegion,
-        momentsApiReferrer: _momentsApiReferrer);
+        _momentsApiRegion,
+        _momentsApiReferrer);
 
     TealiumMomentsApi.configure(config);
 
