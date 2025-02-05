@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -204,19 +203,8 @@ class _MyAppState extends State<MyApp> {
       ConsentCategories.personalization,
       ConsentCategories.social
     ];
-    list = _shuffleCategories(list)!;
+    list.shuffle();
     Tealium.setConsentCategories(list.sublist(0, 3));
-  }
-
-  List<ConsentCategories>? _shuffleCategories(List<ConsentCategories> items) {
-    var random = new Random();
-    for (var i = items.length - 1; i > 0; i--) {
-      var n = random.nextInt(i + 1);
-      var temp = items[i];
-      items[i] = items[n];
-      items[n] = temp;
-      return items;
-    }
   }
 
   _joinTrace() {

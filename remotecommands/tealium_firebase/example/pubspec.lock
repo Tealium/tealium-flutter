@@ -190,14 +190,14 @@ packages:
       path: "../../../tealium"
       relative: true
     source: path
-    version: "2.6.0"
+    version: "2.6.1"
   tealium_firebase:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "1.4.0"
+    version: "1.5.0"
   term_glyph:
     dependency: transitive
     description:
