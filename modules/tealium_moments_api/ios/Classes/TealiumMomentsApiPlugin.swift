@@ -73,13 +73,19 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule{
             return
         }
         
-        guard let momentsInstance = SwiftTealiumPlugin.instance?.tealium?.momentsAPI else {
+        guard let tealium = SwiftTealiumPlugin.instance?.tealium else {
             result(FlutterError(code: "ConfigurationError",
-                                message: "Unable to retrieve MomentsAPI module. Please check your configuration.",
+                                message: "Unable to retrieve Tealium instance. Please check your configuration.",
                                 details: nil))
             return
         }
-            
+        
+        guard let momentsInstance = tealium.momentsAPI else {
+                result(FlutterError(code: "ConfigurationError",
+                                    message: "Unable to retrieve MomentsAPI module. Please check your configuration.",
+                                    details: nil))
+            return
+        }   
         
         momentsInstance.fetchEngineResponse(engineID: engineId as String, completion: { engineResponse in
             switch engineResponse {

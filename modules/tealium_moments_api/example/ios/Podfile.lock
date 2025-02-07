@@ -2,28 +2,28 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - tealium (2.5.0):
+  - tealium (2.6.1):
     - Flutter
-    - tealium-swift/Collect (~> 2.12)
-    - tealium-swift/Core (~> 2.12)
-    - tealium-swift/Lifecycle (~> 2.12)
-    - tealium-swift/RemoteCommands (~> 2.12)
-    - tealium-swift/TagManagement (~> 2.12)
-    - tealium-swift/VisitorService (~> 2.12)
-  - tealium-swift/Collect (2.14.0):
+    - tealium-swift/Collect (~> 2.15)
+    - tealium-swift/Core (~> 2.15)
+    - tealium-swift/Lifecycle (~> 2.15)
+    - tealium-swift/RemoteCommands (~> 2.15)
+    - tealium-swift/TagManagement (~> 2.15)
+    - tealium-swift/VisitorService (~> 2.15)
+  - tealium-swift/Collect (2.15.0):
     - tealium-swift/Core
-  - tealium-swift/Core (2.14.0)
-  - tealium-swift/Lifecycle (2.14.0):
+  - tealium-swift/Core (2.15.0)
+  - tealium-swift/Lifecycle (2.15.0):
     - tealium-swift/Core
-  - tealium-swift/MomentsAPI (2.14.0):
+  - tealium-swift/MomentsAPI (2.15.0):
     - tealium-swift/Core
-  - tealium-swift/RemoteCommands (2.14.0):
+  - tealium-swift/RemoteCommands (2.15.0):
     - tealium-swift/Core
-  - tealium-swift/TagManagement (2.14.0):
+  - tealium-swift/TagManagement (2.15.0):
     - tealium-swift/Core
-  - tealium-swift/VisitorService (2.14.0):
+  - tealium-swift/VisitorService (2.15.0):
     - tealium-swift/Core
-  - tealium_moments_api (0.0.1):
+  - tealium_moments_api (1.0.0):
     - Flutter
     - tealium (~> 2.5)
     - tealium-swift/Core (~> 2.14)
@@ -52,10 +52,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  tealium: 78a288dbb0cd3dbdcbec000b21189f8664b2af89
-  tealium-swift: d2a1f3ee12f3a0aa759ab43c07005b24148b6f75
-  tealium_moments_api: 348d14ac346b52707250f62122894d73a7babc81
+  tealium: e7204b855d71eea1f1448eaee3405a6798a66b0a
+  tealium-swift: 452713faa749291049ca039b9c02139a559084c8
+  tealium_moments_api: d780cad2713628e5cf76344927259a1be179f011
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

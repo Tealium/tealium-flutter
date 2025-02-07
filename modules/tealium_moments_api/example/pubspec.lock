@@ -234,17 +234,18 @@ packages:
   tealium:
     dependency: "direct main"
     description:
-      path: "../../../tealium"
-      relative: true
-    source: path
-    version: "2.6.0"
+      name: tealium
+      sha256: "474369793b0b99b099d463f2da5fd91b54b498b60f725f779f76e72c7682594c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.1"
   tealium_moments_api:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   term_glyph:
     dependency: transitive
     description:

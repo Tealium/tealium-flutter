@@ -82,7 +82,17 @@ class TealiumMomentsApiPlugin : FlutterPlugin, MethodCallHandler, OptionalModule
             return
         }
 
-        val momentsApi = Tealium[INSTANCE_NAME]?.momentsApi
+        val tealium = Tealium[INSTANCE_NAME]
+        if (tealium == null) {
+            result.error(
+                "ConfigurationError",
+                "Unable to retrieve Tealium instance. Please check your configuration.",
+                null
+            )
+            return
+        }
+
+        val momentsApi = tealium.momentsApi
         if (momentsApi == null) {
             result.error(
                 "ConfigurationError",
