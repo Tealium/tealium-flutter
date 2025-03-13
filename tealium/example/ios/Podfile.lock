@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - tealium (2.6.1):
+  - tealium (2.6.2):
     - Flutter
     - tealium-swift/Collect (~> 2.15)
     - tealium-swift/Core (~> 2.15)
@@ -36,9 +36,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  tealium: abace3619a08a744f174c937059cda20a7de8c16
+  tealium: 73deaf1be25d261c7b50deffcafa1fdbc5159cfa
   tealium-swift: 452713faa749291049ca039b9c02139a559084c8
 
 PODFILE CHECKSUM: afd05c17de5123aebb6233a65031820798210501
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
