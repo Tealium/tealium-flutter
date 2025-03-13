@@ -89,7 +89,7 @@ PODS:
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
   - PromisesObjC (2.4.0)
-  - tealium (2.6.1):
+  - tealium (2.6.2):
     - Flutter
     - tealium-swift/Collect (~> 2.15)
     - tealium-swift/Core (~> 2.15)
@@ -157,11 +157,11 @@ SPEC CHECKSUMS:
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  tealium: abace3619a08a744f174c937059cda20a7de8c16
+  tealium: 73deaf1be25d261c7b50deffcafa1fdbc5159cfa
   tealium-swift: 452713faa749291049ca039b9c02139a559084c8
   tealium_firebase: 9ff6fb8515e273040effc7ca91a437c4e0ffc356
   TealiumFirebase: 4c81de8f1ae6cfabdd637198981f18e0177f1a7f
 
 PODFILE CHECKSUM: cb8a9ab615ed4185cd8fa2140c71a3ea0aa439c6
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
