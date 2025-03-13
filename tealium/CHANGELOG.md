@@ -2,7 +2,7 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
-### 2.6.2 (Feb 2025)
+### 2.6.2 (Mar 2025)
 * iOS: invoke tealium channel methods from main thread
 
 ### 2.6.1 (Feb 2025)
