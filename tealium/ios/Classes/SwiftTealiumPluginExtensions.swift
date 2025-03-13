@@ -21,7 +21,7 @@ public extension SwiftTealiumPlugin {
             localConfig.onConsentExpiration = {
                 var payload = [String: String]()
                 payload[TealiumFlutterConstants.Events.emitterName.rawValue] = TealiumFlutterConstants.Events.consent.rawValue
-                SwiftTealiumPlugin.channel?.invokeMethod("callListener", arguments: payload)
+                Self.invokeOnMain("callListener", arguments: payload)
             }
         }
         
@@ -228,7 +228,7 @@ public extension SwiftTealiumPlugin {
                     return
                 }
                 payload[TealiumFlutterConstants.Events.emitterName.rawValue] = TealiumFlutterConstants.Events.remoteCommand.rawValue
-                SwiftTealiumPlugin.channel?.invokeMethod("callListener", arguments: payload)
+                Self.invokeOnMain("callListener", arguments: payload)
            }
         }
         
