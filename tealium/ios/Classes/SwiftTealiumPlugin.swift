@@ -3,12 +3,12 @@ import UIKit
 import TealiumSwift
 
 public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
-    
+    private typealias Events = TealiumFlutterConstants.Events
     var tealiumInstance: Tealium?
     private var config: TealiumConfig?
     var visitorServiceDelegate: VisitorServiceDelegate = VisitorDelegate()
     var consentExpiryCallback: (() -> Void)?
-    static var channel: FlutterMethodChannel?
+    static private var channel: FlutterMethodChannel?
     static var remoteCommandFactories = [String: RemoteCommandFactory]()
     static var optionalModules = [OptionalModule]()
     static var pluginInstance: SwiftTealiumPlugin? = nil
@@ -102,9 +102,11 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         tealiumInstance = Tealium(config: localConfig) { _ in
             
             self.tealium?.onVisitorId?.subscribe { visitorId in
-                SwiftTealiumPlugin.channel?.invokeMethod("callListener",
-                                                         arguments: [TealiumFlutterConstants.Events.emitterName.rawValue: TealiumFlutterConstants.Events.visitorId.rawValue,
-                                                                     "visitorId": visitorId])
+                Self.invokeOnMain("callListener",
+                                  arguments: [
+                                    Events.emitterName.rawValue: Events.visitorId.rawValue,
+                                    "visitorId": visitorId
+                                  ])
             }
             result(true)
         }
@@ -238,8 +240,8 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     
     func setConsentExpiryListener() {
         tealium?.consentManager?.onConsentExpiraiton = {
-            SwiftTealiumPlugin.channel?.invokeMethod("callListener",
-                                                     arguments: [TealiumFlutterConstants.Events.emitterName.rawValue: TealiumFlutterConstants.Events.consent.rawValue])
+            Self.invokeOnMain("callListener",
+                              arguments: [Events.emitterName.rawValue: Events.consent.rawValue])
         }
     }
     
@@ -254,5 +256,12 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         tealium?.gatherTrackData(retrieveCachedData: retrieveCachedData, completion: { data in
             result(data)
         })
+    }
+
+    static func invokeOnMain(_ method: String, arguments: [String: Any]) {
+        TealiumQueues.secureMainThreadExecution {
+            SwiftTealiumPlugin.channel?.invokeMethod(method,
+                                                     arguments: arguments)
+        }
     }
 }

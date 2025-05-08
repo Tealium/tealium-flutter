@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'tealium'
-  s.version = '2.6.1'
+  s.version = '2.6.2'
   s.summary = 'Tealium Flutter Plugin'
   s.description = <<-DESC
                   A Flutter plugin for the Tealium Swift and Kotlin SDKs.
