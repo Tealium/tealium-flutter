@@ -16,11 +16,11 @@ import com.tealium.dispatcher.TealiumView
 import com.tealium.lifecycle.Lifecycle
 import com.tealium.lifecycle.isAutoTrackingEnabled
 import com.tealium.remotecommanddispatcher.RemoteCommandDispatcher
-import com.tealium.remotecommanddispatcher.remoteAPIEnabled
 import com.tealium.remotecommands.RemoteCommand
 import com.tealium.tagmanagementdispatcher.TagManagementDispatcher
-import com.tealium.tagmanagementdispatcher.sessionCountingEnabled
 import com.tealium.tagmanagementdispatcher.overrideTagManagementUrl
+import com.tealium.tagmanagementdispatcher.remoteApiEnabled
+import com.tealium.tagmanagementdispatcher.sessionCountingEnabled
 import com.tealium.visitorservice.VisitorProfile
 import com.tealium.visitorservice.VisitorService
 import org.json.JSONArray
@@ -170,7 +170,7 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         
         // Enable RemoteAPI only when RemoteCommands dispatcher is present
         if (dispatchers?.contains(RemoteCommandDispatcher) ?: false) {
-            remoteAPIEnabled = true
+            remoteApiEnabled = true
         }
     }
 
