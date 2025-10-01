@@ -58,10 +58,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //Tealium
-    implementation 'com.tealium:kotlin-core:1.9.3'
+    implementation 'com.tealium:kotlin-core:1.9.1'
     implementation 'com.tealium:kotlin-collect-dispatcher:1.1.1'
     implementation 'com.tealium:kotlin-tagmanagement-dispatcher:1.2.3'
-    implementation 'com.tealium:kotlin-remotecommand-dispatcher:1.5.4'
+    implementation 'com.tealium:kotlin-remotecommand-dispatcher:1.5.2'
     implementation 'com.tealium:kotlin-lifecycle:1.2.0'
     implementation 'com.tealium:kotlin-visitor-service:1.2.1'
 }
