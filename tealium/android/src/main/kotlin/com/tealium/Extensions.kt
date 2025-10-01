@@ -16,6 +16,7 @@ import com.tealium.dispatcher.TealiumView
 import com.tealium.lifecycle.Lifecycle
 import com.tealium.lifecycle.isAutoTrackingEnabled
 import com.tealium.remotecommanddispatcher.RemoteCommandDispatcher
+import com.tealium.remotecommanddispatcher.remoteAPIEnabled
 import com.tealium.remotecommands.RemoteCommand
 import com.tealium.tagmanagementdispatcher.TagManagementDispatcher
 import com.tealium.tagmanagementdispatcher.sessionCountingEnabled
@@ -165,6 +166,11 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
 
         configMap[KEY_VISITOR_IDENTITY_KEY]?.let { key ->
             config.visitorIdentityKey = key.toString()
+        }
+        
+        // Enable RemoteAPI only when RemoteCommands dispatcher is present
+        if (dispatchers?.contains(RemoteCommandDispatcher) ?: false) {
+            remoteAPIEnabled = true
         }
     }
 
