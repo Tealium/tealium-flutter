@@ -49,7 +49,7 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
     }
 
     val environment = try {
-        Environment.valueOf(environmentString?.toUpperCase(Locale.ROOT) ?: "PROD")
+        Environment.valueOf(environmentString?.uppercase(Locale.ROOT) ?: "PROD")
     } catch (iax: IllegalArgumentException) {
         missingRequiredProperty(KEY_CONFIG_ENV)
         Environment.PROD
@@ -177,7 +177,7 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
 
 fun consentPolicyFromString(name: String): ConsentPolicy? {
     return try {
-        ConsentPolicy.valueOf(name.toUpperCase(Locale.ROOT))
+        ConsentPolicy.valueOf(name.uppercase(Locale.ROOT))
     } catch (iax: IllegalArgumentException) {
         null
     }
@@ -210,7 +210,7 @@ fun timeUnitFromString(unit: String): TimeUnit? {
 
 fun expiryFromString(name: String?) =
         if (!name.isNullOrBlank()) {
-            when (name.toLowerCase(Locale.ROOT)) {
+            when (name.lowercase(Locale.ROOT)) {
                 "forever" -> Expiry.FOREVER
                 "untilrestart" -> Expiry.UNTIL_RESTART
                 else -> Expiry.SESSION
@@ -220,7 +220,7 @@ fun expiryFromString(name: String?) =
 fun dispatchFromArguments(data: Map<*, *>): Dispatch {
     val eventType = data[KEY_TRACK_EVENT_TYPE] as String
 
-    return when (eventType.toLowerCase(Locale.ROOT)) {
+    return when (eventType.lowercase(Locale.ROOT)) {
         DispatchType.VIEW -> TealiumView((data[KEY_TRACK_VIEW_NAME] as String)
                 ?: DispatchType.VIEW,
                 data[KEY_TRACK_DATALAYER] as Map<String, Any>
