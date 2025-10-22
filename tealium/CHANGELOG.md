@@ -2,6 +2,9 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.6.3 (Oct 2025)
+* Android fix: RemoteAPI now only enabled when RemoteCommands dispatcher is added.
+
 ### 2.6.2 (May 2025)
 * iOS: invoke tealium channel methods from main thread
 

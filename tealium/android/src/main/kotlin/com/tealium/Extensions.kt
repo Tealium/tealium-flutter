@@ -168,7 +168,7 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
             config.visitorIdentityKey = key.toString()
         }
         
-        // Enable RemoteAPI only when RemoteCommands dispatcher is present
+        // Disable RemoteAPI when RemoteCommands dispatcher is not present
         remoteApiEnabled = dispatchers?.contains(RemoteCommandDispatcher) ?: false
     }
 
