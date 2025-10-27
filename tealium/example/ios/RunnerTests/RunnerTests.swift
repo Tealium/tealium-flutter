@@ -1,15 +1,10 @@
-//
-//  TealiumPluginTests.swift
-//  TealiumPluginTests
-//
-//  Created by Christina Schell on 4/12/21.
-//
-
+import Flutter
+import UIKit
 import XCTest
 import TealiumSwift
 import tealium
 
-class TealiumPluginTests: XCTestCase {
+class RunnerTests: XCTestCase {
     
     var tealiumPlugin: SwiftTealiumPlugin?
 
@@ -17,6 +12,13 @@ class TealiumPluginTests: XCTestCase {
         tealiumPlugin = SwiftTealiumPlugin()
     }
 
+    func testExample() {
+        // If you add code to the Runner application, consider adding tests here.
+        // See https://developer.apple.com/documentation/xctest for more information about using XCTest.
+    }
+    
+    // MARK: - Tealium Plugin Tests
+    
     func testInitializeSucceeds_WithBasicConfig() throws {
         let call = FlutterMethodCall( methodName: "initialize", arguments: TestData.basicConfig )
         tealiumPlugin!.handle( call, result: { result in
@@ -75,6 +77,7 @@ class TealiumPluginTests: XCTestCase {
         XCTAssertEqual(result.overrideCollectBatchURL, "https://override.batch.url")
         XCTAssertEqual(result.tagManagementOverrideURL, "https://override.tm.url")
         XCTAssertEqual(result.publishSettingsURL, "https://override.libsettings.url")
+        XCTAssertTrue(result.remoteAPIEnabled ?? false)
     }
     
     func testConsentPolicyFrom_ReturnsNil() {
@@ -130,8 +133,28 @@ class TealiumPluginTests: XCTestCase {
             XCTAssertEqual(result.description.lowercased(), expected[$0.offset])
         }
     }
+    
+    func testRemoteAPIEnabled_WhenRemoteCommandsDispatcherNotPresent() {
+        let config = ["account": "testAccount", "profile": "testProfile", "environment": "testEnvironment", "dispatchers": ["Collect", "TagManagement"]] as [String : Any]
+        
+        let result = tealiumPlugin!.tealiumConfig(from: config)
+        
+        XCTAssertNotNil(result)
+        XCTAssertNil(result?.remoteAPIEnabled) // Should be nil when RemoteCommands not present (default behavior)
+    }
+    
+    func testRemoteAPIEnabled_WhenRemoteCommandsDispatcherPresent() {
+        let config = ["account": "testAccount", "profile": "testProfile", "environment": "testEnvironment", "dispatchers": ["Collect", "TagManagement", "RemoteCommands"]] as [String : Any]
+        
+        let result = tealiumPlugin!.tealiumConfig(from: config)
+        
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result?.remoteAPIEnabled ?? false) // Should be true when RemoteCommands is present
+    }
 
 }
+
+// MARK: - Test Data
 
 fileprivate struct TestData {
     
@@ -147,6 +170,8 @@ fileprivate struct TestData {
     
 }
 
+// MARK: - Extensions
+
 extension Expiry: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -161,4 +186,3 @@ extension Expiry: CustomStringConvertible {
         }
     }
 }
-

@@ -2,6 +2,36 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.6.3 (Oct 2025)
+* Android fix: RemoteAPI now only enabled when RemoteCommands dispatcher is added.
+* Android: Updated deprecated Kotlin methods (toUpperCase/toLowerCase → uppercase/lowercase) for Kotlin 2.1+ compatibility.
+
+### 2.6.2 (May 2025)
+* iOS: invoke tealium channel methods from main thread
+
+### 2.6.1 (Feb 2025)
+* Bumped Tealium dependencies
+
+### 2.6.0 (Sep 2024)
+* Android 
+    * Fix to resolve missing `namespace` issue when using AGP v8
+    * Bumped Tealium dependencies
+    * Bumped Android/Kotlin version support
+
+### 2.5.0 (Feb 2024)
+* Updated iOS dependencies to support XCode 15
+* Increased minimum iOS deployment target to 12.0
+
+### 2.4.1 (Jan 2024)
+* Fix: Remote Commands with local mappings incorrectly set as `.webview`
+
+### 2.4.0 (Apr 2023)
+* Visitor Service (Android)
+    - Fixed a case where event tracking would be delayed whilst fetching an updated visitor profile.
+* Lifecycle (Android)
+    - Fixed a case where the initial launch event is not sent until the first wake/sleep is triggered.
+* Kotlin dependencies updated
+
 ### 2.3.0 (Jan 2023)
 * `OptionalModule` added to support adding of additional modules
 * Adobe Visitor API module support
