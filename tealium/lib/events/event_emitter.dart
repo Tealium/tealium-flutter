@@ -26,17 +26,15 @@ class EventEmitter {
     Set<EventListener> subs =
         this._listeners.putIfAbsent(event, () => new Set<EventListener>());
 
-    if (null == listener) {
-      // Create new element.
-      listener = new EventListener(event, context, callback, () {
-        subs.remove(listener);
-        if (subs.length == 0) {
-          this._listeners.remove(listener?.eventName);
-        }
-      });
-      subs.add(listener);
-    }
-
+    // Create new element.
+    listener = new EventListener(event, context, callback, () {
+      subs.remove(listener);
+      if (subs.length == 0) {
+        this._listeners.remove(listener?.eventName);
+      }
+    });
+    subs.add(listener);
+  
     return listener;
   }
 
