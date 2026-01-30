@@ -3,8 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:flutter/services.dart';
+ 
 import 'package:tealium_firebase/tealium_firebase.dart';
 
 import 'dart:developer' as developer;
@@ -70,7 +69,7 @@ class _MyAppState extends State<MyApp> {
     return ListView(
       scrollDirection: Axis.vertical,
       children: <Widget>[
-        Padding(padding: EdgeInsets.all(3.5)),
+        const Padding(padding: EdgeInsets.all(3.5)),
         TealiumButton(
             title: 'Track Screen View',
             onPressed: () => Tealium.track(TealiumView("screen_view", {
@@ -104,7 +103,7 @@ class _MyAppState extends State<MyApp> {
 
   void _logRemoteCommand(String name, dynamic payload) {
     developer.log('=========$name Remote Command Response=========');
-    developer.log(JsonEncoder().convert(payload));
+    developer.log(const JsonEncoder().convert(payload));
   }
 
   @override

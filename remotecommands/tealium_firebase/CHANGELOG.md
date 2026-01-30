@@ -1,3 +1,11 @@
+## 2.0.0
+* **BREAKING CHANGES:**
+  * Requires Tealium Flutter 2.7.0+
+  * Minimum iOS deployment target: 15.0 (previously 12.0)
+* iOS: Updated Tealium dependency (~> 2.7)
+* Android: Firebase Remote Command [1.6.0, 2.0)
+* iOS: TealiumFirebase ~> 4.0
+
 ## 1.5.0
 * Firebase Remote Command dependency update
 
