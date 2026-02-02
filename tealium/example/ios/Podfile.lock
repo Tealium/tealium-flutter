@@ -36,7 +36,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  tealium: aed182837b25aebb8f1defad07b10f0d2f467cf5
+  tealium: 8ad43b543fdc03d098ee31c6b2302ebdf24728f3
   tealium-swift: 9c38e6687b24c9eed0f3bc221ea5d7717274af16
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
