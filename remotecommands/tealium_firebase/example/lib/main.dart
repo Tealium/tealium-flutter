@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
- 
 import 'package:tealium_firebase/tealium_firebase.dart';
 
 import 'dart:developer' as developer;
