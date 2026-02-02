@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'tealium'
-  s.version = '2.6.3'
+  s.version = '2.7.0'
   s.summary = 'Tealium Flutter Plugin'
   s.description = <<-DESC
                   A Flutter plugin for the Tealium Swift and Kotlin SDKs.
@@ -17,10 +17,10 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   s.dependency 'Flutter'
-  s.dependency 'tealium-swift/Core', '~> 2.15'
-  s.dependency 'tealium-swift/TagManagement', '~> 2.15'
-  s.dependency 'tealium-swift/Collect', '~> 2.15'
-  s.dependency 'tealium-swift/Lifecycle', '~> 2.15'
-  s.dependency 'tealium-swift/RemoteCommands', '~> 2.15'
-  s.dependency 'tealium-swift/VisitorService', '~> 2.15'
+  s.dependency 'tealium-swift/Core', '~> 2.18'
+  s.dependency 'tealium-swift/TagManagement', '~> 2.18'
+  s.dependency 'tealium-swift/Collect', '~> 2.18'
+  s.dependency 'tealium-swift/Lifecycle', '~> 2.18'
+  s.dependency 'tealium-swift/RemoteCommands', '~> 2.18'
+  s.dependency 'tealium-swift/VisitorService', '~> 2.18'
 end
