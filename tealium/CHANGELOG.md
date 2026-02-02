@@ -2,6 +2,9 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 2.7.0 (Feb 2026)
+* Android: Fixed `IllegalArgumentException` in `gatherTrackData()`—array types from collectors/DataLayer are now converted to Lists.
+
 ### 2.6.3 (Oct 2025)
 * Android fix: RemoteAPI now only enabled when RemoteCommands dispatcher is added.
 * Android: Updated deprecated Kotlin methods (toUpperCase/toLowerCase → uppercase/lowercase) for Kotlin 2.1+ compatibility.
