@@ -58,3 +58,10 @@ const val KEY_LIFECYCLE_AUTO_TRACKING_ENABLED = "lifecycleAutotrackingEnabled"
 const val KEY_VISITOR_SERVICE_ENABLED = "visitorServiceEnabled"
 const val KEY_CUSTOM_VISITOR_ID = "customVisitorId"
 const val KEY_VISITOR_IDENTITY_KEY = "visitorIdentityKey"
+
+// Error codes and messages
+object TealiumError {
+    const val NOT_INITIALIZED = "NOT_INITIALIZED"
+    const val NOT_INITIALIZED_MSG = "Tealium instance not initialized"
+    const val MISSING_PARAMETER = "MISSING_PARAMETER"
+}

@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
       TealiumEnvironment.dev,
       [Collectors.AppData, Collectors.Lifecycle],
       [Dispatchers.RemoteCommands, Dispatchers.Collect],
+      loglevel: LogLevel.DEV,
       consentPolicy: ConsentPolicy.GDPR,
       useRemoteLibrarySettings: true,
       batchingEnabled: false,

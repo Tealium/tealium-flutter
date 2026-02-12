@@ -45,6 +45,17 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         channel.setMethodCallHandler(this)
         context = flutterPluginBinding.applicationContext
     }
+    
+    /**
+     * Helper to get Tealium instance or send error if not initialized.
+     * Returns null if Tealium is not initialized (error is sent to result).
+     */
+    private fun requireTealium(result: Result): Tealium? {
+        return tealium ?: run {
+            result.onMain().error(TealiumError.NOT_INITIALIZED, TealiumError.NOT_INITIALIZED_MSG, null)
+            null
+        }
+    }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
@@ -107,7 +118,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             val path = it["path"] as? String?
                             val url = it["url"] as? String?
 
-                            addRemoteCommand(id, path, url)
+                            addRemoteCommand(this, id, path, url)
                         }
                     }
                 }
@@ -130,60 +141,71 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun track(call: MethodCall, result: Result) {
-        call.arguments<Map<*, *>>()?.let { map ->
-            dispatchFromArguments(map).let {
-                tealium?.track(it)
-            }
+        val tealium = requireTealium(result) ?: return
+        
+        val map = call.arguments<Map<*, *>>()
+        if (map == null) {
+            result.onMain().error(TealiumError.MISSING_PARAMETER, "Track dispatch data is required", null)
+            return
+        }
+        
+        dispatchFromArguments(map).let {
+            tealium.track(it)
         }
         result.onMain().success(null)
     }
 
     private fun addToDataLayer(call: MethodCall, result: Result) {
+        val tealium = requireTealium(result) ?: return
+        
         val data = call.argument<Map<String, Any>>("data")
         val expiry = call.argument<String>("expiry")
+        
+        if (data == null) {
+            result.onMain().error(TealiumError.MISSING_PARAMETER, "Data parameter is required", null)
+            return
+        }
 
-        tealium?.apply {
-            data?.forEach { (key, value) ->
-                val exp = expiryFromString(expiry)
-                when (value) {
-                    is String -> dataLayer.putString(key, value, exp)
-                    is Int -> dataLayer.putInt(key, value, exp)
-                    is Long -> dataLayer.putLong(key, value, exp)
-                    is Double -> dataLayer.putDouble(key, value, exp)
-                    is Boolean -> dataLayer.putBoolean(key, value, exp)
-                    is JSONObject -> tealium?.dataLayer?.putJsonObject(key, value, exp)
-                    is ArrayList<*> -> {
-                        when (value.toList().first()) {
-                            is Int -> {
-                                val formatted = value.toList()
-                                    .map { i -> i.toString().toInt() }
-                                    .toTypedArray()
-                                tealium?.dataLayer?.putIntArray(key, formatted, exp)
-                            }
-                            is Boolean -> {
-                                val formatted = value.toList()
-                                    .map { i -> i.toString().toBoolean() }
-                                    .toTypedArray()
-                                tealium?.dataLayer?.putBooleanArray(key, formatted, exp)
-                            }
-                            is Long -> {
-                                val formatted = value.toList()
-                                    .map { i -> i.toString().toLong() }
-                                    .toTypedArray()
-                                tealium?.dataLayer?.putLongArray(key, formatted, exp)
-                            }
-                            is Double -> {
-                                val formatted = value.toList()
-                                    .map { i -> i.toString().toDouble() }
-                                    .toTypedArray()
-                                tealium?.dataLayer?.putDoubleArray(key, formatted, exp)
-                            }
-                            else -> {
-                                val formatted = value.toList()
-                                    .map { i -> i.toString() }
-                                    .toTypedArray()
-                                tealium?.dataLayer?.putStringArray(key, formatted, exp)
-                            }
+        data.forEach { (key, value) ->
+            val exp = expiryFromString(expiry)
+            when (value) {
+                is String -> tealium.dataLayer.putString(key, value, exp)
+                is Int -> tealium.dataLayer.putInt(key, value, exp)
+                is Long -> tealium.dataLayer.putLong(key, value, exp)
+                is Double -> tealium.dataLayer.putDouble(key, value, exp)
+                is Boolean -> tealium.dataLayer.putBoolean(key, value, exp)
+                is JSONObject -> tealium.dataLayer.putJsonObject(key, value, exp)
+                is ArrayList<*> -> {
+                    when (value.toList().first()) {
+                        is Int -> {
+                            val formatted = value.toList()
+                                .map { i -> i.toString().toInt() }
+                                .toTypedArray()
+                            tealium.dataLayer.putIntArray(key, formatted, exp)
+                        }
+                        is Boolean -> {
+                            val formatted = value.toList()
+                                .map { i -> i.toString().toBoolean() }
+                                .toTypedArray()
+                            tealium.dataLayer.putBooleanArray(key, formatted, exp)
+                        }
+                        is Long -> {
+                            val formatted = value.toList()
+                                .map { i -> i.toString().toLong() }
+                                .toTypedArray()
+                            tealium.dataLayer.putLongArray(key, formatted, exp)
+                        }
+                        is Double -> {
+                            val formatted = value.toList()
+                                .map { i -> i.toString().toDouble() }
+                                .toTypedArray()
+                            tealium.dataLayer.putDoubleArray(key, formatted, exp)
+                        }
+                        else -> {
+                            val formatted = value.toList()
+                                .map { i -> i.toString() }
+                                .toTypedArray()
+                            tealium.dataLayer.putStringArray(key, formatted, exp)
                         }
                     }
                 }
@@ -193,18 +215,15 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun getFromDataLayer(call: MethodCall, result: Result) {
+        val tealium = requireTealium(result) ?: return
+        
         val key = call.argument<String>("key")
         if (key == null) {
-            result.onMain().error("MISSING_PARAMETER", "Key parameter is required", null)
+            result.onMain().error(TealiumError.MISSING_PARAMETER, "Key parameter is required", null)
             return
         }
         
-        if (tealium == null) {
-            result.onMain().error("NOT_INITIALIZED", "Tealium instance not initialized", null)
-            return
-        }
-        
-        val data = tealium?.dataLayer?.all()?.get(key)
+        val data = tealium.dataLayer.all()[key]
         val payload = when (data) {
             is Array<*> -> data.toList()
             is JSONObject -> data.toFriendlyMap()
@@ -214,135 +233,144 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun removeFromDataLayer(call: MethodCall, result: Result) {
+        val tealium = requireTealium(result) ?: return
+        
         val keys = call.argument<List<String>>("keys")
-
-        keys?.forEach {
-            tealium?.apply {
-                dataLayer.remove(it)
-            }
+        if (keys == null) {
+            result.onMain().error(TealiumError.MISSING_PARAMETER, "Keys parameter is required", null)
+            return
         }
+
+        keys.forEach { tealium.dataLayer.remove(it) }
         result.onMain().success(null)
     }
 
     private fun setConsentStatus(call: MethodCall, result: Result) {
+        val tealium = requireTealium(result) ?: return
+        
         val status = call.argument<String>("status")
-
-        status?.let {
-            tealium?.apply {
-                consentManager.userConsentStatus = ConsentStatus.consentStatus(it)
-            }
+        if (status == null) {
+            result.onMain().error(TealiumError.MISSING_PARAMETER, "Status parameter is required", null)
+            return
         }
+
+        tealium.consentManager.userConsentStatus = ConsentStatus.consentStatus(status)
         result.onMain().success(null)
     }
 
     private fun getConsentStatus(result: Result) {
-        result.onMain().success(tealium?.consentManager?.userConsentStatus?.value)
+        val tealium = requireTealium(result) ?: return
+        result.onMain().success(tealium.consentManager.userConsentStatus.value)
     }
 
     private fun setConsentCategories(call: MethodCall, result: Result) {
+        val tealium = requireTealium(result) ?: return
+        
         val categories = call.argument<List<String>>("categories")
-        categories?.let {
-            tealium?.apply {
-                val categoryStrings = it.toTypedArray()
-                consentManager.userConsentCategories =
-                    ConsentCategory.consentCategories(categoryStrings.toSet())
-            }
+        if (categories == null) {
+            result.onMain().error(TealiumError.MISSING_PARAMETER, "Categories parameter is required", null)
+            return
         }
+        
+        val categoryStrings = categories.toTypedArray()
+        tealium.consentManager.userConsentCategories =
+            ConsentCategory.consentCategories(categoryStrings.toSet())
         result.onMain().success(null)
     }
 
     private fun getConsentCategories(result: Result) {
-        val categories =
-            tealium?.consentManager?.userConsentCategories?.map { it -> it.toString() }?.toList()
+        val tealium = requireTealium(result) ?: return
+        val categories = tealium.consentManager.userConsentCategories?.map { it.toString() }?.toList()
         result.onMain().success(categories)
     }
 
     private fun addRemoteCommand(call: MethodCall, result: Result) {
+        val tealium = requireTealium(result) ?: return
+        
         val id = call.argument<String>("id")
         if (id == null) {
-            result.onMain().error("MISSING_PARAMETER", "ID parameter is required", null)
+            result.onMain().error(TealiumError.MISSING_PARAMETER, "ID parameter is required", null)
             return
         }
         val path = call.argument<String?>("path")
         val url = call.argument<String?>("url")
-        addRemoteCommand(id, path, url)
+        addRemoteCommand(tealium, id, path, url)
         result.onMain().success(null)
     }
 
-    private fun addRemoteCommand(id: String, path: String? = null, url: String? = null) {
-        tealium?.apply {
-            val factory = getRemoteCommandFactory(id)
-            val remoteCommand = factory?.create() ?: RemoteCommandListener(channel, id)
-            tealium?.remoteCommands?.add(remoteCommand, filename = path, remoteUrl = url)
-        }
+    private fun addRemoteCommand(tealium: Tealium, id: String, path: String? = null, url: String? = null) {
+        val factory = getRemoteCommandFactory(id)
+        val remoteCommand = factory?.create() ?: RemoteCommandListener(channel, id)
+        tealium.remoteCommands?.add(remoteCommand, filename = path, remoteUrl = url)
     }
 
     private fun removeRemoteCommand(call: MethodCall, result: Result) {
+        val tealium = requireTealium(result) ?: return
+        
         val id = call.argument<String>("id")
-
-        id?.let {
-            tealium?.remoteCommands?.remove(it)
+        if (id == null) {
+            result.onMain().error(TealiumError.MISSING_PARAMETER, "ID parameter is required", null)
+            return
         }
+
+        tealium.remoteCommands?.remove(id)
         result.onMain().success(null)
     }
 
     private fun joinTrace(call: MethodCall, result: Result) {
+        val tealium = requireTealium(result) ?: return
+        
         val traceId = call.argument<String>("id")
-
-        traceId?.let {
-            tealium?.apply {
-                joinTrace(it)
-            }
+        if (traceId == null) {
+            result.onMain().error(TealiumError.MISSING_PARAMETER, "Trace ID parameter is required", null)
+            return
         }
+
+        tealium.joinTrace(traceId)
         result.onMain().success(null)
     }
 
     private fun leaveTrace(result: Result) {
-        tealium?.apply {
-            leaveTrace()
-        }
+        val tealium = requireTealium(result) ?: return
+        tealium.leaveTrace()
         result.onMain().success(null)
     }
 
     private fun getVisitorId(result: Result) {
-        result.onMain().success(tealium?.visitorId ?: "")
+        val tealium = requireTealium(result) ?: return
+        result.onMain().success(tealium.visitorId)
     }
 
     private fun resetVisitorId(result: Result) {
-        tealium?.apply {
-            resetVisitorId()
-        }
+        val tealium = requireTealium(result) ?: return
+        tealium.resetVisitorId()
         result.onMain().success(null)
     }
 
     private fun clearStoredVisitorIds(result: Result) {
-        tealium?.clearStoredVisitorIds()
+        val tealium = requireTealium(result) ?: return
+        tealium.clearStoredVisitorIds()
         result.onMain().success(null)
     }
 
     private fun setConsentExpiryListener(result: Result) {
+        val tealium = requireTealium(result) ?: return
         // Consent expiry is handled via the EmitterListeners (UserConsentPreferencesUpdatedListener)
         // which is set up during initialization
         result.onMain().success(null)
     }
 
     private fun gatherTrackData(result: Result) {
-        if (tealium == null) {
-            result.onMain().error("NOT_INITIALIZED", "Tealium instance not initialized", null)
-            return
-        }
-        
-        tealium?.apply {
-            val data = gatherTrackData()
-            result.success(data.mapValues {
-                val value = it.value
-                when (value) {
-                    is JSONObject -> value.toFriendlyMap()
-                    is JSONArray -> value.toFriendlyList().toList()
-                    else -> value
-                }
-            })
-        }
+        val tealium = requireTealium(result) ?: return
+        val data = tealium.gatherTrackData()
+        result.success(data.mapValues {
+            val value = it.value
+            when (value) {
+                is JSONObject -> value.toFriendlyMap()
+                is JSONArray -> value.toFriendlyList().toList()
+                else -> value
+            }
+        })
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

@@ -81,4 +81,19 @@ public enum TealiumFlutterConstants {
         static let arraysOfStrings = "arraysOfStrings"
         static let setsOfStrings = "setsOfStrings"
     }
+    
+    // Error codes and messages
+    enum TealiumError {
+        static let notInitializedCode = "NOT_INITIALIZED"
+        static let notInitializedMsg = "Tealium instance not initialized"
+        static let missingParameterCode = "MISSING_PARAMETER"
+        
+        static var notInitialized: FlutterError {
+            FlutterError(code: notInitializedCode, message: notInitializedMsg, details: nil)
+        }
+        
+        static func missingParameter(_ param: String) -> FlutterError {
+            FlutterError(code: missingParameterCode, message: "\(param) parameter is required", details: nil)
+        }
+    }
 }
