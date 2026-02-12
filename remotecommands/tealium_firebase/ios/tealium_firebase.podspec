@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tealium_firebase'
-  s.version          = '1.5.0'
+  s.version          = '2.0.0'
   s.summary          = 'Tealium for Firebase and Flutter.'
   s.description      = <<-DESC
         Tealium for Firebase and Flutter.
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.authors = { 'Tealium Mobile Team' => 'mobile-team@tealium.com' }
   s.source = { :path => '.' }
   s.source_files = 'Classes/**/*'
-  s.platform = :ios, '12.0'
+  s.platform = :ios, '15.0'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
@@ -23,6 +23,6 @@ Pod::Spec.new do |s|
 
   s.dependency 'Flutter'
   s.dependency 'tealium', '~> 2.5'
-  s.dependency "tealium-swift/Core", "~> 2.15"
-  s.dependency "TealiumFirebase", "~> 3.4"
+  s.dependency "tealium-swift/Core", "~> 2.18"
+  s.dependency "TealiumFirebase", "~> 4.0"
 end

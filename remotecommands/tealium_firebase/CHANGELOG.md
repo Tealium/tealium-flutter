@@ -1,3 +1,8 @@
+## 2.0.0
+* **BREAKING CHANGES:**
+  * Minimum iOS deployment target: 15.0 (previously 12.0)
+  * iOS: TealiumFirebase ~> 4.0 
+
 ## 1.5.0
 * Firebase Remote Command dependency update
 
