@@ -385,3 +385,22 @@ internal fun VisitorProfile.Companion.toFriendlyMutableMap(visitorProfile: Visit
 
     return visitor
 }
+
+fun Any?.toFlutterCompatibleValue(): Any? {
+    return when (this) {
+        is JSONObject -> this.toFriendlyMap()
+        is JSONArray -> this.toFriendlyList()
+        is Map<*, *> -> this.mapValues { it.value.toFlutterCompatibleValue() }
+        is List<*> -> this.map { it.toFlutterCompatibleValue() }
+        is Array<*> -> this.map { it.toFlutterCompatibleValue() }
+        is IntArray -> this.toList()
+        is LongArray -> this.toList()
+        is DoubleArray -> this.toList()
+        is FloatArray -> this.toList()
+        is BooleanArray -> this.toList()
+        is ShortArray -> this.toList()
+        is ByteArray -> this.toList()
+        is CharArray -> this.toList()
+        else -> this
+    }
+}

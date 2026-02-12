@@ -2,7 +2,8 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
-### 2.7.0 (Jan 2026)
+### 2.7.0 (Feb 2026)
+* Android: Fixed `IllegalArgumentException` in `gatherTrackData()`—array types from collectors/DataLayer are now converted to Lists.
 * Android: Updated Tealium Kotlin SDK dependencies (Core 1.9.1 → 1.9.2, Collect 1.1.1 → 1.1.4, TagManagement 1.2.3 → 1.3.0, RemoteCommands 1.5.2 → 1.5.3, Lifecycle 1.2.0 → 1.2.3, VisitorService 1.2.1 → 1.2.4)
 * iOS: Updated Tealium Swift SDK dependencies (2.15 → 2.18)
 * Example app: Updated deprecated Flutter APIs (MaterialStateProperty → WidgetStateProperty)
