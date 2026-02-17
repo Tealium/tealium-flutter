@@ -25,7 +25,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 import org.json.JSONArray
 import java.util.*
-import kotlin.collections.ArrayList
+import kotlin.collections.List
 
 /** TealiumPlugin */
 class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -53,6 +53,22 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun requireTealium(result: Result): Tealium? {
         return tealium ?: run {
             result.onMain().error(TealiumError.NOT_INITIALIZED, TealiumError.NOT_INITIALIZED_MSG, null)
+            null
+        }
+    }
+
+    /**
+     * Helper to get a required parameter or send error if null.
+     * Returns the value if non-null, otherwise sends error to result and returns null.
+     */
+    private fun <T> requireParam(
+        value: T?,
+        result: Result,
+        paramName: String,
+        message: String = "$paramName parameter is required"
+    ): T? {
+        return value ?: run {
+            result.onMain().error(TealiumError.MISSING_PARAMETER, message, null)
             null
         }
     }
@@ -130,25 +146,26 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         } ?: run {
             Log.w(BuildConfig.TAG, "Failed to initialize instance.")
             Handler(Looper.getMainLooper()).post {
-                result.onMain().success(false) // todo: should this use .error() instead?
+                result.onMain().error(TealiumError.MISSING_PARAMETER, "Invalid or missing configuration", null)
             }
         }
     }
 
     private fun terminate(result: Result) {
         Tealium.destroy(INSTANCE_NAME)
+        tealium = null
         result.onMain().success(null)
     }
 
     private fun track(call: MethodCall, result: Result) {
         val tealium = requireTealium(result) ?: return
-        
-        val map = call.arguments<Map<*, *>>()
-        if (map == null) {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, "Track dispatch data is required", null)
-            return
-        }
-        
+        val map = requireParam(
+            call.arguments<Map<*, *>>(),
+            result,
+            "Track dispatch data",
+            "Track dispatch data is required"
+        ) ?: return
+
         dispatchFromArguments(map).let {
             tealium.track(it)
         }
@@ -157,14 +174,8 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun addToDataLayer(call: MethodCall, result: Result) {
         val tealium = requireTealium(result) ?: return
-        
-        val data = call.argument<Map<String, Any>>("data")
+        val data = requireParam(call.argument<Map<String, Any>>("data"), result, "Data") ?: return
         val expiry = call.argument<String>("expiry")
-        
-        if (data == null) {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, "Data parameter is required", null)
-            return
-        }
 
         data.forEach { (key, value) ->
             val exp = expiryFromString(expiry)
@@ -175,7 +186,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 is Double -> tealium.dataLayer.putDouble(key, value, exp)
                 is Boolean -> tealium.dataLayer.putBoolean(key, value, exp)
                 is JSONObject -> tealium.dataLayer.putJsonObject(key, value, exp)
-                is ArrayList<*> -> {
+                is List<*> -> {
                     when (value.toList().first()) {
                         is Int -> {
                             val formatted = value.toList()
@@ -216,14 +227,9 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun getFromDataLayer(call: MethodCall, result: Result) {
         val tealium = requireTealium(result) ?: return
-        
-        val key = call.argument<String>("key")
-        if (key == null) {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, "Key parameter is required", null)
-            return
-        }
-        
-        val data = tealium.dataLayer.all()[key]
+        val key = requireParam(call.argument<String>("key"), result, "Key") ?: return
+
+        val data = tealium.dataLayer.get(key)
         val payload = when (data) {
             is Array<*> -> data.toList()
             is JSONObject -> data.toFriendlyMap()
@@ -234,12 +240,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun removeFromDataLayer(call: MethodCall, result: Result) {
         val tealium = requireTealium(result) ?: return
-        
-        val keys = call.argument<List<String>>("keys")
-        if (keys == null) {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, "Keys parameter is required", null)
-            return
-        }
+        val keys = requireParam(call.argument<List<String>>("keys"), result, "Keys") ?: return
 
         keys.forEach { tealium.dataLayer.remove(it) }
         result.onMain().success(null)
@@ -247,12 +248,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun setConsentStatus(call: MethodCall, result: Result) {
         val tealium = requireTealium(result) ?: return
-        
-        val status = call.argument<String>("status")
-        if (status == null) {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, "Status parameter is required", null)
-            return
-        }
+        val status = requireParam(call.argument<String>("status"), result, "Status") ?: return
 
         tealium.consentManager.userConsentStatus = ConsentStatus.consentStatus(status)
         result.onMain().success(null)
@@ -265,13 +261,8 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun setConsentCategories(call: MethodCall, result: Result) {
         val tealium = requireTealium(result) ?: return
-        
-        val categories = call.argument<List<String>>("categories")
-        if (categories == null) {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, "Categories parameter is required", null)
-            return
-        }
-        
+        val categories = requireParam(call.argument<List<String>>("categories"), result, "Categories") ?: return
+
         val categoryStrings = categories.toTypedArray()
         tealium.consentManager.userConsentCategories =
             ConsentCategory.consentCategories(categoryStrings.toSet())
@@ -286,12 +277,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun addRemoteCommand(call: MethodCall, result: Result) {
         val tealium = requireTealium(result) ?: return
-        
-        val id = call.argument<String>("id")
-        if (id == null) {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, "ID parameter is required", null)
-            return
-        }
+        val id = requireParam(call.argument<String>("id"), result, "ID") ?: return
         val path = call.argument<String?>("path")
         val url = call.argument<String?>("url")
         addRemoteCommand(tealium, id, path, url)
@@ -306,12 +292,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun removeRemoteCommand(call: MethodCall, result: Result) {
         val tealium = requireTealium(result) ?: return
-        
-        val id = call.argument<String>("id")
-        if (id == null) {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, "ID parameter is required", null)
-            return
-        }
+        val id = requireParam(call.argument<String>("id"), result, "ID") ?: return
 
         tealium.remoteCommands?.remove(id)
         result.onMain().success(null)
@@ -319,12 +300,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun joinTrace(call: MethodCall, result: Result) {
         val tealium = requireTealium(result) ?: return
-        
-        val traceId = call.argument<String>("id")
-        if (traceId == null) {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, "Trace ID parameter is required", null)
-            return
-        }
+        val traceId = requireParam(call.argument<String>("id"), result, "Trace ID") ?: return
 
         tealium.joinTrace(traceId)
         result.onMain().success(null)
