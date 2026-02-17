@@ -339,14 +339,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun gatherTrackData(result: Result) {
         val tealium = requireTealium(result) ?: return
         val data = tealium.gatherTrackData()
-        result.success(data.mapValues {
-            val value = it.value
-            when (value) {
-                is JSONObject -> value.toFriendlyMap()
-                is JSONArray -> value.toFriendlyList().toList()
-                else -> value
-            }
-        })
+        result.success(data.mapValues { it.value.toFlutterCompatibleValue() })
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
