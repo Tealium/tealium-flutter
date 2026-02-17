@@ -97,3 +97,6 @@ enum TealiumError {
         FlutterError(code: missingParameterCode, message: "\(param) parameter is required", details: nil)
     }
 }
+
+extension FlutterError: Error {}
+

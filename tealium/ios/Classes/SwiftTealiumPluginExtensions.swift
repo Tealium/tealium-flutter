@@ -2,10 +2,15 @@ import TealiumSwift
 
 public extension SwiftTealiumPlugin {
     
-    func tealiumConfig(from dictionary: [String: Any]) -> TealiumConfig? {
-        guard let account = dictionary[.account] as? String,
-              let profile = dictionary[.profile] as? String,
-              let environment = dictionary[.environment] as? String else {
+    func tealiumConfig(from call: FlutterMethodCall, result: FlutterResult) -> TealiumConfig? {
+        guard let dictionary = call.arguments as? [String: Any] else {
+            result(TealiumError.missingParameter("Arguments"))
+            return nil
+        }
+
+        guard let account: String = call.requireParameter(.account, result: result),
+              let profile: String = call.requireParameter(.profile, result: result),
+              let environment: String = call.requireParameter(.environment, result: result) else {
             return nil
         }
         
@@ -160,17 +165,20 @@ public extension SwiftTealiumPlugin {
         }
     }
     
-    func dispatchFrom(_ payload: [String: Any]) -> TealiumDispatch? {
+    func dispatchFrom(_ call: FlutterMethodCall, result: FlutterResult) -> TealiumDispatch? {
+        guard let payload = call.arguments as? [String: Any] else {
+            return nil
+        }
         let type = payload[.type] as? String ?? TealiumFlutterConstants.event
         let dataLayer = payload[.dataLayer] as? [String: Any]
         switch type.lowercased() {
         case TealiumFlutterConstants.view:
-            guard let viewName = payload[.viewName] as? String else {
+            guard let viewName: String = call.requireParameter(.viewName, result: result) else {
                 return nil
             }
             return TealiumView(viewName, dataLayer: dataLayer)
         default:
-            guard let eventName = payload[.eventName] as? String else {
+            guard let eventName: String = call.requireParameter(.eventName, result: result) else {
                 return nil
             }
             return TealiumEvent(eventName, dataLayer: dataLayer)
@@ -246,5 +254,28 @@ extension Dictionary where Key: ExpressibleByStringLiteral {
         get {
             return self[key.rawValue as! Key]
         }
+    }
+}
+
+extension FlutterMethodCall {
+    /// Helper to get a required parameter or send error if nil.
+    /// Returns the value if non-nil, otherwise sends missing parameter error to result and returns nil.
+    func requireParameter<T>(_ key: String, result: FlutterResult) -> T? {
+        guard let arguments = self.arguments as? [String: Any],
+              let value = arguments[key] as? T else {
+            result(TealiumError.missingParameter(key))
+            return nil
+        }
+        return value
+    }
+}
+
+private extension FlutterMethodCall {
+    func requireParameter<T>(_ key: TealiumFlutterConstants.Config, result: FlutterResult) -> T? {
+        requireParameter(key.rawValue, result: result)
+    }
+
+    func requireParameter<T>(_ key: TealiumFlutterConstants.Dispatch, result: FlutterResult) -> T? {
+        requireParameter(key.rawValue, result: result)
     }
 }
