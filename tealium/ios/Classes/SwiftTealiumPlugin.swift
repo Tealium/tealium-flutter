@@ -102,10 +102,8 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func initialize(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let localConfig = tealiumConfig(from: call, result: result) else {
-            return
-        }
+    func initialize(call: FlutterMethodCall, result: @escaping FlutterResult) throws(FlutterError) {
+        let localConfig = try tealiumConfig(from: call)
         self.config = localConfig.copy
         
         SwiftTealiumPlugin.optionalModules.forEach { module in
@@ -127,9 +125,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     
     func track(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let track = dispatchFrom(call, result: result) else {
-            return
-        }
+        let track = try dispatchFrom(call)
         tealium.track(track)
         result(nil)
     }
@@ -146,55 +142,39 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     
     func addToDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let arguments = call.arguments as? [String: Any] else {
-            result(TealiumError.missingParameter("Arguments"))
-            return
-        }
-        guard let data: [String: Any] = call.requireParameter("data", result: result),
-              let expiry: String = call.requireParameter("expiry", result: result) else {
-            return
-        }
+        let data: [String: Any] = try call.requireParameter("data")
+        let expiry: String = try call.requireParameter("expiry")
         tealium.dataLayer.add(data: data, expiry: expiryFrom(expiry))
         result(nil)
     }
     
     func removeFromDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let keys: [String] = call.requireParameter("keys", result: result) else { 
-            return
-        }
-
+        let keys: [String] = try call.requireParameter("keys")
         tealium.dataLayer.delete(for: keys)
         result(nil)
     }
     
     func getFromDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let key: String = call.requireParameter("key", result: result) else { 
-            return
-        }
-        
+        let key: String = try call.requireParameter("key")
         let value = tealium.dataLayer.all[key]
         result(value)
     }
     
     func deleteFromDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let key: String = call.requireParameter("key", result: result) else { 
-            return
-        }
+        let key: String = try call.requireParameter("key")
         tealium.dataLayer.delete(for: key)
         result(nil)
     }
     
     func addRemoteCommand(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let id: String = call.requireParameter("id", result: result) else { 
-            return
-        }
+        let id: String = try call.requireParameter("id")
 
         guard let arguments = call.arguments as? [String: Any] else {
-            return
+            throw TealiumError.missingParameter("Arguments")
         }
 
         let path = arguments["path"] as? String
@@ -206,18 +186,14 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     
     func removeRemoteCommand(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let id: String = call.requireParameter("id", result: result) else { 
-            return
-        }
+        let id: String = try call.requireParameter("id")
         tealium.remoteCommands?.remove(commandWithId: id)
         result(nil)
     }
     
     func setConsentStatus(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let status: String = call.requireParameter("status", result: result) else { 
-            return
-        }
+        let status: String = try call.requireParameter("status")
         if status == TealiumFlutterConstants.consented {
             tealium.consentManager?.userConsentStatus = .consented
         } else {
@@ -233,9 +209,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     
     func setConsentCategories(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let categories: [String] = call.requireParameter("categories", result: result) else { 
-            return
-        }
+        let categories: [String] = try call.requireParameter("categories")
         tealium.consentManager?.userConsentCategories = TealiumConsentCategories.consentCategoriesStringArrayToEnum(categories)
         result(nil)
     }
@@ -251,9 +225,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     
     func joinTrace(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
         let tealium = try requireTealium()
-        guard let id: String = call.requireParameter("id", result: result) else { 
-            return
-        }
+        let id: String = try call.requireParameter("id")
         tealium.joinTrace(id: id)
         result(nil)
     }

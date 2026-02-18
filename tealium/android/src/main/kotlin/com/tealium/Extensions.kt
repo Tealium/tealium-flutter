@@ -404,3 +404,15 @@ fun Any?.toFlutterCompatibleValue(): Any? {
         else -> this
     }
 }
+
+inline fun <reified T> io.flutter.plugin.common.MethodCall.requireParameter(key: String): T {
+    val args = arguments as? Map<*, *>
+        ?: throw TealiumException.MissingParameter(key)
+
+    return args[key] as? T
+        ?: throw TealiumException.MissingParameter(key)
+}
+
+fun Tealium?.requireInstance(): Tealium {
+    return this ?: throw TealiumException.NotInitialized()
+}

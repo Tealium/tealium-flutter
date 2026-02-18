@@ -65,3 +65,20 @@ object TealiumError {
     const val NOT_INITIALIZED_MSG = "Tealium instance not initialized"
     const val MISSING_PARAMETER = "MISSING_PARAMETER"
 }
+
+sealed class TealiumException(
+    val code: String,
+    override val message: String
+) : Exception(message) {
+    
+    class NotInitialized : TealiumException(
+        TealiumError.NOT_INITIALIZED,
+        TealiumError.NOT_INITIALIZED_MSG
+    )
+    
+    class MissingParameter(paramName: String) : TealiumException(
+        TealiumError.MISSING_PARAMETER,
+        "$paramName parameter is required"
+    )
+    
+}

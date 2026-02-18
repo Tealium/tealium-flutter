@@ -46,55 +46,32 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         context = flutterPluginBinding.applicationContext
     }
     
-    /**
-     * Helper to get Tealium instance or send error if not initialized.
-     * Returns null if Tealium is not initialized (error is sent to result).
-     */
-    private fun requireTealium(result: Result): Tealium? {
-        return tealium ?: run {
-            result.onMain().error(TealiumError.NOT_INITIALIZED, TealiumError.NOT_INITIALIZED_MSG, null)
-            null
-        }
-    }
-
-    /**
-     * Helper to get a required parameter or send error if null.
-     * Returns the value if non-null, otherwise sends error to result and returns null.
-     */
-    private fun <T> requireParam(
-        value: T?,
-        result: Result,
-        paramName: String,
-        message: String = "$paramName parameter is required"
-    ): T? {
-        return value ?: run {
-            result.onMain().error(TealiumError.MISSING_PARAMETER, message, null)
-            null
-        }
-    }
-
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-        when (call.method) {
-            "initialize" -> initialize(call, result)
-            "terminateInstance" -> terminate(result)
-            "track" -> track(call, result)
-            "addToDataLayer" -> addToDataLayer(call, result)
-            "getFromDataLayer" -> getFromDataLayer(call, result)
-            "removeFromDataLayer" -> removeFromDataLayer(call, result)
-            "setConsentStatus" -> setConsentStatus(call, result)
-            "getConsentStatus" -> getConsentStatus(result)
-            "setConsentCategories" -> setConsentCategories(call, result)
-            "getConsentCategories" -> getConsentCategories(result)
-            "addRemoteCommand" -> addRemoteCommand(call, result)
-            "removeRemoteCommand" -> removeRemoteCommand(call, result)
-            "joinTrace" -> joinTrace(call, result)
-            "leaveTrace" -> leaveTrace(result)
-            "getVisitorId" -> getVisitorId(result)
-            "resetVisitorId" -> resetVisitorId(result)
-            "clearStoredVisitorIds" -> clearStoredVisitorIds(result)
-            "setConsentExpiryListener" -> setConsentExpiryListener(result)
-            "gatherTrackData" -> gatherTrackData(result)
-            else -> result.onMain().notImplemented()
+        try {
+            when (call.method) {
+                "initialize" -> initialize(call, result)
+                "terminateInstance" -> terminate(result)
+                "track" -> track(call, result)
+                "addToDataLayer" -> addToDataLayer(call, result)
+                "getFromDataLayer" -> getFromDataLayer(call, result)
+                "removeFromDataLayer" -> removeFromDataLayer(call, result)
+                "setConsentStatus" -> setConsentStatus(call, result)
+                "getConsentStatus" -> getConsentStatus(result)
+                "setConsentCategories" -> setConsentCategories(call, result)
+                "getConsentCategories" -> getConsentCategories(result)
+                "addRemoteCommand" -> addRemoteCommand(call, result)
+                "removeRemoteCommand" -> removeRemoteCommand(call, result)
+                "joinTrace" -> joinTrace(call, result)
+                "leaveTrace" -> leaveTrace(result)
+                "getVisitorId" -> getVisitorId(result)
+                "resetVisitorId" -> resetVisitorId(result)
+                "clearStoredVisitorIds" -> clearStoredVisitorIds(result)
+                "setConsentExpiryListener" -> setConsentExpiryListener(result)
+                "gatherTrackData" -> gatherTrackData(result)
+                else -> result.onMain().notImplemented()
+            }
+        } catch (e: TealiumException) {
+            result.onMain().error(e)
         }
     }
 
@@ -158,13 +135,9 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun track(call: MethodCall, result: Result) {
-        val tealium = requireTealium(result) ?: return
-        val map = requireParam(
-            call.arguments<Map<*, *>>(),
-            result,
-            "Track dispatch data",
-            "Track dispatch data is required"
-        ) ?: return
+        val tealium = tealium.requireInstance()
+        val map = call.arguments<Map<*, *>>()
+            ?: throw TealiumException.MissingParameter("arguments")
 
         dispatchFromArguments(map).let {
             tealium.track(it)
@@ -173,8 +146,8 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun addToDataLayer(call: MethodCall, result: Result) {
-        val tealium = requireTealium(result) ?: return
-        val data = requireParam(call.argument<Map<String, Any>>("data"), result, "Data") ?: return
+        val tealium = tealium.requireInstance()
+        val data: Map<String, Any> = call.requireParameter("data")
         val expiry = call.argument<String>("expiry")
 
         data.forEach { (key, value) ->
@@ -226,8 +199,8 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun getFromDataLayer(call: MethodCall, result: Result) {
-        val tealium = requireTealium(result) ?: return
-        val key = requireParam(call.argument<String>("key"), result, "Key") ?: return
+        val tealium = tealium.requireInstance()
+        val key: String = call.requireParameter("key")
 
         val data = tealium.dataLayer.get(key)
         val payload = when (data) {
@@ -239,29 +212,29 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun removeFromDataLayer(call: MethodCall, result: Result) {
-        val tealium = requireTealium(result) ?: return
-        val keys = requireParam(call.argument<List<String>>("keys"), result, "Keys") ?: return
+        val tealium = tealium.requireInstance()
+        val keys: List<String> = call.requireParameter("keys")
 
         keys.forEach { tealium.dataLayer.remove(it) }
         result.onMain().success(null)
     }
 
     private fun setConsentStatus(call: MethodCall, result: Result) {
-        val tealium = requireTealium(result) ?: return
-        val status = requireParam(call.argument<String>("status"), result, "Status") ?: return
+        val tealium = tealium.requireInstance()
+        val status: String = call.requireParameter("status")
 
         tealium.consentManager.userConsentStatus = ConsentStatus.consentStatus(status)
         result.onMain().success(null)
     }
 
     private fun getConsentStatus(result: Result) {
-        val tealium = requireTealium(result) ?: return
+        val tealium = tealium.requireInstance()
         result.onMain().success(tealium.consentManager.userConsentStatus.value)
     }
 
     private fun setConsentCategories(call: MethodCall, result: Result) {
-        val tealium = requireTealium(result) ?: return
-        val categories = requireParam(call.argument<List<String>>("categories"), result, "Categories") ?: return
+        val tealium = tealium.requireInstance()
+        val categories: List<String> = call.requireParameter("categories")
 
         val categoryStrings = categories.toTypedArray()
         tealium.consentManager.userConsentCategories =
@@ -270,14 +243,14 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun getConsentCategories(result: Result) {
-        val tealium = requireTealium(result) ?: return
+        val tealium = tealium.requireInstance()
         val categories = tealium.consentManager.userConsentCategories?.map { it.toString() }?.toList()
         result.onMain().success(categories)
     }
 
     private fun addRemoteCommand(call: MethodCall, result: Result) {
-        val tealium = requireTealium(result) ?: return
-        val id = requireParam(call.argument<String>("id"), result, "ID") ?: return
+        val tealium = tealium.requireInstance()
+        val id: String = call.requireParameter("id")
         val path = call.argument<String?>("path")
         val url = call.argument<String?>("url")
         addRemoteCommand(tealium, id, path, url)
@@ -291,53 +264,53 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun removeRemoteCommand(call: MethodCall, result: Result) {
-        val tealium = requireTealium(result) ?: return
-        val id = requireParam(call.argument<String>("id"), result, "ID") ?: return
+        val tealium = tealium.requireInstance()
+        val id: String = call.requireParameter("id")
 
         tealium.remoteCommands?.remove(id)
         result.onMain().success(null)
     }
 
     private fun joinTrace(call: MethodCall, result: Result) {
-        val tealium = requireTealium(result) ?: return
-        val traceId = requireParam(call.argument<String>("id"), result, "Trace ID") ?: return
+        val tealium = tealium.requireInstance()
+        val traceId: String = call.requireParameter("id")
 
         tealium.joinTrace(traceId)
         result.onMain().success(null)
     }
 
     private fun leaveTrace(result: Result) {
-        val tealium = requireTealium(result) ?: return
+        val tealium = tealium.requireInstance()
         tealium.leaveTrace()
         result.onMain().success(null)
     }
 
     private fun getVisitorId(result: Result) {
-        val tealium = requireTealium(result) ?: return
+        val tealium = tealium.requireInstance()
         result.onMain().success(tealium.visitorId)
     }
 
     private fun resetVisitorId(result: Result) {
-        val tealium = requireTealium(result) ?: return
+        val tealium = tealium.requireInstance()
         tealium.resetVisitorId()
         result.onMain().success(null)
     }
 
     private fun clearStoredVisitorIds(result: Result) {
-        val tealium = requireTealium(result) ?: return
+        val tealium = tealium.requireInstance()
         tealium.clearStoredVisitorIds()
         result.onMain().success(null)
     }
 
     private fun setConsentExpiryListener(result: Result) {
-        val tealium = requireTealium(result) ?: return
+        tealium.requireInstance()
         // Consent expiry is handled via the EmitterListeners (UserConsentPreferencesUpdatedListener)
         // which is set up during initialization
         result.onMain().success(null)
     }
 
     private fun gatherTrackData(result: Result) {
-        val tealium = requireTealium(result) ?: return
+        val tealium = tealium.requireInstance()
         val data = tealium.gatherTrackData()
         result.success(data.mapValues { it.value.toFlutterCompatibleValue() })
     }

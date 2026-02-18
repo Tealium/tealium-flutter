@@ -4,6 +4,10 @@ import android.os.Handler
 import android.os.Looper
 import io.flutter.plugin.common.MethodChannel
 
+fun MethodChannel.Result.error(exception: TealiumException) {
+    error(exception.code, exception.message, null)
+}
+
 fun MethodChannel.Result.onMain(): ResultOnMain {
     return if (this is ResultOnMain) {
         this
