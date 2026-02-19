@@ -52,6 +52,6 @@ SPEC CHECKSUMS:
   tealium_adobevisitor: abebf7abf24ee9e63edf90601473acbfd08870d0
   TealiumAdobeVisitorAPI: dd487f3e130829a15b9cdc7de7b2841a200214e2
 
-PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
 COCOAPODS: 1.16.2
