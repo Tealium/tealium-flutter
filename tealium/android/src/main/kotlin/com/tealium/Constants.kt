@@ -59,26 +59,20 @@ const val KEY_VISITOR_SERVICE_ENABLED = "visitorServiceEnabled"
 const val KEY_CUSTOM_VISITOR_ID = "customVisitorId"
 const val KEY_VISITOR_IDENTITY_KEY = "visitorIdentityKey"
 
-// Error codes and messages
-object TealiumError {
-    const val NOT_INITIALIZED = "NOT_INITIALIZED"
-    const val NOT_INITIALIZED_MSG = "Tealium instance not initialized"
-    const val MISSING_PARAMETER = "MISSING_PARAMETER"
-}
-
-sealed class TealiumException(
+class TealiumException(
     val code: String,
-    override val message: String
-) : Exception(message) {
-    
-    class NotInitialized : TealiumException(
-        TealiumError.NOT_INITIALIZED,
-        TealiumError.NOT_INITIALIZED_MSG
-    )
-    
-    class MissingParameter(paramName: String) : TealiumException(
-        TealiumError.MISSING_PARAMETER,
-        "$paramName parameter is required"
-    )
-    
+    message: String,
+    cause: Throwable? = null
+) : Exception(message, cause) {
+
+    companion object {
+        fun notInitialized(): TealiumException =
+            TealiumException("NOT_INITIALIZED", "Tealium instance not initialized")
+
+        fun missingParameter(key: String): TealiumException =
+            TealiumException("MISSING_PARAMETER", "$key parameter is required")
+
+        fun unknown(cause: Throwable): TealiumException =
+            TealiumException("UNKNOWN_ERROR", cause.message ?: "An unknown error occurred", cause)
+    }
 }

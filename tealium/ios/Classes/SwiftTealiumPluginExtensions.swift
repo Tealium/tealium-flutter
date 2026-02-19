@@ -1,8 +1,8 @@
 import TealiumSwift
 
-public extension SwiftTealiumPlugin {
+extension SwiftTealiumPlugin {
     
-    func tealiumConfig(from call: FlutterMethodCall) throws(FlutterError) -> TealiumConfig {
+    func tealiumConfig(from call: FlutterMethodCall) throws(TealiumError) -> TealiumConfig {
         guard let dictionary = call.arguments as? [String: Any] else {
             throw TealiumError.missingParameter("Arguments")
         }
@@ -162,7 +162,7 @@ public extension SwiftTealiumPlugin {
         }
     }
     
-    func dispatchFrom(_ call: FlutterMethodCall) throws(FlutterError) -> TealiumDispatch {
+    func dispatchFrom(_ call: FlutterMethodCall) throws(TealiumError) -> TealiumDispatch {
         guard let payload = call.arguments as? [String: Any] else {
             throw TealiumError.missingParameter("Arguments")
         }
@@ -252,8 +252,8 @@ extension Dictionary where Key: ExpressibleByStringLiteral {
 
 extension FlutterMethodCall {
     /// Helper to get a required parameter or throw if missing/wrong type.
-    /// Returns the value as `T`, or throws `FlutterError` (TealiumError.missingParameter).
-    func requireParameter<T>(_ key: String) throws(FlutterError) -> T {
+    /// Returns the value as `T`, or throws `TealiumError.missingParameter`.
+    func requireParameter<T>(_ key: String) throws(TealiumError) -> T {
         guard let arguments = self.arguments as? [String: Any],
               let value = arguments[key] as? T else {
             throw TealiumError.missingParameter(key)
@@ -263,11 +263,11 @@ extension FlutterMethodCall {
 }
 
 private extension FlutterMethodCall {
-    func requireParameter<T>(_ key: TealiumFlutterConstants.Config) throws(FlutterError) -> T {
+    func requireParameter<T>(_ key: TealiumFlutterConstants.Config) throws(TealiumError) -> T {
         try requireParameter(key.rawValue)
     }
 
-    func requireParameter<T>(_ key: TealiumFlutterConstants.Dispatch) throws(FlutterError) -> T {
+    func requireParameter<T>(_ key: TealiumFlutterConstants.Dispatch) throws(TealiumError) -> T {
         try requireParameter(key.rawValue)
     }
 }

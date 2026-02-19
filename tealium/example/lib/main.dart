@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
               (payload) => {_logRemoteCommand('JSON Test', payload)}),
           Tealium.getFromDataLayer(visitorIdentityKey)
               .then((value) => setState(() {
-                    userIdValue.text = value;
+                    userIdValue.text = value ?? '';
                   })),
         });
     super.initState();

@@ -83,20 +83,22 @@ public enum TealiumFlutterConstants {
     }
 }
 
-// Error codes and messages 
-enum TealiumError {
-    private static let notInitializedCode = "NOT_INITIALIZED"
-    private static let notInitializedMsg = "Tealium instance not initialized"
-    private static let missingParameterCode = "MISSING_PARAMETER"
-    
-    static var notInitialized: FlutterError {
-        FlutterError(code: notInitializedCode, message: notInitializedMsg, details: nil)
+struct TealiumError: Error {
+    let code: String
+    let message: String
+
+    static let notInitialized: Self = TealiumError(code: "NOT_INITIALIZED", message: "Tealium instance not initialized")
+
+    static func missingParameter(_ param: String) -> Self {
+        TealiumError(code: "MISSING_PARAMETER", message: "\(param) parameter is required")
     }
-    
-    static func missingParameter(_ param: String) -> FlutterError {
-        FlutterError(code: missingParameterCode, message: "\(param) parameter is required", details: nil)
+
+    static func unknown(_ error: Error) -> Self {
+        TealiumError(code: "UNKNOWN_ERROR", message: error.localizedDescription)
+    }
+
+    func toFlutterError() -> FlutterError {
+        FlutterError(code: code, message: message, details: nil)
     }
 }
-
-extension FlutterError: Error {}
 

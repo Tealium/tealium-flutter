@@ -72,6 +72,8 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
         } catch (e: TealiumException) {
             result.onMain().error(e)
+        } catch (e: Exception) {
+            result.onMain().error(TealiumException.unknown(e))
         }
     }
 
@@ -118,13 +120,11 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 Log.d(BuildConfig.TAG, "Instance Initialized")
                 events.subscribe(EmitterListeners(channel))
-                result.onMain().success(true)
+                result.onMain().success(null)
             }
         } ?: run {
             Log.w(BuildConfig.TAG, "Failed to initialize instance.")
-            Handler(Looper.getMainLooper()).post {
-                result.onMain().error(TealiumError.MISSING_PARAMETER, "Invalid or missing configuration", null)
-            }
+            result.onMain().error("MISSING_PARAMETER", "Invalid or missing configuration", null)
         }
     }
 
@@ -137,7 +137,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun track(call: MethodCall, result: Result) {
         val tealium = tealium.requireInstance()
         val map = call.arguments<Map<*, *>>()
-            ?: throw TealiumException.MissingParameter("arguments")
+            ?: throw TealiumException.missingParameter("arguments")
 
         dispatchFromArguments(map).let {
             tealium.track(it)

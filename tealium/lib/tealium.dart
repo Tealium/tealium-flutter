@@ -7,7 +7,7 @@ import 'events/event_emitter.dart';
 
 class Tealium {
   static const String plugin_name = 'Tealium-Flutter';
-  static const String plugin_version = '2.7.0';
+  static const String plugin_version = '3.0.0';
   static const MethodChannel _channel = const MethodChannel('tealium');
   static EventEmitter emitter = new EventEmitter();
   static Map<String, Function> _remoteCommands = new Map();
@@ -15,8 +15,8 @@ class Tealium {
 
   /// Initializes Tealium with a [TealiumConfig] object
   ///
-  /// [Future<bool>] upon success or failure
-  static Future<bool> initialize(TealiumConfig config) async {
+  /// Throws a [PlatformException] on failure.
+  static Future<void> initialize(TealiumConfig config) async {
     if (config.dispatchers
         .toString()
         .contains(Dispatchers.RemoteCommands.toString())) {
@@ -29,7 +29,7 @@ class Tealium {
       }
     });
 
-    var initialized = await _channel.invokeMethod('initialize', {
+    await _channel.invokeMethod('initialize', {
       'account': config.account,
       'profile': config.profile,
       'environment': config.environment,
@@ -56,21 +56,19 @@ class Tealium {
       'visitorServiceEnabled': config.visitorServiceEnabled,
       'sessionCountingEnabled': config.sessionCountingEnabled,
       'test': "test",
-      'remoteCommands': config.remoteCommands?.map((e) => {
-          "id": e.id,
-          "url": e.url,
-          "path": e.path
-      }).toList(),
+      'remoteCommands': config.remoteCommands
+          ?.map((e) => {
+                "id": e.id,
+                "url": e.url,
+                "path": e.path,
+              })
+          .toList(),
       'visitorIdentityKey': config.visitorIdentityKey
     });
 
-    if (initialized) {
-      addToDataLayer(
-          {'plugin_name': plugin_name, 'plugin_version': plugin_version},
-          Expiry.forever);
-    }
-
-    return initialized;
+    addToDataLayer(
+        {'plugin_name': plugin_name, 'plugin_version': plugin_version},
+        Expiry.forever);
   }
 
   /// Tracks a [TealiumDispatch]
@@ -116,10 +114,11 @@ class Tealium {
 
   /// Adds a [RemoteCommand] to the [RemoteCommands] Dispatcher
   static addCustomRemoteCommand(String id, Function callback) async {
-    return await addRemoteCommand(RemoteCommand(id, 
+    return await addRemoteCommand(RemoteCommand(
+      id,
       callback: callback,
-      path: null, 
-      url: null
+      path: null,
+      url: null,
     ));
   }
 
@@ -130,7 +129,7 @@ class Tealium {
       if (callback != null) {
         _addRemoteCommandListener(remoteCommand.id, callback);
       }
-    
+
       return await _channel.invokeMethod('addRemoteCommand', {
         'id': remoteCommand.id,
         'path': remoteCommand.path,
@@ -147,7 +146,7 @@ class Tealium {
 
   static _addRemoteCommandListener(String id, Function callback) {
     _remoteCommands[id] = callback;
-  } 
+  }
 
   static setConsentStatus(ConsentStatus status) {
     _channel.invokeMethod('setConsentStatus', {'status': status.toString()});
@@ -269,7 +268,7 @@ class Tealium {
           var visitorId = eventDataMap['visitorId'];
           if (visitorId != null) {
             Function callback = _listeners[EventListenerNames.visitorId] =
-              _listeners[EventListenerNames.visitorId] as Function;
+                _listeners[EventListenerNames.visitorId] as Function;
             callback(visitorId);
           }
           break;

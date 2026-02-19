@@ -46,7 +46,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     
     /// Helper to get Tealium instance or send error if not initialized.
     /// Returns nil if Tealium is not initialized (error is sent to result).
-    private func requireTealium() throws(FlutterError) -> Tealium {
+    private func requireTealium() throws(TealiumError) -> Tealium {
         guard let tealium = tealium else {
             throw TealiumError.notInitialized
         }
@@ -55,54 +55,56 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         do {
-        switch call.method {
-        case "initialize":
-            try initialize(call: call, result: result)
-        case "terminateInstance":
-            try terminateInstance(result: result)
-        case "track":
-            try track(call: call, result: result)
-        case "addToDataLayer":
-            try addToDataLayer(call: call, result: result)
-        case "removeFromDataLayer", "deleteFromDataLayer":
-            try removeFromDataLayer(call: call, result: result)
-        case "getFromDataLayer":
-            try getFromDataLayer(call: call, result: result)
-        case "addRemoteCommand":
-            try addRemoteCommand(call: call, result: result)
-        case "removeRemoteCommand":
-            try removeRemoteCommand(call: call, result: result)
-        case "setConsentStatus":
-            try setConsentStatus(call: call, result: result)
-        case "getConsentStatus":
-            try getConsentStatus(result: result)
-        case "setConsentCategories":
-            try setConsentCategories(call: call, result: result)
-        case "getConsentCategories":
-            try getConsentCategories(result: result)
-        case "joinTrace":
-            try joinTrace(call: call, result: result)
-        case "leaveTrace":
-            try leaveTrace(result: result)
-        case "getVisitorId":
-            try getVisitorId(result: result)
-        case "setConsentExpiryListener":
-            try setConsentExpiryListener(result: result)
-        case "gatherTrackData":
-            try gatherTrackData(call: call, result: result)
-        case "resetVisitorId":
-            try resetVisitorId(result: result)
-        case "clearStoredVisitorIds":
-            try clearStoredVisitorIds(result: result)
-        default:
-            result(FlutterMethodNotImplemented)
-        }
+            switch call.method {
+            case "initialize":
+                try initialize(call: call, result: result)
+            case "terminateInstance":
+                terminateInstance(result: result)
+            case "track":
+                try track(call: call, result: result)
+            case "addToDataLayer":
+                try addToDataLayer(call: call, result: result)
+            case "removeFromDataLayer":
+                try removeFromDataLayer(call: call, result: result)
+            case "getFromDataLayer":
+                try getFromDataLayer(call: call, result: result)
+            case "addRemoteCommand":
+                try addRemoteCommand(call: call, result: result)
+            case "removeRemoteCommand":
+                try removeRemoteCommand(call: call, result: result)
+            case "setConsentStatus":
+                try setConsentStatus(call: call, result: result)
+            case "getConsentStatus":
+                try getConsentStatus(result: result)
+            case "setConsentCategories":
+                try setConsentCategories(call: call, result: result)
+            case "getConsentCategories":
+                try getConsentCategories(result: result)
+            case "joinTrace":
+                try joinTrace(call: call, result: result)
+            case "leaveTrace":
+                try leaveTrace(result: result)
+            case "getVisitorId":
+                try getVisitorId(result: result)
+            case "setConsentExpiryListener":
+                try setConsentExpiryListener(result: result)
+            case "gatherTrackData":
+                try gatherTrackData(call: call, result: result)
+            case "resetVisitorId":
+                try resetVisitorId(result: result)
+            case "clearStoredVisitorIds":
+                try clearStoredVisitorIds(result: result)
+            default:
+                result(FlutterMethodNotImplemented)
+            }
+        } catch let tealiumError as TealiumError {
+            result(tealiumError.toFlutterError())
         } catch {
-            result(error)
+            result(TealiumError.unknown(error).toFlutterError())
         }
     }
     
-    func initialize(call: FlutterMethodCall, result: @escaping FlutterResult) throws(FlutterError) {
+    func initialize(call: FlutterMethodCall, result: @escaping FlutterResult) throws(TealiumError) {
         let localConfig = try tealiumConfig(from: call)
         self.config = localConfig.copy
         
@@ -119,11 +121,11 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
                                     "visitorId": visitorId
                                   ])
             }
-            result(true)
+            result(nil)
         }
     }
     
-    func track(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
+    func track(call: FlutterMethodCall, result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         let track = try dispatchFrom(call)
         tealium.track(track)
@@ -140,7 +142,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         result(nil)
     }
     
-    func addToDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
+    func addToDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         let data: [String: Any] = try call.requireParameter("data")
         let expiry: String = try call.requireParameter("expiry")
@@ -148,28 +150,21 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         result(nil)
     }
     
-    func removeFromDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
+    func removeFromDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         let keys: [String] = try call.requireParameter("keys")
         tealium.dataLayer.delete(for: keys)
         result(nil)
     }
     
-    func getFromDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
+    func getFromDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         let key: String = try call.requireParameter("key")
         let value = tealium.dataLayer.all[key]
         result(value)
     }
     
-    func deleteFromDataLayer(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
-        let tealium = try requireTealium()
-        let key: String = try call.requireParameter("key")
-        tealium.dataLayer.delete(for: key)
-        result(nil)
-    }
-    
-    func addRemoteCommand(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
+    func addRemoteCommand(call: FlutterMethodCall, result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         let id: String = try call.requireParameter("id")
 
@@ -184,14 +179,14 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         result(nil)
     }
     
-    func removeRemoteCommand(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
+    func removeRemoteCommand(call: FlutterMethodCall, result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         let id: String = try call.requireParameter("id")
         tealium.remoteCommands?.remove(commandWithId: id)
         result(nil)
     }
     
-    func setConsentStatus(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
+    func setConsentStatus(call: FlutterMethodCall, result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         let status: String = try call.requireParameter("status")
         if status == TealiumFlutterConstants.consented {
@@ -202,19 +197,19 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         result(nil)
     }
     
-    func getConsentStatus(result: FlutterResult) throws(FlutterError) -> Void {
+    func getConsentStatus(result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         result(tealium.consentManager?.userConsentStatus.rawValue ?? "unknown")
     }
     
-    func setConsentCategories(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
+    func setConsentCategories(call: FlutterMethodCall, result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         let categories: [String] = try call.requireParameter("categories")
         tealium.consentManager?.userConsentCategories = TealiumConsentCategories.consentCategoriesStringArrayToEnum(categories)
         result(nil)
     }
     
-    func getConsentCategories(result: FlutterResult) throws(FlutterError) -> Void {
+    func getConsentCategories(result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         var converted = [String]()
         tealium.consentManager?.userConsentCategories?.forEach {
@@ -223,37 +218,37 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         result(converted)
     }
     
-    func joinTrace(call: FlutterMethodCall, result: FlutterResult) throws(FlutterError) -> Void {
+    func joinTrace(call: FlutterMethodCall, result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         let id: String = try call.requireParameter("id")
         tealium.joinTrace(id: id)
         result(nil)
     }
     
-    func leaveTrace(result: FlutterResult) throws(FlutterError) -> Void {
+    func leaveTrace(result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         tealium.leaveTrace()
         result(nil)
     }
     
-    func getVisitorId(result: FlutterResult) throws(FlutterError) -> Void {
+    func getVisitorId(result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         result(tealium.visitorId)
     }
     
-    func resetVisitorId(result: FlutterResult) throws(FlutterError) -> Void {
+    func resetVisitorId(result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         tealium.resetVisitorId()
         result(nil)
     }
     
-    func clearStoredVisitorIds(result: FlutterResult) throws(FlutterError) -> Void {
+    func clearStoredVisitorIds(result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         tealium.clearStoredVisitorIds()
         result(nil)
     }
     
-    func setConsentExpiryListener(result: FlutterResult) throws(FlutterError) -> Void {
+    func setConsentExpiryListener(result: FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         tealium.consentManager?.onConsentExpiraiton = {
             Self.invokeOnMain("callListener",
@@ -262,7 +257,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         result(nil)
     }
     
-    func gatherTrackData(call: FlutterMethodCall, result: @escaping FlutterResult) throws(FlutterError) -> Void {
+    func gatherTrackData(call: FlutterMethodCall, result: @escaping FlutterResult) throws(TealiumError) -> Void {
         let tealium = try requireTealium()
         
         guard let arguments = call.arguments as? [String: Any],

@@ -13,7 +13,7 @@ dependencies:
   plugin_platform_interface: ^2.1.8
   # TODO: Before publishing, ensure tealium dependency uses pub.dev version (^2.5.0),
   # not local path. Uncomment the path version only for local testing.
-  tealium: ^2.5.0
+  tealium: ^3.0.0
   # for local testing
   # tealium:
   #   path: ../../tealium/

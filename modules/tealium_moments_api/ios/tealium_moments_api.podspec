@@ -15,7 +15,7 @@ Tealium Moments Api Module for Flutter.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'tealium', '~> 2.5'
+  s.dependency 'tealium', '~> 3.0'
   s.dependency "tealium-swift/Core", "~> 2.14"
   s.dependency "tealium-swift/MomentsAPI", "~> 2.14"
   s.platform = :ios, '12.0'
