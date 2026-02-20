@@ -44,12 +44,12 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 25
     }
 }
 
 dependencies {
     compileOnly rootProject.findProject(":tealium")
 
-    implementation 'com.tealium.remotecommands:braze:3.1.0'
+    implementation 'com.tealium.remotecommands:braze:3.3.0'
 }

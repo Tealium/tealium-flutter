@@ -23,6 +23,6 @@ Pod::Spec.new do |s|
 
   s.dependency 'Flutter'
   s.dependency 'tealium', '~> 3.0'
-  s.dependency "tealium-swift/Core", "~> 2.12"
-  s.dependency "TealiumBraze", "~> 3.2"
+  s.dependency "tealium-swift/Core", "~> 2.18"
+  s.dependency "TealiumBraze", "~> 3.6"
 end
