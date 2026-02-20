@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
       TealiumEnvironment.dev,
       [Collectors.AppData, Collectors.Lifecycle],
       [Dispatchers.RemoteCommands, Dispatchers.Collect],
+      loglevel: LogLevel.DEV,
       consentPolicy: ConsentPolicy.GDPR,
       useRemoteLibrarySettings: true,
       batchingEnabled: false,
@@ -52,7 +53,7 @@ class _MyAppState extends State<MyApp> {
               (payload) => {_logRemoteCommand('JSON Test', payload)}),
           Tealium.getFromDataLayer(visitorIdentityKey)
               .then((value) => setState(() {
-                    userIdValue.text = value;
+                    userIdValue.text = value ?? '';
                   })),
         });
     super.initState();
