@@ -1,3 +1,7 @@
+## 3.0.0
+* Updated `tealium` dependency to ^3.0.0
+* Dart SDK constraint widened to `>=2.18.0 <4.0.0` (adds Dart 3 support)
+
 ## 2.0.0
 * **BREAKING CHANGES:**
   * Minimum iOS deployment target: 15.0 (previously 12.0)

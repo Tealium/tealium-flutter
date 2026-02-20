@@ -11,6 +11,7 @@
 * iOS
     * Updated Tealium Swift SDK dependencies (2.15 → 2.18)
     * Added `FlutterMethodNotImplemented` response for unknown method calls
+* Dart SDK constraint widened to `>=2.18.0 <4.0.0` (adds Dart 3 support)
 * Example app: Updated deprecated Flutter APIs (MaterialStateProperty → WidgetStateProperty)
 
 ## 2.X
