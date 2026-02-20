@@ -10,15 +10,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   tealium_firebase:
     path: ../
   tealium:
     path: ../../../tealium/
   cupertino_icons: ^1.0.8
-
-dependency_overrides:
-  tealium:
-    path: ../../../tealium/
 
 dev_dependencies:
   flutter_test:

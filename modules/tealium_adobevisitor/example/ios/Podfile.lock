@@ -1,27 +1,27 @@
 PODS:
   - Flutter (1.0.0)
-  - tealium (3.0.0):
+  - tealium (2.5.0):
     - Flutter
-    - tealium-swift/Collect (~> 2.18)
-    - tealium-swift/Core (~> 2.18)
-    - tealium-swift/Lifecycle (~> 2.18)
-    - tealium-swift/RemoteCommands (~> 2.18)
-    - tealium-swift/TagManagement (~> 2.18)
-    - tealium-swift/VisitorService (~> 2.18)
-  - tealium-swift/Collect (2.18.2):
+    - tealium-swift/Collect (~> 2.12)
+    - tealium-swift/Core (~> 2.12)
+    - tealium-swift/Lifecycle (~> 2.12)
+    - tealium-swift/RemoteCommands (~> 2.12)
+    - tealium-swift/TagManagement (~> 2.12)
+    - tealium-swift/VisitorService (~> 2.12)
+  - tealium-swift/Collect (2.12.2):
     - tealium-swift/Core
-  - tealium-swift/Core (2.18.2)
-  - tealium-swift/Lifecycle (2.18.2):
+  - tealium-swift/Core (2.12.2)
+  - tealium-swift/Lifecycle (2.12.2):
     - tealium-swift/Core
-  - tealium-swift/RemoteCommands (2.18.2):
+  - tealium-swift/RemoteCommands (2.12.2):
     - tealium-swift/Core
-  - tealium-swift/TagManagement (2.18.2):
+  - tealium-swift/TagManagement (2.12.2):
     - tealium-swift/Core
-  - tealium-swift/VisitorService (2.18.2):
+  - tealium-swift/VisitorService (2.12.2):
     - tealium-swift/Core
   - tealium_adobevisitor (1.1.0):
     - Flutter
-    - tealium (~> 3.0)
+    - tealium (~> 2.5)
     - tealium-swift/Core (~> 2.12)
     - TealiumAdobeVisitorAPI (~> 1.2)
   - TealiumAdobeVisitorAPI (1.2.0):
@@ -46,12 +46,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/tealium_adobevisitor/ios"
 
 SPEC CHECKSUMS:
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  tealium: 9032e4ba8cdb3407c93860ecde341b172f4b55e7
-  tealium-swift: 9c38e6687b24c9eed0f3bc221ea5d7717274af16
-  tealium_adobevisitor: abebf7abf24ee9e63edf90601473acbfd08870d0
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  tealium: 78a288dbb0cd3dbdcbec000b21189f8664b2af89
+  tealium-swift: 4b7e3dda42d7c1de6acb769abad9920346d17d43
+  tealium_adobevisitor: 8a820986ab0d7519f4110e24e80acfa05864f003
   TealiumAdobeVisitorAPI: dd487f3e130829a15b9cdc7de7b2841a200214e2
 
-PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2

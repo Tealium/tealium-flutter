@@ -190,7 +190,7 @@ packages:
       path: "../../../tealium"
       relative: true
     source: path
-    version: "3.0.0"
+    version: "2.7.0"
   tealium_firebase:
     dependency: "direct main"
     description:

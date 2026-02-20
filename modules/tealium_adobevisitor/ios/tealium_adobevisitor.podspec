@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   s.dependency 'Flutter'
-  s.dependency 'tealium', '~> 3.0'
+  s.dependency 'tealium', '~> 2.5'
   s.dependency 'tealium-swift/Core', '~> 2.12'
   s.dependency 'TealiumAdobeVisitorAPI', '~> 1.2'
 end
