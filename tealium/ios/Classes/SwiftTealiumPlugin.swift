@@ -119,7 +119,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
                                     "visitorId": visitorId
                                   ])
             }
-            result(nil)
+            DispatchQueue.main.async { result(nil) }
         }
     }
     
@@ -261,12 +261,12 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         guard let arguments = call.arguments as? [String: Any],
               let retrieveCachedData = arguments["retrieveCachedData"] as? Bool else {
             tealium.gatherTrackData(completion: { data in
-                result(data)
+                DispatchQueue.main.async { result(data) }
             })
             return
         }
         tealium.gatherTrackData(retrieveCachedData: retrieveCachedData, completion: { data in
-            result(data)
+            DispatchQueue.main.async { result(data) }
         })
     }
 

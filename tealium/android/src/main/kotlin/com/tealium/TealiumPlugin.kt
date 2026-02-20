@@ -306,7 +306,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun gatherTrackData(result: Result) {
         val tealium = tealium.requireInstance()
         val data = tealium.gatherTrackData()
-        result.success(data.mapValues { it.value.toFlutterCompatibleValue() })
+        result.onMain().success(data.mapValues { it.value.toFlutterCompatibleValue() })
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

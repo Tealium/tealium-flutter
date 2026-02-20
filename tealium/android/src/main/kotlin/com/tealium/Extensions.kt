@@ -221,13 +221,13 @@ fun dispatchFromArguments(data: Map<*, *>): Dispatch {
     val eventType = data[KEY_TRACK_EVENT_TYPE] as String
 
     return when (eventType.lowercase(Locale.ROOT)) {
-        DispatchType.VIEW -> TealiumView((data[KEY_TRACK_VIEW_NAME] as String)
-                ?: DispatchType.VIEW,
-                data[KEY_TRACK_DATALAYER] as Map<String, Any>
+        DispatchType.VIEW -> TealiumView(
+                data[KEY_TRACK_VIEW_NAME] as? String ?: DispatchType.VIEW,
+                data[KEY_TRACK_DATALAYER] as? Map<String, Any> ?: emptyMap()
         )
-        else -> TealiumEvent((data[KEY_TRACK_EVENT_NAME] as String)
-                ?: DispatchType.EVENT,
-                data[KEY_TRACK_DATALAYER] as Map<String, Any>
+        else -> TealiumEvent(
+                data[KEY_TRACK_EVENT_NAME] as? String ?: DispatchType.EVENT,
+                data[KEY_TRACK_DATALAYER] as? Map<String, Any> ?: emptyMap()
         )
     }
 }
