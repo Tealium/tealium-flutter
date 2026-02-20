@@ -97,10 +97,8 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
             default:
                 result(FlutterMethodNotImplemented)
             }
-        } catch let tealiumError as TealiumError {
-            result(tealiumError.toFlutterError())
         } catch {
-            result(TealiumError.unknown(error).toFlutterError())
+            result(error.toFlutterError())
         }
     }
     

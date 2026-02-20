@@ -23,7 +23,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
-import org.json.JSONArray
 import java.util.*
 import kotlin.collections.List
 
@@ -203,12 +202,7 @@ class TealiumPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         val key: String = call.requireParameter("key")
 
         val data = tealium.dataLayer.get(key)
-        val payload = when (data) {
-            is Array<*> -> data.toList()
-            is JSONObject -> data.toFriendlyMap()
-            else -> data
-        }
-        result.onMain().success(payload)
+        result.onMain().success(data.toFlutterCompatibleValue())
     }
 
     private fun removeFromDataLayer(call: MethodCall, result: Result) {

@@ -93,10 +93,6 @@ struct TealiumError: Error {
         TealiumError(code: "MISSING_PARAMETER", message: "\(param) parameter is required")
     }
 
-    static func unknown(_ error: Error) -> Self {
-        TealiumError(code: "UNKNOWN_ERROR", message: error.localizedDescription)
-    }
-
     func toFlutterError() -> FlutterError {
         FlutterError(code: code, message: message, details: nil)
     }
