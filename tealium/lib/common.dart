@@ -72,27 +72,29 @@ abstract class TealiumDispatch {
 }
 
 class TealiumView implements TealiumDispatch {
+  @override
   late String type;
   late String viewName;
+  @override
   Map<String, Object>? dataLayer;
-  TealiumView(String viewName, Map<String, Object> dataLayer,
-      {String type = 'view'}) {
-    this.type = type;
-    this.viewName = viewName;
-    this.dataLayer = dataLayer;
-  }
+  TealiumView(
+    this.viewName,
+    Map<String, Object> this.dataLayer, {
+    this.type = 'view',
+  });
 }
 
 class TealiumEvent implements TealiumDispatch {
+  @override
   late String type;
   late String eventName;
+  @override
   Map<String, Object>? dataLayer;
-  TealiumEvent(String eventName, Map<String, Object> dataLayer,
-      {String type = 'event'}) {
-    this.type = type;
-    this.eventName = eventName;
-    this.dataLayer = dataLayer;
-  }
+  TealiumEvent(
+    this.eventName,
+    Map<String, Object> this.dataLayer, {
+    this.type = 'event',
+  });
 }
 
 class ConsentStatus {
@@ -174,13 +176,9 @@ class ConsentCategories {
 class ConsentExpiry {
   late int time;
   late TimeUnit unit;
-  ConsentExpiry(int time, TimeUnit unit) {
-    this.time = time;
-    this.unit = unit;
-  }
+  ConsentExpiry(this.time, this.unit);
 
-  Map<String, dynamic> toJson() =>
-      {'time': this.time, 'unit': this.unit.toString()};
+  Map<String, dynamic> toJson() => {'time': time, 'unit': unit.toString()};
 }
 
 class TimeUnit {
@@ -204,15 +202,8 @@ class RemoteCommand {
   final String? path;
   final String? url;
   final Function? callback;
-  
-  RemoteCommand(
-    this.id,
-    {
-      this.path,
-      this.url,
-      this.callback
-    }
-  );
+
+  RemoteCommand(this.id, {this.path, this.url, this.callback});
 }
 
 class TealiumConfig {
@@ -244,63 +235,36 @@ class TealiumConfig {
   List<RemoteCommand>? remoteCommands;
   String? visitorIdentityKey;
 
-  TealiumConfig(
-    String account,
-    String profile,
-    TealiumEnvironment environment,
-    List<Collectors> collectors,
-    List<Dispatchers> dispatchers,
-    // Optional TealiumConfig Parameters
-    {
-    String? dataSource,
-    String? customVisitorId,
-    bool? memoryReportingEnabled,
-    String? overrideCollectURL,
-    String? overrideCollectProfile,
-    String? overrideCollectBatchURL,
-    String? overrideCollectDomain,
-    String? overrideLibrarySettingsURL,
-    String? overrideTagManagementURL,
-    bool? deepLinkTrackingEnabled,
-    bool? qrTraceEnabled,
-    LogLevel? loglevel,
-    bool? consentLoggingEnabled,
-    ConsentPolicy? consentPolicy,
-    ConsentExpiry? consentExpiry,
-    bool? batchingEnabled,
-    bool? lifecycleAutotrackingEnabled,
-    bool? useRemoteLibrarySettings,
-    bool? visitorServiceEnabled,
-    bool? sessionCountingEnabled,
-    List<RemoteCommand>? remoteCommands,
-    String? visitorIdentityKey
-  }) {
-    this.account = account;
-    this.profile = profile;
+  TealiumConfig(this.account, this.profile, TealiumEnvironment environment,
+      List<Collectors> collectors, List<Dispatchers> dispatchers,
+      // Optional TealiumConfig Parameters
+      {this.dataSource,
+      this.customVisitorId,
+      this.memoryReportingEnabled,
+      this.overrideCollectURL,
+      this.overrideCollectProfile,
+      this.overrideCollectBatchURL,
+      this.overrideCollectDomain,
+      this.overrideLibrarySettingsURL,
+      this.overrideTagManagementURL,
+      this.deepLinkTrackingEnabled,
+      this.qrTraceEnabled,
+      LogLevel? loglevel,
+      this.consentLoggingEnabled,
+      ConsentPolicy? consentPolicy,
+      ConsentExpiry? consentExpiry,
+      this.batchingEnabled,
+      this.lifecycleAutotrackingEnabled,
+      this.useRemoteLibrarySettings,
+      this.visitorServiceEnabled,
+      this.sessionCountingEnabled,
+      this.remoteCommands,
+      this.visitorIdentityKey}) {
     this.environment = environment.toString();
     this.collectors = collectors.map((item) => item.toString()).toList();
     this.dispatchers = dispatchers.map((item) => item.toString()).toList();
-    this.dataSource = dataSource;
-    this.customVisitorId = customVisitorId;
-    this.memoryReportingEnabled = memoryReportingEnabled;
-    this.overrideCollectURL = overrideCollectURL;
-    this.overrideCollectProfile = overrideCollectProfile;
-    this.overrideCollectBatchURL = overrideCollectBatchURL;
-    this.overrideCollectDomain = overrideCollectDomain;
-    this.overrideLibrarySettingsURL = overrideLibrarySettingsURL;
-    this.overrideTagManagementURL = overrideTagManagementURL;
-    this.deepLinkTrackingEnabled = deepLinkTrackingEnabled;
-    this.qrTraceEnabled = qrTraceEnabled;
-    this.logLevel = loglevel?.toString();
-    this.consentLoggingEnabled = consentLoggingEnabled;
+    logLevel = loglevel?.toString();
     this.consentPolicy = consentPolicy?.toString();
     this.consentExpiry = consentExpiry?.toJson();
-    this.batchingEnabled = batchingEnabled;
-    this.lifecycleAutotrackingEnabled = lifecycleAutotrackingEnabled;
-    this.useRemoteLibrarySettings = useRemoteLibrarySettings;
-    this.visitorServiceEnabled = visitorServiceEnabled;
-    this.sessionCountingEnabled = sessionCountingEnabled;
-    this.remoteCommands = remoteCommands;
-    this.visitorIdentityKey = visitorIdentityKey;
   }
 }

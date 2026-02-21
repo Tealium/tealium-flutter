@@ -6,10 +6,10 @@
 import 'event.dart';
 import 'listener.dart';
 
-typedef void EventCallback(EmittedEvent ev, Object context);
+typedef EventCallback = void Function(EmittedEvent ev, Object context);
 
 class EventEmitter {
-  Map<String, Set<EventListener>> _listeners =
+  final Map<String, Set<EventListener>> _listeners =
       Map<String, Set<EventListener>>();
 
   /// API to register for notification.
@@ -24,17 +24,17 @@ class EventEmitter {
     EventListener? listener;
 
     Set<EventListener> subs =
-        this._listeners.putIfAbsent(event, () => new Set<EventListener>());
+        _listeners.putIfAbsent(event, () => Set<EventListener>());
 
     // Create new element.
-    listener = new EventListener(event, context, callback, () {
+    listener = EventListener(event, context, callback, () {
       subs.remove(listener);
-      if (subs.length == 0) {
-        this._listeners.remove(listener?.eventName);
+      if (subs.isEmpty) {
+        _listeners.remove(listener?.eventName);
       }
     });
     subs.add(listener);
-  
+
     return listener;
   }
 
@@ -58,8 +58,8 @@ class EventEmitter {
     // Check if listeners have the specific event already registered.
     // if so, then check for the callback registration.
 
-    if (this._listeners.containsKey(eventName)) {
-      Set<EventListener>? subs = this._listeners[eventName];
+    if (_listeners.containsKey(eventName)) {
+      Set<EventListener>? subs = _listeners[eventName];
       subs?.removeWhere((element) =>
           element.eventName == eventName && element.callback == callback);
     }
@@ -69,9 +69,9 @@ class EventEmitter {
   /// event is a required parameter.
   /// If sender information is sent, it will be used to intimate user about it.
   void emit(String event, [Object? sender, Object? data]) {
-    if (this._listeners.containsKey(event)) {
-      EmittedEvent ev = new EmittedEvent(event, data, sender);
-      List<EventListener>? sublist = this._listeners[event]?.toList();
+    if (_listeners.containsKey(event)) {
+      EmittedEvent ev = EmittedEvent(event, data, sender);
+      List<EventListener>? sublist = _listeners[event]?.toList();
       sublist?.forEach((item) {
         if (ev.handled) {
           return;
@@ -83,14 +83,14 @@ class EventEmitter {
 
   /// Clear all subscribers from the cache.
   void clear() {
-    this._listeners.clear();
+    _listeners.clear();
   }
 
   /// Remove all listeners which matches with the callback provided.
   /// It is possible to register for multiple events with a single callback.
   /// This mechanism makesure that all event registrations would be cancelled which matches the callback.
   void removeAllByCallback(EventCallback callback) {
-    this._listeners.forEach((key, lst) {
+    _listeners.forEach((key, lst) {
       lst.removeWhere((item) => item.callback == callback);
     });
   }
@@ -99,13 +99,13 @@ class EventEmitter {
   /// Caution : This will remove all the listeners from multiple files or classes or modules.
   /// Think twice before calling this API and make sure you know what you are doing!!!
   void removeAllByEvent(String event) {
-    this._listeners.removeWhere((key, val) => key == event);
+    _listeners.removeWhere((key, val) => key == event);
   }
 
   /// Get the unique count of events registered in the emitter.
-  int get count => this._listeners.length;
+  int get count => _listeners.length;
 
   /// Get the list of subscribers for a particular event.
   int getListenersCount(String event) =>
-      this._listeners.containsKey(event) ? this._listeners[event]!.length : 0;
+      _listeners.containsKey(event) ? _listeners[event]!.length : 0;
 }

@@ -1,17 +1,16 @@
 library tealium;
 
 import 'package:flutter/services.dart';
-import 'dart:convert';
 import 'common.dart';
 import 'events/event_emitter.dart';
 
 class Tealium {
-  static const String plugin_name = 'Tealium-Flutter';
-  static const String plugin_version = '3.0.0';
-  static const MethodChannel _channel = const MethodChannel('tealium');
-  static EventEmitter emitter = new EventEmitter();
-  static Map<String, Function> _remoteCommands = new Map();
-  static Map<String, Function> _listeners = new Map();
+  static const String pluginName = 'Tealium-Flutter';
+  static const String pluginVersion = '3.0.0';
+  static const MethodChannel _channel = MethodChannel('tealium');
+  static EventEmitter emitter = EventEmitter();
+  static final Map<String, Function> _remoteCommands = Map();
+  static final Map<String, Function> _listeners = Map();
 
   /// Initializes Tealium with a [TealiumConfig] object
   ///
@@ -66,43 +65,45 @@ class Tealium {
       'visitorIdentityKey': config.visitorIdentityKey
     });
 
-    addToDataLayer(
-        {'plugin_name': plugin_name, 'plugin_version': plugin_version},
+    await addToDataLayer(
+        {'plugin_name': pluginName, 'plugin_version': pluginVersion},
         Expiry.forever);
   }
 
   /// Tracks a [TealiumDispatch]
   ///
   /// Accepts a [TealiumView] or [TealiumEvent] type
-  static track(TealiumDispatch dispatch) {
+  static Future<void> track(TealiumDispatch dispatch) async {
     if (dispatch is TealiumView) {
-      _channel.invokeMethod('track', {
+      await _channel.invokeMethod('track', {
         'viewName': dispatch.viewName,
         'dataLayer': dispatch.dataLayer,
         'type': 'view'
       });
-    } else if (dispatch is TealiumEvent)
-      _channel.invokeMethod('track', {
+    } else if (dispatch is TealiumEvent) {
+      await _channel.invokeMethod('track', {
         'eventName': dispatch.eventName,
         'dataLayer': dispatch.dataLayer,
         'type': 'event'
       });
+    }
   }
 
   /// Disables the Tealium instance and all tracking
-  static terminateInstance() {
-    _channel.invokeMethod('terminateInstance');
+  static Future<void> terminateInstance() async {
+    await _channel.invokeMethod('terminateInstance');
   }
 
   /// Adds a key value pair to the data layer with a specified [Expiry]
-  static addToDataLayer(Map<String, Object> data, Expiry expiry) {
-    _channel.invokeMethod(
+  static Future<void> addToDataLayer(
+      Map<String, Object> data, Expiry expiry,) async {
+    await _channel.invokeMethod(
         'addToDataLayer', {'data': data, 'expiry': expiry.toString()});
   }
 
   /// Removes a List of keys from the data layer
-  static removeFromDataLayer(List<String> keys) {
-    _channel.invokeMethod('removeFromDataLayer', {'keys': keys});
+  static Future<void> removeFromDataLayer(List<String> keys) async {
+    await _channel.invokeMethod('removeFromDataLayer', {'keys': keys});
   }
 
   /// Retrieves a value from the data layer for a specified key
@@ -113,8 +114,11 @@ class Tealium {
   }
 
   /// Adds a [RemoteCommand] to the [RemoteCommands] Dispatcher
-  static addCustomRemoteCommand(String id, Function callback) async {
-    return await addRemoteCommand(RemoteCommand(
+  static Future<void> addCustomRemoteCommand(
+    String id,
+    Function callback,
+  ) async {
+    await addRemoteCommand(RemoteCommand(
       id,
       callback: callback,
       path: null,
@@ -123,14 +127,14 @@ class Tealium {
   }
 
   /// Adds a [RemoteCommand] to the [RemoteCommands] Dispatcher
-  static addRemoteCommand(RemoteCommand remoteCommand) async {
+  static Future<void> addRemoteCommand(RemoteCommand remoteCommand) async {
     if (!_remoteCommands.containsKey(remoteCommand.id)) {
       final callback = remoteCommand.callback;
       if (callback != null) {
         _addRemoteCommandListener(remoteCommand.id, callback);
       }
 
-      return await _channel.invokeMethod('addRemoteCommand', {
+      await _channel.invokeMethod('addRemoteCommand', {
         'id': remoteCommand.id,
         'path': remoteCommand.path,
         'url': remoteCommand.url,
@@ -139,17 +143,18 @@ class Tealium {
   }
 
   /// Removes a [RemoteCommand] from the [RemoteCommands] Dispatcher
-  static removeRemoteCommand(String id) {
+  static Future<void> removeRemoteCommand(String id) async {
     _remoteCommands.remove(id);
-    _channel.invokeMethod('removeRemoteCommand', {'id': id});
+    await _channel.invokeMethod('removeRemoteCommand', {'id': id});
   }
 
-  static _addRemoteCommandListener(String id, Function callback) {
+  static void _addRemoteCommandListener(String id, Function callback) {
     _remoteCommands[id] = callback;
   }
 
-  static setConsentStatus(ConsentStatus status) {
-    _channel.invokeMethod('setConsentStatus', {'status': status.toString()});
+  static Future<void> setConsentStatus(ConsentStatus status) async {
+    await _channel
+        .invokeMethod('setConsentStatus', {'status': status.toString()});
   }
 
   /// Retrieves the current user [ConsentStatus]
@@ -160,9 +165,10 @@ class Tealium {
   }
 
   /// Sets a List of [ConsentCategories] for the user
-  static setConsentCategories(List<ConsentCategories> categories) {
+  static Future<void> setConsentCategories(
+      List<ConsentCategories> categories,) async {
     var categoriesList = categories.map((item) => item.toString()).toList();
-    _channel
+    await _channel
         .invokeMethod('setConsentCategories', {'categories': categoriesList});
   }
 
@@ -174,13 +180,13 @@ class Tealium {
   }
 
   /// Joins a trace session for a given id
-  static joinTrace(String id) {
-    _channel.invokeMethod('joinTrace', {'id': id});
+  static Future<void> joinTrace(String id) async {
+    await _channel.invokeMethod('joinTrace', {'id': id});
   }
 
   /// Leaves the current trace session
-  static leaveTrace() {
-    _channel.invokeMethod('leaveTrace');
+  static Future<void> leaveTrace() async {
+    await _channel.invokeMethod('leaveTrace');
   }
 
   /// Retrieves the visitor id for the user
@@ -189,32 +195,32 @@ class Tealium {
   }
 
   /// Resets the visitor id for the user
-  static resetVisitorId() {
-    _channel.invokeMethod('resetVisitorId');
+  static Future<void> resetVisitorId() async {
+    await _channel.invokeMethod('resetVisitorId');
   }
 
   /// Clears all stored visitor ids.
-  static clearStoredVisitorIds() {
-    _channel.invokeMethod('clearStoredVisitorIds');
+  static Future<void> clearStoredVisitorIds() async {
+    await _channel.invokeMethod('clearStoredVisitorIds');
   }
 
   /// Sets the callback for the [VisitorService] update
-  static setVisitorServiceListener(Function callback) {
+  static void setVisitorServiceListener(Function callback) {
     _listeners[EventListenerNames.visitor] = callback;
     _handleListener(EventListenerNames.visitor);
   }
 
   /// Sets the callback for the Visitor Id update
-  static setVisitorIdListener(Function callback) {
+  static void setVisitorIdListener(Function callback) {
     _listeners[EventListenerNames.visitorId] = callback;
     _handleListener(EventListenerNames.visitorId);
   }
 
   /// Sets the callback for when the user [ConsentExpiry] has expired
-  static setConsentExpiryListener(Function callback) async {
+  static Future<void> setConsentExpiryListener(Function callback) async {
     _listeners[EventListenerNames.consentExpired] = callback;
     _handleListener(EventListenerNames.consentExpired);
-    return await _channel.invokeMethod('setConsentExpiryListener');
+    await _channel.invokeMethod('setConsentExpiryListener');
   }
 
   static Future<void> _methodCallHandler(MethodCall call) async {
@@ -231,45 +237,34 @@ class Tealium {
     return await _channel.invokeMethod('gatherTrackData');
   }
 
-  static _handleListener(String eventName) {
+  static Map<String, dynamic> _extractEventData(dynamic eventData) {
+    return Map<String, dynamic>.from(eventData as Map)
+      ..remove(EventListenerNames.name);
+  }
+
+  static void _handleListener(String eventName) {
     _channel.setMethodCallHandler(_methodCallHandler);
     emitter.on(eventName, {}, (ev, context) {
       switch (eventName) {
         case EventListenerNames.remoteCommand:
-          var encodedData = json.encode(ev.eventData);
-          var eventDataMap = json.decode(encodedData);
-          eventDataMap as Map;
-          eventDataMap.remove(EventListenerNames.name);
-          var commandID = eventDataMap['command_id'];
+          final eventDataMap = _extractEventData(ev.eventData);
+          final commandID = eventDataMap['command_id'];
           if (commandID != null) {
-            Function callback = _remoteCommands[commandID] as Function;
-            callback(eventDataMap);
+            _remoteCommands[commandID]?.call(eventDataMap);
           }
           break;
         case EventListenerNames.consentExpired:
-          Function callback = _listeners[EventListenerNames.consentExpired] =
-              _listeners[EventListenerNames.consentExpired] as Function;
-          callback();
+          _listeners[EventListenerNames.consentExpired]?.call();
           break;
         case EventListenerNames.visitor:
-          var encodedData = json.encode(ev.eventData);
-          var eventDataMap = json.decode(encodedData);
-          eventDataMap as Map;
-          eventDataMap.remove(EventListenerNames.name);
-          Function callback = _listeners[EventListenerNames.visitor] =
-              _listeners[EventListenerNames.visitor] as Function;
-          callback(eventDataMap);
+          final eventDataMap = _extractEventData(ev.eventData);
+          _listeners[EventListenerNames.visitor]?.call(eventDataMap);
           break;
         case EventListenerNames.visitorId:
-          var encodedData = json.encode(ev.eventData);
-          var eventDataMap = json.decode(encodedData);
-          eventDataMap as Map;
-          eventDataMap.remove(EventListenerNames.name);
-          var visitorId = eventDataMap['visitorId'];
+          final eventDataMap = _extractEventData(ev.eventData);
+          final visitorId = eventDataMap['visitorId'];
           if (visitorId != null) {
-            Function callback = _listeners[EventListenerNames.visitorId] =
-                _listeners[EventListenerNames.visitorId] as Function;
-            callback(visitorId);
+            _listeners[EventListenerNames.visitorId]?.call(visitorId);
           }
           break;
         default:
