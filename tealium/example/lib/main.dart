@@ -242,14 +242,14 @@ class _MyAppState extends State<MyApp> {
     await Tealium.setConsentCategories(list.sublist(0, 3));
   }
 
-  void _joinTrace() {
+  Future<void> _joinTrace() async {
     setState(() => result = traceIdValue.text);
-    Tealium.joinTrace(result);
+    await Tealium.joinTrace(result);
   }
 
-  void _setIdentity() {
+  Future<void> _setIdentity() async {
     var identity = userIdValue.text;
-    Tealium.addToDataLayer({visitorIdentityKey: identity}, Expiry.forever);
+    await Tealium.addToDataLayer({visitorIdentityKey: identity}, Expiry.forever);
   }
 
   @override

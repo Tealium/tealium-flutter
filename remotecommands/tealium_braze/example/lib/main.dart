@@ -119,22 +119,22 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void _identifyUser() {
+  Future<void> _identifyUser() async {
     var userId = userIdValue.text;
     if (userId == "") return;
 
-    Tealium.track(TealiumView("user_login", {"customer_id": userId}));
+    await Tealium.track(TealiumView("user_login", {"customer_id": userId}));
   }
 
-  void _trackCustomEvent() {
+  Future<void> _trackCustomEvent() async {
     var customEvent = customEventValue.text;
     if (customEvent == "") return;
 
-    Tealium.track(TealiumView("log_custom_event", {"event_name": customEvent}));
+    await Tealium.track(TealiumView("log_custom_event", {"event_name": customEvent}));
   }
 
-  void _trackPurchase() {
-    Tealium.track(TealiumView("purchase", {
+  Future<void> _trackPurchase() async {
+    await Tealium.track(TealiumView("purchase", {
       "product_id": ["SKU-123", "SKU-456"],
       "product_name": ["Product 123", "Product 456"],
       "product_category": ["clothes", "shoes"],
@@ -146,20 +146,20 @@ class _MyAppState extends State<MyApp> {
     }));
   }
 
-  void _setCustomAttribute() {
+  Future<void> _setCustomAttribute() async {
     var userAttribute = userAttributeValue.text;
     if (userAttribute == "") return;
 
-    Tealium.track(TealiumView("custom_attribute", {"pet": userAttribute}));
+    await Tealium.track(TealiumView("custom_attribute", {"pet": userAttribute}));
   }
 
-  void _updateSubscription(SubscriptionType? subscriptionType) {
+  Future<void> _updateSubscription(SubscriptionType? subscriptionType) async {
     setState(() {
       _subscriptionStatus = subscriptionType;
     });
     if (subscriptionType == null) return;
 
-    Tealium.track(TealiumEvent("setengagement", {
+    await Tealium.track(TealiumEvent("setengagement", {
       "email_subscription": subscriptionType.name,
       "push_subscription": subscriptionType.name
     }));
