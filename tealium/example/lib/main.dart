@@ -45,27 +45,25 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     // MARK: Initialize Tealium
-    Tealium.initialize(config).then((_) => {
-          developer.log('Tealium Initialized'),
-          Tealium.setConsentStatus(ConsentStatus.consented),
-          Tealium.setConsentExpiryListener(
-            () => developer.log('Consent Expired'),
-          ),
-          Tealium.setVisitorServiceListener(
-            (profile) => _logVisitorProfile(profile),
-          ),
-          Tealium.getVisitorId().then((value) => _logVisitorId(value)),
-          Tealium.setVisitorIdListener((visitorId) => _logVisitorId(visitorId)),
-          Tealium.addCustomRemoteCommand(
-            'json-test',
-            (payload) => _logRemoteCommand('JSON Test', payload),
-          ),
-          Tealium.getFromDataLayer(visitorIdentityKey).then(
-            (value) => setState(() {
-              userIdValue.text = value ?? '';
-            }),
-          ),
-        });
+    Tealium.initialize(config).then((_) async {
+      developer.log('Tealium Initialized');
+      await Tealium.setConsentStatus(ConsentStatus.consented);
+      await Tealium.setConsentExpiryListener(
+        () => developer.log('Consent Expired'),
+      );
+      Tealium.setVisitorServiceListener(
+        (profile) => _logVisitorProfile(profile),
+      );
+      final visitorId = await Tealium.getVisitorId();
+      _logVisitorId(visitorId);
+      Tealium.setVisitorIdListener((visitorId) => _logVisitorId(visitorId));
+      await Tealium.addCustomRemoteCommand(
+        'json-test',
+        (payload) => _logRemoteCommand('JSON Test', payload),
+      );
+      final value = await Tealium.getFromDataLayer(visitorIdentityKey);
+      if (mounted) setState(() => userIdValue.text = value ?? '');
+    });
   }
 
   ListView _listView() {
@@ -223,7 +221,7 @@ class _MyAppState extends State<MyApp> {
     developer.log(JsonEncoder().convert(payload));
   }
 
-  void _setRandomConsentCategories() {
+  Future<void> _setRandomConsentCategories() async {
     List<ConsentCategories> list = [
       ConsentCategories.affiliates,
       ConsentCategories.analytics,
@@ -241,14 +239,12 @@ class _MyAppState extends State<MyApp> {
       ConsentCategories.social
     ];
     list.shuffle();
-    Tealium.setConsentCategories(list.sublist(0, 3));
+    await Tealium.setConsentCategories(list.sublist(0, 3));
   }
 
   void _joinTrace() {
-    setState(() {
-      result = traceIdValue.text;
-      Tealium.joinTrace(result);
-    });
+    setState(() => result = traceIdValue.text);
+    Tealium.joinTrace(result);
   }
 
   void _setIdentity() {

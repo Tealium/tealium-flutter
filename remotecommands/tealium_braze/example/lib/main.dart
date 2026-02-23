@@ -59,11 +59,10 @@ class _MyAppState extends State<MyApp> {
           RemoteCommand(TealiumBraze.commandName, path: "braze.json")
         ]);
 
-    Tealium.initialize(config).then((value) => {
-        developer.log('Tealium Initialized'),
-        Tealium.setConsentStatus(ConsentStatus.consented),
-        Tealium.track(TealiumEvent("launch", {}))
-      });
+    await Tealium.initialize(config);
+    developer.log('Tealium Initialized');
+    await Tealium.setConsentStatus(ConsentStatus.consented);
+    await Tealium.track(TealiumEvent("launch", {}));
   }
 
   ListView _listView() {

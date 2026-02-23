@@ -108,7 +108,7 @@ class Tealium {
 
   /// Retrieves a value from the data layer for a specified key
   ///
-  /// [Furture<dynamic>] the value for the key specified if it exists
+  /// [Future<dynamic>] the value for the key specified if it exists
   static Future<dynamic> getFromDataLayer(String key) async {
     return await _channel.invokeMethod('getFromDataLayer', {'key': key});
   }
