@@ -51,7 +51,7 @@ android {
     dependencies {
         compileOnly rootProject.findProject(":tealium")
 
-        implementation 'com.tealium:kotlin-core:1.6.0'
-        implementation 'com.tealium:kotlin-momentsapi:1.0.2'
+        implementation 'com.tealium:kotlin-core:1.9.2'
+        implementation 'com.tealium:kotlin-momentsapi:1.0.6'
     }
 }

@@ -1,5 +1,5 @@
 PODS:
-  - BrazeKit (14.0.1)
+  - BrazeKit (14.0.2)
   - Flutter (1.0.0)
   - tealium (3.0.0):
     - Flutter
@@ -50,7 +50,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/tealium_braze/ios"
 
 SPEC CHECKSUMS:
-  BrazeKit: 0605a4475203bdf08a8852f8c0628053b64686bd
+  BrazeKit: 737bca0f11642c9d9b962d7eb587e6fe1ce7262c
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   tealium: 9032e4ba8cdb3407c93860ecde341b172f4b55e7
   tealium-swift: 9c38e6687b24c9eed0f3bc221ea5d7717274af16
