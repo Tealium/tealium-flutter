@@ -1,5 +1,5 @@
 group = "com.tealium.flutter.moments_api.tealium_moments_api"
-version = "1.0-SNAPSHOT"
+version = "2.0.0"
 
 buildscript {
     ext.kotlin_version = rootProject.ext.has('kotlin_version') ? rootProject.ext.get('kotlin_version') : '1.8.0'
@@ -51,7 +51,7 @@ android {
     dependencies {
         compileOnly rootProject.findProject(":tealium")
 
-        implementation 'com.tealium:kotlin-core:1.6.0'
-        implementation 'com.tealium:kotlin-momentsapi:1.0.2'
+        implementation 'com.tealium:kotlin-core:1.9.2'
+        implementation 'com.tealium:kotlin-momentsapi:1.0.6'
     }
 }

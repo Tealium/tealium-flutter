@@ -58,3 +58,21 @@ const val KEY_LIFECYCLE_AUTO_TRACKING_ENABLED = "lifecycleAutotrackingEnabled"
 const val KEY_VISITOR_SERVICE_ENABLED = "visitorServiceEnabled"
 const val KEY_CUSTOM_VISITOR_ID = "customVisitorId"
 const val KEY_VISITOR_IDENTITY_KEY = "visitorIdentityKey"
+
+class TealiumException(
+    val code: String,
+    message: String,
+    cause: Throwable? = null
+) : Exception(message, cause) {
+
+    companion object {
+        fun notInitialized(): TealiumException =
+            TealiumException("NOT_INITIALIZED", "Tealium instance not initialized")
+
+        fun missingParameter(key: String): TealiumException =
+            TealiumException("MISSING_PARAMETER", "$key parameter is required")
+
+        fun unknown(cause: Throwable): TealiumException =
+            TealiumException("UNKNOWN_ERROR", cause.message ?: "An unknown error occurred", cause)
+    }
+}

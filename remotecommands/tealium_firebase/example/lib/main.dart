@@ -3,8 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:tealium_firebase/tealium_firebase.dart';
 
 import 'dart:developer' as developer;
@@ -24,6 +22,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  static TealiumConfig get _config => TealiumConfig(
+      'tealiummobile',
+      'demo',
+      TealiumEnvironment.dev,
+      [Collectors.AppData],
+      [Dispatchers.RemoteCommands],
+      batchingEnabled: false,
+      consentExpiry: ConsentExpiry(5, TimeUnit.MINUTES),
+      remoteCommands: [
+        RemoteCommand(TealiumFirebase.commandName, path: "firebase.json")
+      ]);
 
   @override
   void initState() {
@@ -31,46 +40,25 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
-
-  
+    await Tealium.initialize(_config);
+    if (!mounted) return;
+    developer.log('Tealium Initialized');
+    await Tealium.setConsentStatus(ConsentStatus.consented);
+    await Tealium.setConsentExpiryListener(
+        () => developer.log('Consent Expired'));
+    Tealium.setVisitorServiceListener(
+        (profile) => developer.log(profile));
+    await Tealium.addCustomRemoteCommand('hello-world', _logRemoteCommand);
+    await Tealium.track(TealiumEvent("init", {}));
   }
 
   ListView _listView() {
-    // MARK: Initialize Tealium
-
-    var config = TealiumConfig(
-        'tealiummobile',
-        'demo',
-        TealiumEnvironment.dev,
-        [Collectors.AppData],
-        [Dispatchers.RemoteCommands],
-        batchingEnabled: false,
-        consentExpiry: ConsentExpiry(5, TimeUnit.MINUTES),
-        remoteCommands: [
-          RemoteCommand(TealiumFirebase.commandName, path: "firebase.json")
-        ]);
-
-    Tealium.initialize(config).then((value) => {
-          developer.log('Tealium Initialized'),
-          Tealium.setConsentStatus(ConsentStatus.consented),
-          Tealium.setConsentExpiryListener(
-              () => developer.log('Consent Expired')),
-          Tealium.setVisitorServiceListener(
-              (profile) => developer.log(profile)),
-          Tealium.addCustomRemoteCommand('hello-world', _logRemoteCommand),
-          Tealium.track(TealiumEvent("init", {}))
-        });
-
     return ListView(
       scrollDirection: Axis.vertical,
       children: <Widget>[
-        Padding(padding: EdgeInsets.all(3.5)),
+        const Padding(padding: EdgeInsets.all(3.5)),
         TealiumButton(
             title: 'Track Screen View',
             onPressed: () => Tealium.track(TealiumView("screen_view", {
@@ -104,7 +92,7 @@ class _MyAppState extends State<MyApp> {
 
   void _logRemoteCommand(String name, dynamic payload) {
     developer.log('=========$name Remote Command Response=========');
-    developer.log(JsonEncoder().convert(payload));
+    developer.log(const JsonEncoder().convert(payload));
   }
 
   @override

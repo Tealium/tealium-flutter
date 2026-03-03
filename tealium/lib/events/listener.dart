@@ -7,7 +7,7 @@
 import 'event_emitter.dart';
 
 /// Handler for cancelling the event registration.
-typedef void CancelEvent();
+typedef CancelEvent = void Function();
 
 /// Listener is one who listen for specific event.
 /// Listener register for notification with EventEmitter

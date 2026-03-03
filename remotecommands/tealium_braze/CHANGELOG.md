@@ -1,3 +1,11 @@
+## 2.0.0
+* Updated `tealium` dependency to ^3.0.0
+* Android: Updated Braze Remote Command to 3.3.0 (Braze SDK v41 support)
+* Android: Minimum SDK raised to 25
+* iOS: Updated TealiumBraze to ~> 3.6 (BrazeKit v14 support)
+* iOS: Updated tealium-swift/Core dependency to ~> 2.18
+* Dart SDK constraint widened to `>=2.18.0 <4.0.0` (adds Dart 3 support)
+
 ## 1.2.0
 * Android 
     * Fix to resolve missing `namespace` issue when using AGP v8

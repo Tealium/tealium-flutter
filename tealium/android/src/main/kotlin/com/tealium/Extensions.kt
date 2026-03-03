@@ -221,13 +221,13 @@ fun dispatchFromArguments(data: Map<*, *>): Dispatch {
     val eventType = data[KEY_TRACK_EVENT_TYPE] as String
 
     return when (eventType.lowercase(Locale.ROOT)) {
-        DispatchType.VIEW -> TealiumView((data[KEY_TRACK_VIEW_NAME] as String)
-                ?: DispatchType.VIEW,
-                data[KEY_TRACK_DATALAYER] as Map<String, Any>
+        DispatchType.VIEW -> TealiumView(
+                data[KEY_TRACK_VIEW_NAME] as? String ?: DispatchType.VIEW,
+                data[KEY_TRACK_DATALAYER] as? Map<String, Any> ?: emptyMap()
         )
-        else -> TealiumEvent((data[KEY_TRACK_EVENT_NAME] as String)
-                ?: DispatchType.EVENT,
-                data[KEY_TRACK_DATALAYER] as Map<String, Any>
+        else -> TealiumEvent(
+                data[KEY_TRACK_EVENT_NAME] as? String ?: DispatchType.EVENT,
+                data[KEY_TRACK_DATALAYER] as? Map<String, Any> ?: emptyMap()
         )
     }
 }
@@ -384,4 +384,35 @@ internal fun VisitorProfile.Companion.toFriendlyMutableMap(visitorProfile: Visit
     visitor["currentVisit"] = visit
 
     return visitor
+}
+
+fun Any?.toFlutterCompatibleValue(): Any? {
+    return when (this) {
+        is JSONObject -> this.toFriendlyMap()
+        is JSONArray -> this.toFriendlyList()
+        is Map<*, *> -> this.mapValues { it.value.toFlutterCompatibleValue() }
+        is List<*> -> this.map { it.toFlutterCompatibleValue() }
+        is Array<*> -> this.map { it.toFlutterCompatibleValue() }
+        is IntArray -> this.toList()
+        is LongArray -> this.toList()
+        is DoubleArray -> this.toList()
+        is FloatArray -> this.toList()
+        is BooleanArray -> this.toList()
+        is ShortArray -> this.toList()
+        is ByteArray -> this.toList()
+        is CharArray -> this.toList()
+        else -> this
+    }
+}
+
+inline fun <reified T> io.flutter.plugin.common.MethodCall.requireParameter(key: String): T {
+    val args = arguments as? Map<*, *>
+        ?: throw TealiumException.missingParameter(key)
+
+    return args[key] as? T
+        ?: throw TealiumException.missingParameter(key)
+}
+
+fun Tealium?.requireInstance(): Tealium {
+    return this ?: throw TealiumException.notInitialized()
 }

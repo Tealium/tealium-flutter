@@ -61,12 +61,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initTealium() async {
-    await Tealium.initialize(tealiumConfig).then((value) => {
-          setConsentStatus(),
-          Tealium.getVisitorId().then((value) => _logVisitorId(value)),
-          Tealium.setVisitorIdListener((visitorId) => _logVisitorId(visitorId)),
-          debugPrint('Tealium Initialized')
-        });
+    await Tealium.initialize(tealiumConfig);
+    await setConsentStatus();
+    final visitorId = await Tealium.getVisitorId();
+    _logVisitorId(visitorId);
+    Tealium.setVisitorIdListener((visitorId) => _logVisitorId(visitorId));
+    debugPrint('Tealium Initialized');
   }
 
   @override

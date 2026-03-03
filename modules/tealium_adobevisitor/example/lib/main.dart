@@ -67,13 +67,11 @@ class _MyAppState extends State<MyApp> {
       batchingEnabled: false,
     );
 
-    Tealium.initialize(config).then((value) => {
-          developer.log('Tealium Initialized'),
-          setState(() {
-            _adobeOrgSet = true;
-          }),
-          _fetchAdobeVisitor()
-        });
+    Tealium.initialize(config).then((_) async {
+      developer.log('Tealium Initialized');
+      if (mounted) setState(() => _adobeOrgSet = true);
+      _fetchAdobeVisitor();
+    });
   }
 
   Padding _listView() {

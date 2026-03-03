@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tealium_moments_api'
-  s.version          = '1.0.0'
+  s.version          = '2.0.0'
   s.summary          = 'Tealium Moments Api Module for Flutter.'
   s.description      = <<-DESC
 Tealium Moments Api Module for Flutter.
@@ -15,9 +15,9 @@ Tealium Moments Api Module for Flutter.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'tealium', '~> 2.5'
-  s.dependency "tealium-swift/Core", "~> 2.14"
-  s.dependency "tealium-swift/MomentsAPI", "~> 2.14"
+  s.dependency 'tealium', '~> 3.0'
+  s.dependency "tealium-swift/Core", "~> 2.18"
+  s.dependency "tealium-swift/MomentsAPI", "~> 2.18"
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.

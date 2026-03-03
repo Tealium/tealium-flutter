@@ -2,32 +2,32 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - tealium (2.6.1):
+  - tealium (3.0.0):
     - Flutter
-    - tealium-swift/Collect (~> 2.15)
-    - tealium-swift/Core (~> 2.15)
-    - tealium-swift/Lifecycle (~> 2.15)
-    - tealium-swift/RemoteCommands (~> 2.15)
-    - tealium-swift/TagManagement (~> 2.15)
-    - tealium-swift/VisitorService (~> 2.15)
-  - tealium-swift/Collect (2.15.0):
+    - tealium-swift/Collect (~> 2.18)
+    - tealium-swift/Core (~> 2.18)
+    - tealium-swift/Lifecycle (~> 2.18)
+    - tealium-swift/RemoteCommands (~> 2.18)
+    - tealium-swift/TagManagement (~> 2.18)
+    - tealium-swift/VisitorService (~> 2.18)
+  - tealium-swift/Collect (2.18.2):
     - tealium-swift/Core
-  - tealium-swift/Core (2.15.0)
-  - tealium-swift/Lifecycle (2.15.0):
+  - tealium-swift/Core (2.18.2)
+  - tealium-swift/Lifecycle (2.18.2):
     - tealium-swift/Core
-  - tealium-swift/MomentsAPI (2.15.0):
+  - tealium-swift/MomentsAPI (2.18.2):
     - tealium-swift/Core
-  - tealium-swift/RemoteCommands (2.15.0):
+  - tealium-swift/RemoteCommands (2.18.2):
     - tealium-swift/Core
-  - tealium-swift/TagManagement (2.15.0):
+  - tealium-swift/TagManagement (2.18.2):
     - tealium-swift/Core
-  - tealium-swift/VisitorService (2.15.0):
+  - tealium-swift/VisitorService (2.18.2):
     - tealium-swift/Core
-  - tealium_moments_api (1.0.0):
+  - tealium_moments_api (2.0.0):
     - Flutter
-    - tealium (~> 2.5)
-    - tealium-swift/Core (~> 2.14)
-    - tealium-swift/MomentsAPI (~> 2.14)
+    - tealium (~> 3.0)
+    - tealium-swift/Core (~> 2.18)
+    - tealium-swift/MomentsAPI (~> 2.18)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -50,12 +50,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/tealium_moments_api/ios"
 
 SPEC CHECKSUMS:
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  tealium: e7204b855d71eea1f1448eaee3405a6798a66b0a
-  tealium-swift: 452713faa749291049ca039b9c02139a559084c8
-  tealium_moments_api: d780cad2713628e5cf76344927259a1be179f011
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  tealium: 9032e4ba8cdb3407c93860ecde341b172f4b55e7
+  tealium-swift: 9c38e6687b24c9eed0f3bc221ea5d7717274af16
+  tealium_moments_api: fb3f1aabd5b47cb134bd51e304a68bb52e99b4a2
 
-PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+PODFILE CHECKSUM: a57f30d18f102dd3ce366b1d62a55ecbef2158e5
 
 COCOAPODS: 1.16.2

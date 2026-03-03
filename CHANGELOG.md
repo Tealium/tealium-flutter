@@ -1,6 +1,19 @@
-## 2.X 
+## 3.X
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
+
+### 3.0.0 (Feb 2026)
+* Breaking change: `initialize` now returns `Future<void>` instead of `Future<bool>`. On failure a `PlatformException` is thrown instead of returning `false`.
+* Android & iOS: Fixed all MethodChannel methods to always return a result, preventing unresolved Futures. Critical fixes for `getFromDataLayer`, `gatherTrackData`, `addRemoteCommand`, and `setConsentExpiryListener`. All other methods now also properly resolve their Futures for consistency.
+* Android
+    * Fixed `IllegalArgumentException` in `gatherTrackData()` and `getFromDataLayer()`—array types from collectors/DataLayer are now converted to Lists.
+    * Updated Tealium Kotlin SDK dependencies (Core 1.9.1 → 1.9.2, Collect 1.1.1 → 1.1.4, TagManagement 1.2.3 → 1.3.0, RemoteCommands 1.5.2 → 1.5.3, Lifecycle 1.2.0 → 1.2.3, VisitorService 1.2.1 → 1.2.4)
+* iOS
+    * Updated Tealium Swift SDK dependencies (2.15 → 2.18)
+    * Added `FlutterMethodNotImplemented` response for unknown method calls
+* Example app: Updated deprecated Flutter APIs (MaterialStateProperty → WidgetStateProperty)
+
+## 2.X
 
 ### 2.6.3 (Oct 2025)
 * Android fix: RemoteAPI now only enabled when RemoteCommands dispatcher is added.
