@@ -2,6 +2,9 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
+### 3.0.1 (Mar 2026)
+* Android: Updated TagManagement Dispatcher 1.3.0 → 1.3.1. WebView console messages are now always intercepted, so `I/chromium` logs no longer appear in logcat when `LogLevel.SILENT` is configured.
+
 ### 3.0.0 (Feb 2026)
 * Breaking change: `initialize` now returns `Future<void>` instead of `Future<bool>`. On failure a `PlatformException` is thrown instead of returning `false`.
 * Android & iOS: Fixed all MethodChannel methods to always return a result, preventing unresolved Futures. Critical fixes for `getFromDataLayer`, `gatherTrackData`, `addRemoteCommand`, and `setConsentExpiryListener`. All other methods now also properly resolve their Futures for consistency.
