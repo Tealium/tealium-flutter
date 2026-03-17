@@ -234,6 +234,7 @@ class TealiumConfig {
   bool? sessionCountingEnabled;
   List<RemoteCommand>? remoteCommands;
   String? visitorIdentityKey;
+  bool? webViewLoggingEnabled;
 
   TealiumConfig(this.account, this.profile, TealiumEnvironment environment,
       List<Collectors> collectors, List<Dispatchers> dispatchers,
@@ -259,7 +260,8 @@ class TealiumConfig {
       this.visitorServiceEnabled,
       this.sessionCountingEnabled,
       this.remoteCommands,
-      this.visitorIdentityKey}) {
+      this.visitorIdentityKey,
+      this.webViewLoggingEnabled}) {
     this.environment = environment.toString();
     this.collectors = collectors.map((item) => item.toString()).toList();
     this.dispatchers = dispatchers.map((item) => item.toString()).toList();

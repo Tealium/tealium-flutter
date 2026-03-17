@@ -6,7 +6,7 @@ import 'events/event_emitter.dart';
 
 class Tealium {
   static const String pluginName = 'Tealium-Flutter';
-  static const String pluginVersion = '3.0.0';
+  static const String pluginVersion = '3.0.1';
   static const MethodChannel _channel = MethodChannel('tealium');
   static EventEmitter emitter = EventEmitter();
   static final Map<String, Function> _remoteCommands = Map();
@@ -62,7 +62,8 @@ class Tealium {
                 "path": e.path,
               })
           .toList(),
-      'visitorIdentityKey': config.visitorIdentityKey
+      'visitorIdentityKey': config.visitorIdentityKey,
+      'webViewLoggingEnabled': config.webViewLoggingEnabled
     });
 
     await addToDataLayer(
