@@ -21,6 +21,7 @@ import com.tealium.tagmanagementdispatcher.TagManagementDispatcher
 import com.tealium.tagmanagementdispatcher.overrideTagManagementUrl
 import com.tealium.tagmanagementdispatcher.remoteApiEnabled
 import com.tealium.tagmanagementdispatcher.sessionCountingEnabled
+import com.tealium.tagmanagementdispatcher.webViewLogsEnabled
 import com.tealium.visitorservice.VisitorProfile
 import com.tealium.visitorservice.VisitorService
 import org.json.JSONArray
@@ -167,7 +168,11 @@ fun toTealiumConfig(app: Application, configMap: Map<*, *>): TealiumConfig? {
         configMap[KEY_VISITOR_IDENTITY_KEY]?.let { key ->
             config.visitorIdentityKey = key.toString()
         }
-        
+
+        configMap[KEY_WEBVIEW_LOGGING_ENABLED]?.let {
+            webViewLogsEnabled = it.toString().toBoolean()
+        }
+
         // Disable RemoteAPI when RemoteCommands dispatcher is not present
         remoteApiEnabled = dispatchers?.contains(RemoteCommandDispatcher) ?: false
     }

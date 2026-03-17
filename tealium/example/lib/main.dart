@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
     'demo',
     TealiumEnvironment.dev,
     [Collectors.AppData, Collectors.Lifecycle],
-    [Dispatchers.RemoteCommands, Dispatchers.Collect],
+    [Dispatchers.RemoteCommands, Dispatchers.Collect, Dispatchers.TagManagement],
     loglevel: LogLevel.DEV,
     consentPolicy: ConsentPolicy.GDPR,
     useRemoteLibrarySettings: true,
@@ -38,6 +38,7 @@ class _MyAppState extends State<MyApp> {
     visitorServiceEnabled: true,
     consentExpiry: ConsentExpiry(5, TimeUnit.MINUTES),
     visitorIdentityKey: visitorIdentityKey,
+    webViewLoggingEnabled: false,
   );
 
   @override

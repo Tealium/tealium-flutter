@@ -62,7 +62,8 @@ class Tealium {
                 "path": e.path,
               })
           .toList(),
-      'visitorIdentityKey': config.visitorIdentityKey
+      'visitorIdentityKey': config.visitorIdentityKey,
+      'webViewLoggingEnabled': config.webViewLoggingEnabled
     });
 
     await addToDataLayer(
