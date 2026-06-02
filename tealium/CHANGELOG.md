@@ -1,3 +1,11 @@
+## 4.X
+
+[Full documentation](https://docs.tealium.com/platforms/flutter/install/)
+
+### 4.0.0 (Jun 2026)
+* iOS: Added Swift Package Manager (SPM) support alongside CocoaPods. SPM is recommended as CocoaPods moves to read-only (Dec 2026); both remain supported. No action needed for CocoaPods users.
+* **Breaking change:** Minimum requirements raised to Flutter 3.41 / Dart 3.11 and iOS 13.0 (from 12.0). Raise your app's iOS deployment target to 13.0 or higher.
+
 ## 3.X
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)

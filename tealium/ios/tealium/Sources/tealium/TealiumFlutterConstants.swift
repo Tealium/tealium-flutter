@@ -1,5 +1,7 @@
+import Flutter
+
 public enum TealiumFlutterConstants {
-    
+
     static let tagManagement = "TagManagement"
     static let collect = "Collect"
     static let remoteCommands = "RemoteCommands"
@@ -21,7 +23,7 @@ public enum TealiumFlutterConstants {
     static let consented = "consented"
     static let ccpa = "ccpa"
     static let gdpr = "gdpr"
-    
+
     enum Config: String {
         case account
         case profile
@@ -51,22 +53,22 @@ public enum TealiumFlutterConstants {
         case remoteCommands
         case visitorIdentityKey
     }
-    
+
     enum Dispatch: String {
         case type
         case dataLayer
         case viewName
         case eventName
     }
-    
-    enum Events: String, CaseIterable  {
-        case emitterName = "emitterName";
+
+    enum Events: String, CaseIterable {
+        case emitterName = "emitterName"
         case remoteCommand = "TealiumFlutter.RemoteCommandEvent"
         case visitorService = "TealiumFlutter.VisitorServiceEvent"
         case visitorId = "TealiumFlutter.VisitorIdUpdatedEvent"
         case consent = "TealiumFlutter.ConsentExpiredEvent"
     }
-    
+
     enum Visitor {
         static let audiences = "audiences"
         static let badges = "badges"
@@ -87,7 +89,8 @@ struct TealiumError: Error {
     let code: String
     let message: String
 
-    static let notInitialized: Self = TealiumError(code: "NOT_INITIALIZED", message: "Tealium instance not initialized")
+    static let notInitialized: Self = TealiumError(
+        code: "NOT_INITIALIZED", message: "Tealium instance not initialized")
 
     static func missingParameter(_ param: String) -> Self {
         TealiumError(code: "MISSING_PARAMETER", message: "\(param) parameter is required")
@@ -97,4 +100,3 @@ struct TealiumError: Error {
         FlutterError(code: code, message: message, details: nil)
     }
 }
-

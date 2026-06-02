@@ -6,8 +6,13 @@
 //
 
 import Foundation
-import TealiumSwift
+
+#if SWIFT_PACKAGE
+    import TealiumCore
+#else
+    import TealiumSwift
+#endif
 
 public protocol OptionalModule {
-    func configure(config: TealiumConfig) -> Void
+    func configure(config: TealiumConfig)
 }
