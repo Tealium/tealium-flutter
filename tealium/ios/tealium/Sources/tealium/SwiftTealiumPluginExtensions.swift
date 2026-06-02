@@ -29,7 +29,7 @@ extension SwiftTealiumPlugin {
             dataSource: dictionary[.dataSource] as? String)
 
         if let policyString = dictionary[.consentPolicy] as? String,
-           let policy = consentPolicyFrom(policyString) {
+            let policy = consentPolicyFrom(policyString) {
             localConfig.consentPolicy = policy
             localConfig.consentLoggingEnabled = dictionary[.consentLoggingEnabled] as? Bool ?? true
             localConfig.onConsentExpiration = {
@@ -212,7 +212,7 @@ extension SwiftTealiumPlugin {
         commands.forEach { commandPayload in
 
             guard let commandPayload = commandPayload as? [String: Any],
-                  let id = commandPayload["id"] as? String else {
+                let id = commandPayload["id"] as? String else {
                 return
             }
 
@@ -270,7 +270,7 @@ extension FlutterMethodCall {
     /// Returns the value as `T`, or throws `TealiumError.missingParameter`.
     func requireParameter<T>(_ key: String) throws(TealiumError) -> T {
         guard let arguments = self.arguments as? [String: Any],
-              let value = arguments[key] as? T else {
+            let value = arguments[key] as? T else {
             throw TealiumError.missingParameter(key)
         }
         return value
