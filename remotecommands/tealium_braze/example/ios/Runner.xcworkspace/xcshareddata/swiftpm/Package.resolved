@@ -1,0 +1,41 @@
+{
+  "pins" : [
+    {
+      "identity" : "braze-swift-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/braze-inc/braze-swift-sdk",
+      "state" : {
+        "revision" : "af1c9bf58f6048fee3bbf6160a342d46210a667c",
+        "version" : "14.2.1"
+      }
+    },
+    {
+      "identity" : "sdwebimage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SDWebImage/SDWebImage.git",
+      "state" : {
+        "revision" : "2de3a496eaf6df9a1312862adcfd54acd73c39c0",
+        "version" : "5.21.7"
+      }
+    },
+    {
+      "identity" : "tealium-ios-braze-remote-command",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tealium/tealium-ios-braze-remote-command",
+      "state" : {
+        "revision" : "0e2934576fd19d438ac34964b2270af2ca4d2b3a",
+        "version" : "3.6.0"
+      }
+    },
+    {
+      "identity" : "tealium-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tealium/tealium-swift",
+      "state" : {
+        "revision" : "0c902201dba1c1904e8dad43abd2a5678f637323",
+        "version" : "2.18.3"
+      }
+    }
+  ],
+  "version" : 2
+}

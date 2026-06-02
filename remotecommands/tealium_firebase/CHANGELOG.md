@@ -1,3 +1,8 @@
+## 4.0.0
+* iOS: Added Swift Package Manager (SPM) support alongside CocoaPods. Both remain supported; no action needed for CocoaPods users.
+* **Breaking change:** Minimum requirements raised to Flutter 3.41 / Dart 3.11. iOS deployment target stays 15.0.
+* Updated `tealium` dependency to ^4.0.0.
+
 ## 3.0.0
 * Updated `tealium` dependency to ^3.0.0
 * Dart SDK constraint widened to `>=2.18.0 <4.0.0` (adds Dart 3 support)
