@@ -17,23 +17,26 @@ public class VisitorDelegate: VisitorServiceDelegate {
         typealias Visitor = TealiumFlutterConstants.Visitor
 
         // Sets cannot be serialized to JSON, so convert to array first
-        let arraySetOfStrings = visitorProfile.setsOfStrings.map({
-            (stringSet) -> [String: [String]] in
-            var newValue = [String: [String]]()
-            stringSet.forEach {
-                newValue[$0.key] = Array($0.value)
+        let arraySetOfStrings = visitorProfile
+            .setsOfStrings
+            .map { (stringSet) -> [String: [String]] in
+                var newValue = [String: [String]]()
+                stringSet.forEach {
+                    newValue[$0.key] = Array($0.value)
+                }
+                return newValue
             }
-            return newValue
-        })
 
-        let currentVisitArraySetOfStrings = visitorProfile.currentVisit?.setsOfStrings.map({
-            (stringSet) -> [String: [String]] in
-            var newValue = [String: [String]]()
-            stringSet.forEach {
-                newValue[$0.key] = Array($0.value)
+        let currentVisitArraySetOfStrings = visitorProfile
+            .currentVisit?
+            .setsOfStrings
+            .map { (stringSet) -> [String: [String]] in
+                var newValue = [String: [String]]()
+                stringSet.forEach {
+                    newValue[$0.key] = Array($0.value)
+                }
+                return newValue
             }
-            return newValue
-        })
 
         let visit: [String: Any?] = [
             Visitor.dates: visitorProfile.currentVisit?.dates,
