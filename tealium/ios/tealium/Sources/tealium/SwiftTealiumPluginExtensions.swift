@@ -29,8 +29,7 @@ extension SwiftTealiumPlugin {
             dataSource: dictionary[.dataSource] as? String)
 
         if let policyString = dictionary[.consentPolicy] as? String,
-            let policy = consentPolicyFrom(policyString)
-        {
+           let policy = consentPolicyFrom(policyString) {
             localConfig.consentPolicy = policy
             localConfig.consentLoggingEnabled = dictionary[.consentLoggingEnabled] as? Bool ?? true
             localConfig.onConsentExpiration = {
@@ -42,9 +41,8 @@ extension SwiftTealiumPlugin {
         }
 
         if let consentExpiry = dictionary[.consentExpiry] as? [String: Any],
-            let time = consentExpiry[.time] as? Int,
-            let unit = consentExpiry[.unit] as? String
-        {
+           let time = consentExpiry[.time] as? Int,
+           let unit = consentExpiry[.unit] as? String {
             var unitType = TimeUnit.days
 
             switch unit.lowercased() {
@@ -214,8 +212,7 @@ extension SwiftTealiumPlugin {
         commands.forEach { commandPayload in
 
             guard let commandPayload = commandPayload as? [String: Any],
-                let id = commandPayload["id"] as? String
-            else {
+                  let id = commandPayload["id"] as? String else {
                 return
             }
 
@@ -273,8 +270,7 @@ extension FlutterMethodCall {
     /// Returns the value as `T`, or throws `TealiumError.missingParameter`.
     func requireParameter<T>(_ key: String) throws(TealiumError) -> T {
         guard let arguments = self.arguments as? [String: Any],
-            let value = arguments[key] as? T
-        else {
+              let value = arguments[key] as? T else {
             throw TealiumError.missingParameter(key)
         }
         return value
@@ -282,15 +278,11 @@ extension FlutterMethodCall {
 }
 
 extension FlutterMethodCall {
-    fileprivate func requireParameter<T>(_ key: TealiumFlutterConstants.Config) throws(TealiumError)
-        -> T
-    {
+    fileprivate func requireParameter<T>(_ key: TealiumFlutterConstants.Config) throws(TealiumError) -> T {
         try requireParameter(key.rawValue)
     }
 
-    fileprivate func requireParameter<T>(_ key: TealiumFlutterConstants.Dispatch)
-        throws(TealiumError) -> T
-    {
+    fileprivate func requireParameter<T>(_ key: TealiumFlutterConstants.Dispatch) throws(TealiumError) -> T {
         try requireParameter(key.rawValue)
     }
 }
