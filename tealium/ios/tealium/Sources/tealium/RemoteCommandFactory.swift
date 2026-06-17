@@ -6,7 +6,12 @@
 //
 
 import Foundation
-import TealiumSwift
+
+#if SWIFT_PACKAGE
+    import TealiumRemoteCommands
+#else
+    import TealiumSwift
+#endif
 
 public protocol RemoteCommandFactory {
     var name: String { get }
