@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "tealium",
     platforms: [
-        .iOS("13.0")
+        .iOS(.v13)
     ],
     products: [
         .library(name: "tealium", targets: ["tealium"])
