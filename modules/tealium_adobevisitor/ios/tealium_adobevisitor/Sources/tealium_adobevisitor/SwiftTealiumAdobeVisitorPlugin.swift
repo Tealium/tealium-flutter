@@ -48,8 +48,7 @@ public class SwiftTealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalMo
             config.adobeVisitorRetries = adobeVisitorRetries
         }
         if let adobeVisitorAuthState = adobeVisitorAuthState,
-            let adobeVisitorAuthState = AdobeVisitorAuthState(rawValue: adobeVisitorAuthState)
-        {
+            let adobeVisitorAuthState = AdobeVisitorAuthState(rawValue: adobeVisitorAuthState) {
             config.adobeVisitorAuthState = adobeVisitorAuthState
         }
         if let adobeVisitorDataProviderId = adobeVisitorDataProviderId {
@@ -129,8 +128,7 @@ public class SwiftTealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalMo
         }
 
         if let adobeAuthState = arguments["authState"] as? Int,
-            let adobeAuthState = AdobeVisitorAuthState(rawValue: adobeAuthState)
-        {
+            let adobeAuthState = AdobeVisitorAuthState(rawValue: adobeAuthState) {
             module.linkECIDToKnownIdentifier(
                 knownId, adobeDataProviderId: adobeDataProviderId, authState: adobeAuthState,
                 completion: completion)

@@ -1,4 +1,4 @@
-library tealium;
+library;
 
 import 'package:flutter/services.dart';
 import 'common.dart';

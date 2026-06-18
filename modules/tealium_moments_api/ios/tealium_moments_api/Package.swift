@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "tealium_moments_api",
     platforms: [
-        .iOS("13.0")
+        .iOS(.v13)
     ],
     products: [
         .library(name: "tealium-moments-api", targets: ["tealium_moments_api"])

@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "tealium_firebase",
     platforms: [
-        .iOS("15.0")
+        .iOS(.v15)
     ],
     products: [
         .library(name: "tealium-firebase", targets: ["tealium_firebase"])

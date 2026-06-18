@@ -216,7 +216,7 @@ class _MyAppState extends State<MyApp> {
     debugPrint(allResponseAttributes.toString());
   }
 
-  _gap(double height) {
+  SizedBox _gap(double height) {
     return SizedBox(height: height);
   }
 }
