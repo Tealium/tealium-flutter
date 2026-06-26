@@ -24,8 +24,4 @@ Tealium Moments Api Module for Flutter.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
 
-  # Privacy manifest. Path mirrors the SPM Sources layout so CocoaPods and Swift
-  # Package Manager bundle the same file. See:
-  # https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
-  s.resource_bundles = {'tealium_moments_api_privacy' => ['tealium_moments_api/Sources/tealium_moments_api/PrivacyInfo.xcprivacy']}
 end

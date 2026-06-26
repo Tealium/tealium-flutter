@@ -17,8 +17,8 @@ let package = Package(
         // tool rewrites this relative path to the versioned symlink at build time, so
         // it resolves both in this monorepo and when consumed from pub.dev.
         .package(name: "tealium", path: "../tealium"),
-        .package(url: "https://github.com/tealium/tealium-swift", from: "2.18.0"),
-        .package(url: "https://github.com/tealium/tealium-swift-adobe-visitor-api", from: "1.2.0")
+        .package(url: "https://github.com/tealium/tealium-swift", .upToNextMajor(from: "2.18.3")),
+        .package(url: "https://github.com/tealium/tealium-swift-adobe-visitor-api", .upToNextMajor(from: "1.2.0"))
     ],
     targets: [
         .target(

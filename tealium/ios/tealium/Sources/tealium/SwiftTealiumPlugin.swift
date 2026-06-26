@@ -9,7 +9,8 @@ import UIKit
     import TealiumSwift
 #endif
 
-public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
+@objc(TealiumPlugin)
+public class TealiumPlugin: NSObject, FlutterPlugin {
     private typealias Events = TealiumFlutterConstants.Events
     var tealiumInstance: Tealium?
     private var config: TealiumConfig?
@@ -18,11 +19,11 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
     static private var channel: FlutterMethodChannel?
     static var remoteCommandFactories = [String: RemoteCommandFactory]()
     static var optionalModules = [OptionalModule]()
-    static var pluginInstance: SwiftTealiumPlugin? = nil
+    static var pluginInstance: TealiumPlugin? = nil
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         channel = FlutterMethodChannel(name: "tealium", binaryMessenger: registrar.messenger())
-        pluginInstance = SwiftTealiumPlugin()
+        pluginInstance = TealiumPlugin()
         guard let channel = channel else {
             return
         }
@@ -39,7 +40,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         optionalModules.append(module)
     }
 
-    public static var instance: SwiftTealiumPlugin? {
+    public static var instance: TealiumPlugin? {
         pluginInstance
     }
 
@@ -109,7 +110,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         let localConfig = try tealiumConfig(from: call)
         self.config = localConfig.copy
 
-        SwiftTealiumPlugin.optionalModules.forEach { module in
+        TealiumPlugin.optionalModules.forEach { module in
             module.configure(config: localConfig)
         }
 
@@ -265,7 +266,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
         let tealium = try requireTealium()
 
         guard let arguments = call.arguments as? [String: Any],
-            let retrieveCachedData = arguments["retrieveCachedData"] as? Bool else {
+              let retrieveCachedData = arguments["retrieveCachedData"] as? Bool else {
             tealium.gatherTrackData(completion: { data in
                 DispatchQueue.main.async { result(data) }
             })
@@ -280,7 +281,7 @@ public class SwiftTealiumPlugin: NSObject, FlutterPlugin {
 
     static func invokeOnMain(_ method: String, arguments: [String: Any]) {
         TealiumQueues.secureMainThreadExecution {
-            SwiftTealiumPlugin.channel?.invokeMethod(
+            TealiumPlugin.channel?.invokeMethod(
                 method,
                 arguments: arguments)
         }

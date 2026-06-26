@@ -6,10 +6,10 @@ import tealium
 
 class RunnerTests: XCTestCase {
     
-    var tealiumPlugin: SwiftTealiumPlugin?
+    var tealiumPlugin: TealiumPlugin?
 
     override func setUpWithError() throws {
-        tealiumPlugin = SwiftTealiumPlugin()
+        tealiumPlugin = TealiumPlugin()
     }
 
     func testExample() {

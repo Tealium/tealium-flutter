@@ -39,7 +39,7 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule {
         let instance = TealiumMomentsApiPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
 
-        SwiftTealiumPlugin.registerOptionalModule(instance)
+        TealiumPlugin.registerOptionalModule(instance)
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -75,7 +75,7 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule {
     private func fetchEngineResponse(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 
         guard let engineIdArg = call.arguments as? [String: Any],
-            let engineId = engineIdArg[KEY_MOMENTS_API_ENGINE_ID] as? String
+              let engineId = engineIdArg[KEY_MOMENTS_API_ENGINE_ID] as? String
         else {
             result(
                 FlutterError(
@@ -85,7 +85,7 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule {
             return
         }
 
-        guard let tealium = SwiftTealiumPlugin.instance?.tealium else {
+        guard let tealium = TealiumPlugin.instance?.tealium else {
             result(
                 FlutterError(
                     code: "ConfigurationError",
