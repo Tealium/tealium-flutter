@@ -34,8 +34,7 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule {
     }
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(
-            name: "tealium_moments_api", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "tealium_moments_api", binaryMessenger: registrar.messenger())
         let instance = TealiumMomentsApiPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
 
@@ -56,11 +55,9 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule {
     // MomentsApi Configure
     private func configure(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let arguments = call.arguments as? [String: Any] else {
-            return result(
-                FlutterError(
-                    code: "ConfigurationError",
-                    message: "Failed to configure MomentsApi",
-                    details: nil))
+            return result(FlutterError(code: "ConfigurationError",
+                                       message: "Failed to configure MomentsApi",
+                                       details: nil))
         }
 
         if let region = arguments[KEY_MOMENTS_API_REGION] as? String {
@@ -75,51 +72,37 @@ public class TealiumMomentsApiPlugin: NSObject, FlutterPlugin, OptionalModule {
     private func fetchEngineResponse(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 
         guard let engineIdArg = call.arguments as? [String: Any],
-              let engineId = engineIdArg[KEY_MOMENTS_API_ENGINE_ID] as? String
-        else {
-            result(
-                FlutterError(
-                    code: "InvalidArgument",
-                    message: "Invalid or missing engineId. Must be a non-null String.",
-                    details: nil))
+                let engineId = engineIdArg[KEY_MOMENTS_API_ENGINE_ID] as? String else {
+            result(FlutterError(code: "InvalidArgument",
+                                message: "Invalid or missing engineId. Must be a non-null String.",
+                                details: nil))
             return
         }
 
         guard let tealium = TealiumPlugin.instance?.tealium else {
-            result(
-                FlutterError(
-                    code: "ConfigurationError",
-                    message:
-                        "Unable to retrieve Tealium instance. Please check your configuration.",
-                    details: nil))
+            result(FlutterError(code: "ConfigurationError",
+                                message: "Unable to retrieve Tealium instance. Please check your configuration.",
+                                details: nil))
             return
         }
 
         guard let momentsInstance = tealium.momentsAPI else {
-            result(
-                FlutterError(
-                    code: "ConfigurationError",
-                    message:
-                        "Unable to retrieve MomentsAPI module. Please check your configuration.",
-                    details: nil))
+            result(FlutterError(code: "ConfigurationError",
+                                message: "Unable to retrieve MomentsAPI module. Please check your configuration.",
+                                details: nil))
             return
         }
 
-        momentsInstance.fetchEngineResponse(
-            engineID: engineId as String,
-            completion: { engineResponse in
-                switch engineResponse {
-                case .success(let response):
-                    result(response.asDictionary())
-                case .failure(let error):
-                    result(
-                        FlutterError(
-                            code: "ErrorFetchingEngineResponse",
-                            message:
-                                "Failed to fetch engine response with error code: \(error.localizedDescription)",
-                            details: nil))
-                }
-            })
+        momentsInstance.fetchEngineResponse(engineID: engineId as String, completion: { engineResponse in
+            switch engineResponse {
+            case .success(let response):
+                result(response.asDictionary())
+            case .failure(let error):
+                result(FlutterError(code: "ErrorFetchingEngineResponse",
+                                    message: "Failed to fetch engine response with error code: \(error.localizedDescription)",
+                                    details: nil))
+            }
+        })
     }
 
     func setMomentsRegion(region: String) {

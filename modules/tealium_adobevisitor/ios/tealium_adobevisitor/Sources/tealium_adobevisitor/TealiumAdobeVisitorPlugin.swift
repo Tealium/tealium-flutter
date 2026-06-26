@@ -20,8 +20,7 @@ public class TealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalModule 
     private var adobeVisitorCustomVisitorId: String? = nil
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(
-            name: "tealium_adobevisitor", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "tealium_adobevisitor", binaryMessenger: registrar.messenger())
         let instance = TealiumAdobeVisitorPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
 
@@ -105,15 +104,12 @@ public class TealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalModule 
         result(adobeModule?.visitor?.asDictionary())
     }
 
-    func linkExistingEcidToKnownIdentifier(
-        _ call: FlutterMethodCall, result: @escaping FlutterResult
-    ) {
+    func linkExistingEcidToKnownIdentifier(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 
         guard let module = adobeModule,
               let arguments = call.arguments as? [String: Any],
               let knownId = arguments["knownId"] as? String,
-              let adobeDataProviderId = arguments["adobeDataProviderId"] as? String
-        else {
+              let adobeDataProviderId = arguments["adobeDataProviderId"] as? String else {
             return result(nil)
         }
 
@@ -128,12 +124,9 @@ public class TealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalModule 
 
         if let adobeAuthState = arguments["authState"] as? Int,
            let adobeAuthState = AdobeVisitorAuthState(rawValue: adobeAuthState) {
-            module.linkECIDToKnownIdentifier(
-                knownId, adobeDataProviderId: adobeDataProviderId, authState: adobeAuthState,
-                completion: completion)
+            module.linkECIDToKnownIdentifier(knownId, adobeDataProviderId: adobeDataProviderId, authState: adobeAuthState, completion: completion)
         } else {
-            module.linkECIDToKnownIdentifier(
-                knownId, adobeDataProviderId: adobeDataProviderId, completion: completion)
+            module.linkECIDToKnownIdentifier(knownId, adobeDataProviderId: adobeDataProviderId, completion: completion)
         }
     }
 
@@ -145,16 +138,13 @@ public class TealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalModule 
         guard let module = adobeModule,
               let arguments = call.arguments as? [String: Any],
               let url = arguments["url"] as? String,
-              let url = URL(string: url)
-        else {
+              let url = URL(string: url) else {
             return result(nil)
         }
 
-        module.decorateUrl(
-            url,
-            completion: { url in
-                result(url.absoluteString)
-            })
+        module.decorateUrl(url, completion: { url in
+            result(url.absoluteString)
+        })
     }
 
     func getUrlParameters(result: @escaping FlutterResult) {
@@ -164,11 +154,7 @@ public class TealiumAdobeVisitorPlugin: NSObject, FlutterPlugin, OptionalModule 
 
         module.getURLParameters(completion: { parameters in
             guard let parameters = parameters else {
-                result(
-                    FlutterError(
-                        code: "Adobe Visitor",
-                        message: "Adobe Visitor was null. Check for valid Adobe Org ID.",
-                        details: nil))
+                result(FlutterError(code: "Adobe Visitor", message: "Adobe Visitor was null. Check for valid Adobe Org ID.", details: nil))
                 return
             }
             result([parameters.name: parameters.value])
