@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "tealium-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tealium/tealium-swift",
+      "state" : {
+        "revision" : "0c902201dba1c1904e8dad43abd2a5678f637323",
+        "version" : "2.18.3"
+      }
+    },
+    {
+      "identity" : "tealium-swift-adobe-visitor-api",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tealium/tealium-swift-adobe-visitor-api",
+      "state" : {
+        "revision" : "e39d4b578cc753e1c480923621a6a8c6c6b82d51",
+        "version" : "1.2.0"
+      }
+    }
+  ],
+  "version" : 2
+}

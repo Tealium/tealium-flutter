@@ -11,7 +11,7 @@ import Flutter
     import TealiumSwift
 #endif
 
-extension SwiftTealiumPlugin {
+extension TealiumPlugin {
 
     func tealiumConfig(from call: FlutterMethodCall) throws(TealiumError) -> TealiumConfig {
         guard let dictionary = call.arguments as? [String: Any] else {
@@ -234,7 +234,7 @@ extension SwiftTealiumPlugin {
             type = .webview
         }
         var command: RemoteCommand
-        if let factory = SwiftTealiumPlugin.remoteCommandFactories[id] {
+        if let factory = TealiumPlugin.remoteCommandFactories[id] {
             command = factory.create()
             command.type = type
         } else {

@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tealium_braze'
-  s.version          = '2.0.0'
+  s.version          = '3.0.0'
   s.summary          = 'Tealium for Braze and Flutter.'
   s.description      = <<-DESC
         Tealium for Braze and Flutter.
@@ -13,8 +13,8 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Tealium Mobile Team' => 'mobile-team@tealium.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.platform = :ios, '12.0'
+  s.source_files = 'tealium_braze/Sources/tealium_braze/**/*.swift'
+  s.platform = :ios, '13.0'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.static_framework = true
 
   s.dependency 'Flutter'
-  s.dependency 'tealium', '~> 3.0'
+  s.dependency 'tealium', '~> 4.0'
   s.dependency "tealium-swift/Core", "~> 2.18"
   s.dependency "TealiumBraze", "~> 3.6"
 end

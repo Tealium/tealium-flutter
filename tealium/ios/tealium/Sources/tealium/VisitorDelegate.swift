@@ -10,7 +10,7 @@ public class VisitorDelegate: VisitorServiceDelegate {
         var payload = convert(visitorProfile)
         payload[TealiumFlutterConstants.Events.emitterName.rawValue] =
             TealiumFlutterConstants.Events.visitorService.rawValue
-        SwiftTealiumPlugin.invokeOnMain("callListener", arguments: payload)
+        TealiumPlugin.invokeOnMain("callListener", arguments: payload)
     }
 
     private func convert(_ visitorProfile: TealiumVisitorProfile) -> [String: Any] {
