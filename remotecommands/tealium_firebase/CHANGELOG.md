@@ -1,6 +1,5 @@
 ## 4.0.0
 * iOS: Added Swift Package Manager (SPM) support alongside CocoaPods. Both remain supported; no action needed for CocoaPods users.
-* iOS: Renamed public plugin class: `SwiftTealiumFirebasePlugin` → `TealiumFirebasePlugin`.
 * **Breaking change:** Minimum requirements raised to Flutter 3.41 / Dart 3.11. iOS deployment target stays 15.0.
 * Updated `tealium` dependency to ^4.0.0.
 
