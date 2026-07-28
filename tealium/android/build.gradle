@@ -1,17 +1,6 @@
 group 'com.tealium'
 version '3.0.1'
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.4'
-    }
-}
-
 rootProject.allprojects {
     repositories {
         google()

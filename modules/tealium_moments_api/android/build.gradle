@@ -1,17 +1,6 @@
 group = "com.tealium.flutter.moments_api.tealium_moments_api"
 version = "2.0.0"
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath("com.android.tools.build:gradle:7.3.0")
-    }
-}
-
 allprojects {
     repositories {
         google()
