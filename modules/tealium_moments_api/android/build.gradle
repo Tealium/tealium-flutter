@@ -2,7 +2,6 @@ group = "com.tealium.flutter.moments_api.tealium_moments_api"
 version = "2.0.0"
 
 buildscript {
-    ext.kotlin_version = rootProject.ext.has('kotlin_version') ? rootProject.ext.get('kotlin_version') : '1.8.0'
     repositories {
         google()
         mavenCentral()
@@ -10,7 +9,6 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:7.3.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
 
@@ -22,7 +20,6 @@ allprojects {
 }
 
 apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
 
 android {
     if (project.android.hasProperty("namespace")) {
@@ -34,10 +31,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     sourceSets {
@@ -53,5 +46,11 @@ android {
 
         implementation 'com.tealium:kotlin-core:1.9.2'
         implementation 'com.tealium:kotlin-momentsapi:1.0.6'
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8
     }
 }
