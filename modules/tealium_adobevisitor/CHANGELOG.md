@@ -1,6 +1,10 @@
+## 3.1.0
+* Android: Migrated to Flutter's built-in Kotlin support so the plugin builds with Android Gradle Plugin (AGP) 9.0 and later.
+* **Breaking change:** Minimum requirements raised to Flutter 3.44 / Dart 3.12 (required for built-in Kotlin).
+* Updated `tealium` dependency to ^4.1.0.
+
 ## 3.0.0
 * iOS: Added Swift Package Manager (SPM) support alongside CocoaPods. Both remain supported; no action needed for CocoaPods users.
-* iOS: Renamed public plugin class: `SwiftTealiumAdobeVisitorPlugin` → `TealiumAdobeVisitorPlugin`.
 * **Breaking change:** Minimum requirements raised to Flutter 3.41 / Dart 3.11 and iOS 13.0 (from 12.0). Raise your app's iOS deployment target to 13.0 or higher.
 * Updated `tealium` dependency to ^4.0.0.
 
