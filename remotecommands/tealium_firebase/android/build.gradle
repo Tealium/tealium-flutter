@@ -1,5 +1,5 @@
 group 'com.tealium.flutter.remotecommands.firebase'
-version '3.0.0'
+version '4.1.0'
 
 allprojects {
     repositories {
@@ -13,16 +13,10 @@ apply plugin: 'com.android.library'
 android {
     compileSdk 34
 
-    if (project.android.hasProperty("namespace")) {
-        namespace = 'com.tealium.flutter.remotecommands.firebase'
-    }
+    namespace = 'com.tealium.flutter.remotecommands.firebase'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {

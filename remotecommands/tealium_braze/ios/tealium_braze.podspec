@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.static_framework = true
 
   s.dependency 'Flutter'
-  s.dependency 'tealium', '~> 4.0'
+  s.dependency 'tealium', '~> 4.1'
   s.dependency "tealium-swift/Core", "~> 2.18"
   s.dependency "TealiumBraze", "~> 3.6"
 end

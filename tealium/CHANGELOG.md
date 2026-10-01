@@ -5,6 +5,7 @@
 ### 4.1.0 (Jul 2026)
 * Android: Migrated to Flutter's built-in Kotlin support so the plugin builds with Android Gradle Plugin (AGP) 9.0 and later.
 * Minimum requirements raised to Flutter 3.44 / Dart 3.12 (required for built-in Kotlin).
+* iOS: Raised the minimum tealium-swift version for Swift Package Manager to 2.18.3.
 
 ### 4.0.0 (Jun 2026)
 * iOS: Added Swift Package Manager (SPM) support alongside CocoaPods. SPM is recommended as CocoaPods moves to read-only (Dec 2026); both remain supported. No action needed for CocoaPods users.

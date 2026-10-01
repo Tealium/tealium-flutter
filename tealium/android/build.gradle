@@ -1,5 +1,5 @@
 group 'com.tealium'
-version '3.0.1'
+version '4.1.0'
 
 rootProject.allprojects {
     repositories {
@@ -16,12 +16,7 @@ apply plugin: 'com.android.library'
 android {
     compileSdk 34
 
-    if (project.android.hasProperty("namespace")) {
-        namespace = 'com.tealium'
-    }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+    namespace = 'com.tealium'
     defaultConfig {
         minSdkVersion 21
 

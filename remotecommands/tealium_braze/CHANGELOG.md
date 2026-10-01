@@ -2,6 +2,8 @@
 * Android: Migrated to Flutter's built-in Kotlin support so the plugin builds with Android Gradle Plugin (AGP) 9.0 and later.
 * Minimum requirements raised to Flutter 3.44 / Dart 3.12 (required for built-in Kotlin).
 * Updated `tealium` dependency to ^4.1.0.
+* iOS: Raised the minimum tealium-swift version for Swift Package Manager to 2.18.3.
+* Android: Raised compileSdk to 35, required by the Braze SDK.
 
 ## 3.0.0
 * iOS: Added Swift Package Manager (SPM) support alongside CocoaPods. Both remain supported; no action needed for CocoaPods users.
