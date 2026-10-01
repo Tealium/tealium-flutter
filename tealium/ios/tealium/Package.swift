@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
-        .package(url: "https://github.com/tealium/tealium-swift", .upToNextMajor(from: "2.18.0"))
+        .package(url: "https://github.com/tealium/tealium-swift", .upToNextMajor(from: "2.18.3"))
     ],
     targets: [
         .target(

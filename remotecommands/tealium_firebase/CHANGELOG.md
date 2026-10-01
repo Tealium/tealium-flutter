@@ -1,3 +1,9 @@
+## 4.1.0
+* Android: Migrated to Flutter's built-in Kotlin support so the plugin builds with Android Gradle Plugin (AGP) 9.0 and later.
+* Minimum requirements raised to Flutter 3.44 / Dart 3.12.
+* Updated `tealium` dependency to ^4.1.0.
+* iOS: Raised the minimum tealium-swift version for Swift Package Manager to 2.18.3.
+
 ## 4.0.0
 * iOS: Added Swift Package Manager (SPM) support alongside CocoaPods. Both remain supported; no action needed for CocoaPods users.
 * iOS: Renamed public plugin class: `SwiftTealiumFirebasePlugin` → `TealiumFirebasePlugin`.
@@ -11,13 +17,13 @@
 ## 2.0.0
 * **BREAKING CHANGES:**
   * Minimum iOS deployment target: 15.0 (previously 12.0)
-  * iOS: TealiumFirebase ~> 4.0 
+  * iOS: TealiumFirebase ~> 4.0
 
 ## 1.5.0
 * Firebase Remote Command dependency update
 
 ## 1.4.0
-* Android 
+* Android
     * Fix to resolve missing `namespace` issue when using AGP v8
     * Bumped Android/Kotlin version support
 

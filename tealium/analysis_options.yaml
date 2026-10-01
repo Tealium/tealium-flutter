@@ -2,3 +2,7 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
     prefer_collection_literals: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**

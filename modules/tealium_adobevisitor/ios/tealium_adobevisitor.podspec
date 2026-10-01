@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tealium_adobevisitor'
-  s.version          = '3.0.0'
+  s.version          = '3.1.0'
   s.summary          = 'Tealium for Adobe Visitor Module and Flutter.'
   s.description      = <<-DESC
   Tealium for Adobe Visitor Module and Flutter.
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   s.dependency 'Flutter'
-  s.dependency 'tealium', '~> 4.0'
+  s.dependency 'tealium', '~> 4.1'
   s.dependency 'tealium-swift/Core', '~> 2.18'
   s.dependency 'TealiumAdobeVisitorAPI', '~> 1.2'
 end
