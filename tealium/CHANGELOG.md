@@ -2,9 +2,9 @@
 
 [Full documentation](https://docs.tealium.com/platforms/flutter/install/)
 
-### 4.1.0 (Jul 2026)
+### 4.1.0 (Oct 2026)
 * Android: Migrated to Flutter's built-in Kotlin support so the plugin builds with Android Gradle Plugin (AGP) 9.0 and later.
-* Minimum requirements raised to Flutter 3.44 / Dart 3.12 (required for built-in Kotlin).
+* Minimum requirements raised to Flutter 3.44 / Dart 3.12.
 * iOS: Raised the minimum tealium-swift version for Swift Package Manager to 2.18.3.
 
 ### 4.0.0 (Jun 2026)
@@ -44,7 +44,7 @@
 * Bumped Tealium dependencies
 
 ### 2.6.0 (Sep 2024)
-* Android 
+* Android
     * Fix to resolve missing `namespace` issue when using AGP v8
     * Bumped Tealium dependencies
     * Bumped Android/Kotlin version support
@@ -91,7 +91,7 @@
 * Updated kotlin and swift tealium dependency versions.
 
 ### 2.0.1 (August 2021)
-* Kotlin 
+* Kotlin
 * Changed collectors to include TimeCollector by default in keeping with Swift.
 * Updated Kotlin SDK dependencies
 * Fix - LogLevel configuration was being ignored
@@ -99,11 +99,11 @@
 ### 2.0.0 (April 2021)
 * Initial release. Updated the plugin to use the Kotlin and Swift libraries.
 
-## 1.X 
+## 1.X
 
 ### 1.2.0 (February 2020)
 * Added support for Remote Commands
-* Underlying Tealium libraries updated to versions 5.7.0 (Android) and 5.6.6 (iOS) 
+* Underlying Tealium libraries updated to versions 5.7.0 (Android) and 5.6.6 (iOS)
 
 ### 1.0.1 (August 2019)
 * Update documentation link
