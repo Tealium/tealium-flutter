@@ -1,6 +1,6 @@
 ## 3.1.0
 * Android: Migrated to Flutter's built-in Kotlin support so the plugin builds with Android Gradle Plugin (AGP) 9.0 and later.
-* **Breaking change:** Minimum requirements raised to Flutter 3.44 / Dart 3.12 (required for built-in Kotlin).
+* Minimum requirements raised to Flutter 3.44 / Dart 3.12 (required for built-in Kotlin).
 * Updated `tealium` dependency to ^4.1.0.
 
 ## 3.0.0
