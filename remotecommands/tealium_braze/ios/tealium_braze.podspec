@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tealium_braze'
-  s.version          = '3.0.0'
+  s.version          = '3.1.0'
   s.summary          = 'Tealium for Braze and Flutter.'
   s.description      = <<-DESC
         Tealium for Braze and Flutter.
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.static_framework = true
 
   s.dependency 'Flutter'
-  s.dependency 'tealium', '~> 4.0'
+  s.dependency 'tealium', '~> 4.1'
   s.dependency "tealium-swift/Core", "~> 2.18"
   s.dependency "TealiumBraze", "~> 3.6"
 end

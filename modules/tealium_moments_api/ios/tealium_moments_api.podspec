@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tealium_moments_api'
-  s.version          = '3.0.0'
+  s.version          = '3.1.0'
   s.summary          = 'Tealium Moments Api Module for Flutter.'
   s.description      = <<-DESC
 Tealium Moments Api Module for Flutter.
@@ -15,7 +15,7 @@ Tealium Moments Api Module for Flutter.
   s.source           = { :path => '.' }
   s.source_files = 'tealium_moments_api/Sources/tealium_moments_api/**/*.swift'
   s.dependency 'Flutter'
-  s.dependency 'tealium', '~> 4.0'
+  s.dependency 'tealium', '~> 4.1'
   s.dependency "tealium-swift/Core", "~> 2.18"
   s.dependency "tealium-swift/MomentsAPI", "~> 2.18"
   s.platform = :ios, '13.0'

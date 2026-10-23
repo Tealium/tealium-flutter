@@ -1,18 +1,5 @@
 group 'com.tealium.flutter.remotecommands.firebase'
-version '3.0.0'
-
-buildscript {
-    ext.kotlin_version = rootProject.ext.has('kotlin_version') ? rootProject.ext.get('kotlin_version') : '1.8.0'
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+version '4.1.0'
 
 allprojects {
     repositories {
@@ -22,25 +9,14 @@ allprojects {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdk 34
 
-    if (project.android.hasProperty("namespace")) {
-        namespace = 'com.tealium.flutter.remotecommands.firebase'
-    }
+    namespace = 'com.tealium.flutter.remotecommands.firebase'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
@@ -51,5 +27,11 @@ android {
         compileOnly rootProject.findProject(":tealium")
 
         implementation 'com.tealium.remotecommands:firebase:[1.5.0,2.0)'
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8
     }
 }

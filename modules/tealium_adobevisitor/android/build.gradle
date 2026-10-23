@@ -1,18 +1,5 @@
 group 'com.tealium.flutter.modules.tealium_adobevisitor'
-version '2.0.0'
-
-buildscript {
-    ext.kotlin_version = rootProject.ext.has('kotlin_version') ? rootProject.ext.get('kotlin_version') : '1.8.0'
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+version '3.1.0'
 
 allprojects {
     repositories {
@@ -22,25 +9,14 @@ allprojects {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdk 34
 
-    if (project.android.hasProperty("namespace")) {
-        namespace = 'com.tealium.flutter.modules.tealium_adobevisitor'
-    }
+    namespace = 'com.tealium.flutter.modules.tealium_adobevisitor'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
@@ -52,5 +28,11 @@ android {
 
         implementation 'com.tealium:kotlin-core:1.9.2'
         implementation 'com.tealium:kotlin-adobe-visitor:1.1.2'
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8
     }
 }
